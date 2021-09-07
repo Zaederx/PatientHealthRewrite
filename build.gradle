@@ -31,3 +31,59 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+
+/**
+* Calls npm to compile scss file into css
+*/
+task compileSass() {
+	println "\u001B[32m"+"compiling sass"
+	ext.process = new ProcessBuilder()
+            .directory(projectDir)
+            .command("npm", "run", "sass")
+            .start();
+	doLast {
+		println "\u001B[32m"+"compileSass done!"
+	}
+	ext.process.waitFor(5,TimeUnit.SECONDS);//wait for command to be executed
+	ext.process.destroy();
+	ext.process.waitFor(5,TimeUnit.SECONDS);//wait for destory to happen
+	ext.process.destroyForcibly();//if stuck then kill process 
+	ext.process.waitFor();//wait for kill Process to happen
+	
+	
+	// ext.output = { //for access to external output if needed
+	// 	return "\u001B[32m"+standardOutput.toString();
+	// }
+	timeout = Duration.ofMinutes(1)
+}
+//Calls npm to compile ts files into js files
+task compileTS() {
+	println "\u001B[32m"+"compiling typescript"
+	ext.process = new ProcessBuilder()
+            .directory(projectDir)
+            .command("npm", "run", "tsc")
+            .start();
+	doLast { 
+		println "\u001B[32m"+"compileTS done!"
+	}
+
+	ext.process.waitFor(5,TimeUnit.SECONDS);
+	ext.process.destroy();
+	ext.process.waitFor(5,TimeUnit.SECONDS);
+	ext.process.destroyForcibly();
+	ext.process.waitFor();
+
+	
+	// ext.output = { //for access to external output if needed
+	// 	return "\u001B[32m"+standardOutput.toString();
+	// }
+	timeout = Duration.ofMinutes(1)
+}
+
+
+/* Extends build to have compileSass and compileTS run before it
+whenever build or bootRun is called
+ */
+
+build.dependsOn compileSass, compileTS
