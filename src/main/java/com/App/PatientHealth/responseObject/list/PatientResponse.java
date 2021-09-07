@@ -1,9 +1,9 @@
-package com.App.PatientHealth.javaJson.list;
+package com.App.PatientHealth.responseObject.list;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.App.PatientHealth.javaJson.single.PatientJson;
+import com.App.PatientHealth.responseObject.single.PatientJson;
 
 public class PatientResponse extends JsonResponse{
     List<PatientJson> patientJson;

@@ -1,4 +1,4 @@
-package com.App.PatientHealth.javaJson.single;
+package com.App.PatientHealth.responseObject.single;
 
 import java.util.ArrayList;
 import java.util.List;

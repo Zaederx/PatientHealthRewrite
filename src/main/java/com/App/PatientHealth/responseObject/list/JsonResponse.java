@@ -1,4 +1,4 @@
-package com.App.PatientHealth.javaJson.list;
+package com.App.PatientHealth.responseObject.list;
 
 
 public class JsonResponse {

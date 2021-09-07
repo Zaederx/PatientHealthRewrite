@@ -1,9 +1,9 @@
-package com.App.PatientHealth.javaJson.list;
+package com.App.PatientHealth.responseObject.list;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.App.PatientHealth.javaJson.single.AdminJson;
+import com.App.PatientHealth.responseObject.single.AdminJson;
 
 public class AdminResponse extends JsonResponse{
     List<AdminJson> adminJson;
