@@ -1,6 +1,7 @@
 package com.App.PatientHealth.domain;
 
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -18,20 +22,28 @@ public class User {
     @Column
     protected String fname;
     @Column
+    protected String mnames;
+    @Column
     protected String lname;
     @Column
     protected String username;
     @Column
+    protected String password;
+    @Column
     protected String email;
     @Column
     protected String role;
+    @Transient
+    BCryptPasswordEncoder encoder;
 
     public User(){}
 
-    public User(String fname, String lname, String username, String email, String role) {
+    public User(String fname, String mnames, String lname, String username, String password, String email, String role) {
         this.fname = fname;
+        this.mnames = mnames;
         this.lname = lname;
         this.username = username;
+        this.password = encoder.encode(password);
         this.email = email;
         this.role = role;
     }
@@ -53,6 +65,14 @@ public class User {
         this.fname = fname;
     }
 
+    public String getMnames() {
+        return mnames;
+    }
+
+    public void setMnames(String mnames) {
+        this.mnames = mnames;
+    }
+
     public String getLname() {
         return this.lname;
     }
@@ -67,6 +87,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = encoder.encode(password);
     }
 
     public String getEmail() {

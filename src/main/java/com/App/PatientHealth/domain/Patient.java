@@ -16,9 +16,13 @@ public class Patient extends User {
     @ManyToOne
     Doctor doctor;
 
+    public Patient() {}
+
+    public Patient(String fname, String mnames, String lname, String username, String password, String email) {
+        super(fname,mnames,lname,username,password,email,"PATIENT");
+    }
 
     public Patient(String fname, String lname, String username, String email,List<Medication> medication, Doctor doctor) {
-        super(fname,lname,username,email,"DOCTOR");
         this.medication = medication;
         this.doctor = doctor;
     }

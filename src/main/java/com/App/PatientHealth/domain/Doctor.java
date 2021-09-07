@@ -14,8 +14,12 @@ public class Doctor extends User {
     List<Patient> patients;
 
     public Doctor(){}
-    public Doctor(String fname, String lname, String username,String email,String specialisation, List<Patient> patients) {
-        super(fname,lname,username,email, "DOCTOR");
+    public Doctor(String fname, String mnames, String lname, String username, String password,String email,String specialisation) {
+        super(fname,lname,mnames,username,password,email, "DOCTOR");
+        this.specialisation = specialisation;
+    }
+    public Doctor(String fname, String mnames, String lname, String username, String password,String email,String specialisation, List<Patient> patients) {
+        super(fname,mnames,lname,username,password,email, "DOCTOR");
         this.specialisation = specialisation;
         this.patients = patients;
     }

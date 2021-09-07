@@ -7,7 +7,14 @@ public class Admin extends User {
     
     public Admin() {}
 
-    public Admin(String fname, String lname, String username,String email) {
-        super(fname,lname,username,email,"ADMIN");
+    /**
+     * 
+     * @param fname
+     * @param lname
+     * @param username
+     * @param email
+     */
+    public Admin(String fname, String mnames,String lname, String username,String password, String email) {
+        super(fname,mnames,lname,username,password,email,"ADMIN");
     }
 }
