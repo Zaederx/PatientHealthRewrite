@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta th:name="_csrf" th:content="${_csrf.token}"/>
+  
+  <!-- <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script> -->
+  <!-- CSS -->
+   <link rel="stylesheet" type="text/css" th:href="@{/css/app-css.css}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+  <!-- JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!--FontAwesome-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Admin - Manage Doctor Patients</title>
+</head>
+
+<body>
+  <div class="jumbotron text-center">
+    <h1>Admin - Manage Doctor Patients</h1>
+    <h3></h3>
+     <div th:replace="admin/admin-nav"></div>
+  </div>
+
+  <div class="container text-center col-sm-10 align-items-center">
+  		<!-- <div> -->
+	   <input id="doctor-searchbar" class="form-control" type="text" placeholder="Search Doctors...">
+	   <!--  </div> -->
+	   <div class="table-flow">
+	    <table id="doctor-details-table" class="table table-bordered table-striped">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="4">Doctors</th>
+	    				</tr>
+	    				<tr>
+		    				<th colspan="1">Name</th>
+		    				<th colspan="1">Username</th>
+		    				<th colspan="1">Specialty</th>
+		    				<th colspan="1">Email</th>
+			    		</tr>
+	    			</thead>
+	    			<tbody class="highlight-table-body-row" id="doctor-search-table-body">
+	    			<!-- Fill via ajax method -->
+	    			</tbody>
+	    		</table>
+	    </div>
+    	<div class="row">
+    	
+	    	
+	    	
+	    	<!-- Current Patients -->
+	    	<div class="col-sm-12"> 
+	    		<!-- Table -->
+	    		<table class="table table-bordered table-striped">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="4">Current Patients</th>
+	    				</tr>
+	    				<tr>
+		    				<th colspan="1">Name</th>
+		    				<th colspan="1">Username</th>
+		    				<th colspan="1">Date of Birth</th>
+		    				<th colspan="1">Email</th>
+	    				</tr>
+	    				
+	    			</thead>
+	    			<tbody class="highlight-red-table-body-row" id="current-patient-table-body">
+	    			<!-- Fill via ajax method -->
+	    			</tbody>
+	    		</table>
+	    	</div>
+    	</div><!-- End of row  -->
+    	<button class="btn btn-primary btn-space-left col-sm-4" onclick="removePatient();">Remove Selected Patient</button>
+    	<div id="add-patient-accordion">
+    	<!-- CARD 2 - Doctor Registration  -->
+		  <div class="card text-center">
+		    <div class="card-header" id="headingOne">
+		        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#doctorCollapse" aria-expanded="false" aria-controls="doctorCollapse">
+		          Add Patient to Doctor
+		        </button>
+		    </div>
+		    <div id="doctorCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#add-patient-accordion">
+		      <div class="card-body">
+		    		<div class="row">
+			    		<!-- Patient Search Bar -->
+			    		<input id="patient-searchbar" class="form-control col-sm-6 bar-space" type="text" placeholder="Search Patients...">
+			    		<button class="btn btn-primary btn-space-left col-sm-4" onclick="addPatient();">Add Selected Patient</button>
+			    	</div>
+			    	<br>
+			    	<div class="row table-flow"><!--table-flow - See style tag in header -->
+			    		<table id="patient-details-table" class="table table-bordered table-striped">
+			    			<thead>
+			    				<tr>
+				    				<th colspan="4">Patients</th>
+			    				</tr>
+			    				<tr>
+				    				<th colspan="1">Name</th>
+				    				<th colspan="1">Username</th>
+				    				<th colspan="1">Date of Birth</th>
+				    				<th colspan="1">Email</th>
+			    				</tr>
+		    				</thead>
+		    			<tbody class="highlight-table-body-row" id="patient-search-table-body">
+		    				<!-- Fill via ajax method -->
+		    			</tbody>
+			    		</table>
+		    		</div>
+		      </div>
+		    </div>
+		  </div>
+    	</div><!-- END OF ACCORDIAN DIV -->
+   
+</div>
+</body>
+
+</html>

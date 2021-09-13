@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="/css/app-css.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+  <!-- JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!--FontAwesome-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Doctor Home</title>
+</head>
+
+<body>
+  <div class="jumbotron text-center">
+    <h1>Doctor Home</h1>
+    <h3>Helping you, help others...</h3>
+   <div th:replace="doctor/doctor-nav"></div>
+	</div>
+	 <!-- Content div -->
+    <div class="container col-sm-9" ><!-- style="background-color:grey;" -->
+	<!-- Model - For ViewingPrescriptions -->
+    	<div id="presModal" class="modal fade" role="dialog">
+    		<div class="modal-dialog">
+    			<!-- Modal Content  -->
+    			<div class="modal-content">
+    				<div class="modal-header">
+    					<h4 class="modal-title">Notices</h4>
+    					<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle" style="color:red;" aria-hidden="true"></i></button>
+    				</div>
+    				<div class="modal-body">
+    					<h5 id="presModal-subTitle"></h5>
+    					<p id="presModal-body"></p>
+    				</div>
+    			</div>
+    		</div>
+    		
+    	</div>
+    	
+    	<br>
+   
+    	<div class="row">
+	    	<!-- Active Prescriptions -->
+	    	<div class="col-sm-6"> 
+	    		<!-- Table -->
+	    		<table class="table">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="2">Staff Notices</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody id="notices">
+	    			<!-- Fill via ajax method -->
+	    			</tbody>
+	    		</table>
+	    	</div>
+	    	
+	    	<!-- Next Appointment -->
+	    	<div class="col-sm-6">
+	    		<!-- Table -->
+	    		<table class="table">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="2">Next Appointment</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody id="appointment">
+		    		<!-- Filled via ajax method -->
+	    			</tbody>
+	    		</table>
+	    	</div>
+    	</div>
+    	
+    	<div class="row">
+    	<!-- Last Message -->
+    	<div class="col-sm-6"> 
+	    		<!-- Table -->
+	    		<table class="table">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="2">Last Message</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody id="lastMessage">
+	    			<!-- Fill via ajax method -->
+	    			</tbody>
+	    		</table>
+	    	</div>
+	    	
+    	<!-- Notes -->
+    	<div class="col-sm-6"> 
+	    		<!-- Table -->
+	    		<table class="table">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="2">Notes</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody id="notes">
+	    			<!-- Fill via ajax method -->
+	    			</tbody>
+	    		</table>
+	    	</div>
+	    </div>
+    	<br><br><br><br><br><br>
+	</div>
+
+</body>
+<script>
+
+</script>
+</html>

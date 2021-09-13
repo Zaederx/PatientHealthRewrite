@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<style>
+    .btn-space{
+    	margin-right: 35px;
+    	margin-bottom: 10px;
+    }
+    </style>
+	<meta th:name="_csrf" th:content="${_csrf.token}"/>
+	<meta th:name="_csrf_header" th:content="${_csrf.headerName}">
+	<!-- For Google Sign-In -->
+	<meta name="google-signin-scope" content="openid profile email https://www.googleapis.com/auth/calendar">
+	<meta name="google-signin-client_id" content="855286502115-emk3m2e458bfmrtsed1o3b7qsmq3bkht.apps.googleusercontent.com">
+	<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+	
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	
+	<!-- Popper JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<div class="jumbotron text-center">
+  <h1>Login</h1>
+  <h3>Just one step, and your're on your way</h3>
+    <!--  Navigation Bar  -->
+    <div th:replace="home/home-nav"></div>
+</div>
+
+
+<div th:if="${param.error}" class="alert alert-info show text-sm-center">Login unsuccessful.</div>
+<div th:if="${param.logout}" class="alert alert-primary show text-sm-center">You have successfully logged out.</div>
+<div id="messages"></div>
+
+<div class="container d-flex flex-sm-column col-sm-12 justify-content-center align-items-center">
+
+  <div class="row">
+  <div id="btn-g-signin" class="g-signin2 col-sm-4 btn-space" data-onsuccess="onSignIn" data-longtitle="true" data-theme="dark"></div><!-- if needed later data-redirecturi="https://localhost:8090/" -->
+  
+  
+  <!-- </div> -->
+  <h3 class="text-muted col-sm-2">OR</h3>
+  <!-- <div class="row"> -->
+    
+  <form class="form-group col-sm-4" th:action="@{/authenticateUser}" method="POST">
+    <div th:if="${param.error}" class="alert alert-info">
+      Username or password is incorrect.
+    </div>
+    <label> Username: </label>
+    <input id="username" class="form-control" type="text" name="username" /> <br>
+   	
+    <label> Password: </label>
+    <input class="form-control" type="password" name="password"/> <br> <br>
+    
+    <label>Remember Me</label>
+    <input type="checkbox" name="rememberMe" value="true"/> <br>
+    
+    <button class="btn btn-secondary" type="submit" value="Login">Login</button>
+    
+  </form>
+	</div>
+	
+</div>
+
+</html>

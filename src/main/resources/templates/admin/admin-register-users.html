@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta th:name="_csrf" th:content="${_csrf.token}"/>
+  
+  <script type="text/javascript" th:src="@{/js/admin-register-users.js}" defer></script>
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/app-css.css}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+  <!-- JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <title>Register User</title>
+</head>
+
+<body>
+  <div class="jumbotron text-center">
+    <h1>Admin - Register User</h1>
+    <h3></h3>
+     <div th:replace="admin/admin-nav"></div><!-- Navigation -->
+  </div>
+	<div class="alert alert-info" th:if=${param.success} th:text="${param.success}">
+	</div>
+	<div>
+		<!-- Accordian (card container) -->	
+		<div id="accordion">
+			<!-- CARD 1 - Patient Registration -->
+		<div class="card text-center">
+			<div class="card-header" id="headingOne">
+				<button class="username-error btn btn-link" data-toggle="collapse" data-target="#patientCollapse" aria-expanded="true" aria-controls="patientCollapse">
+				Patient
+				</button>
+			</div>
+			<div id="patientCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+			<div class="card-body">
+			<div class="container d-flex flex-sm-column col-sm-8 justify-content-center">
+				<form class="form-group" action="#" th:action="@{/admin/register-patient}" th:object="${patientRegForm}" method="POST">
+					<!-- Name -->
+					<label for="patient-name">Name</label>
+					<input id="patient-name" class="form-control text-center" type="text" th:field="*{name}" placeholder="Henry Thompson" autocomplete="off"></input>
+					<div id="patient-name-error"></div>
+
+					<!-- Username -->
+					<label for="patient-username">Username</label>
+					<input id="patient-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Einstein92" autocomplete="off"></input>
+					<div id="patient-username-error"></div>
+					
+					<!-- Email -->
+					<label for="patient-email">Email</label>
+					<input id="patient-email" class="form-control text-center" type="text"  th:field="*{email}" placeholder="email@email.com" autocomplete="off"></input>
+					<div id="patient-email-error"></div>
+					<br><br>
+					
+					<!-- Toggle Password Visibility -->
+					<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-info">
+						<input type="radio" onfocus="togglePasswordVisibility(this);" name="patient-password-visibility" id="patient-show-password" autocomplete="off"> Show
+					</label>
+					<label class="btn btn-secondary active">
+						<input type="radio" onfocus="togglePasswordVisibility(this);" name="patient-password-visibility" id="patient-hide-password" autocomplete="off" checked> Hide
+					</label>
+					</div><br>
+					
+					<!-- Password -->
+					<label for="patient-password1">Password</label>
+					<input id= "patient-password1" class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
+					pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
+					<div id="patient-password1-error" th:error="*{password1}"></div>
+					<br>
+					<!-- Repeat Password -->
+					<label for="patient-password2">Repeat Password</label>
+					<input id="patient-password2" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+					<br>
+
+					<!-- Register Button -->
+					<button id="reg-btn-patient" class="btn btn-primary" type="submit">Register</button>
+				</form>
+			</div>
+			</div>
+			</div>
+		</div>
+
+		<!-- CARD 2 - Doctor Registration  -->
+		<div class="card text-center">
+			<div class="card-header" id="headingTwo">
+				<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#doctorCollapse" aria-expanded="false" aria-controls="doctorCollapse">
+				Doctor
+				</button>
+			</div>
+			<div id="doctorCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+			<div class="card-body">
+				<div class="container d-flex flex-sm-column col-sm-8 justify-content-center">
+					<form class="form-group" action="#" th:action="@{/admin/register-doctor}" th:object="${doctorRegForm}" method="POST">
+						<label>Name</label>
+						<input id="doctor-name"class="form-control text-center" type="text" th:field="*{name}" placeholder="Henry Thompson" pattern="{1,}" title="This field cannot be empty" autocomplete="off"></input>
+						<div id="doctor-name-error"></div>
+						<br>
+						
+						<label>GMC Reference Number</label><!--General Medical Council Number - Each doctor in UK is meant to have one  -->
+						<input id="doctor-gmc" class="form-control text-center" type="text" th:field="*{gmcNum}" placeholder="3494984098345" autocomplete="off"></input>
+						<div id="doctor-gmc-error"></div>
+						<br>
+						
+						<label>Username</label>
+						<input id="doctor-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Enstein92" autocomplete="off"></input>
+						<div id="doctor-username-error"></div>
+						<br>
+						
+						<label for="doctor-email">Email</label>
+						<input id="doctor-email" class="form-control text-center" type="text"  th:field="*{email}" placeholder="email@email.com" autocomplete="off"></input>
+						<div id="doctor-email-error"></div>
+						<br><br>
+						
+						<!-- IMPORTANT - PASSWORD TOGGLE FUNCTIONALITY -->
+						<div class="btn-group" data-toggle="buttons">
+						<label class="btn btn-info">
+							<input type="radio" onfocus="togglePasswordVisibility(this);" name="doctor-password-visibility" id="doctor-show-password" autocomplete="off"> Show
+						</label>
+						<label class="btn btn-secondary">
+							<input type="radio" onfocus="togglePasswordVisibility(this);" name="doctor-password-visibility" id="doctor-hide-password" autocomplete="off" checked> Hide
+						</label>
+						</div><br>
+					
+						<label>Password</label>
+						<input id="doctor-password" class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
+						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
+						<div id="doctor-password-error"></div>
+						<br>
+						
+						<label for="doctor-passwordTwo">Repeat Password</label>
+						<input id="doctor-passwordTwo" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+						
+						<br>
+						<button id="reg-btn-doctor" class="btn btn-primary" type="submit">Register</button>
+					</form>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<!-- CARD 3 - Admin Registration -->
+		<div class="card text-center">
+			<div class="card-header text-center" id="headingThree">
+				<button onclick="setRegBtn('#reg-btn-admin');" class="btn btn-link collapsed" data-toggle="collapse" data-target="#adminCollapse" aria-expanded="false" aria-controls="adminCollapse">
+				Admin
+				</button>
+			</div>
+			<div id="adminCollapse" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+			<div class="card-body">
+				<div class="container d-flex flex-sm-column col-sm-8 justify-content-center">
+					<form class="form-group" action="#" th:action="@{/admin/register-admin}" th:object="${adminRegForm}" method="POST">
+						<label>Name</label>
+						<input id="admin-name" class="form-control text-center" type="text" th:field="*{name}" placeholder="Henry Thompson" pattern="{1,}" title="This field cannot be empty" autocomplete="off"></input>
+						<div id="admin-name-error"></div>
+						
+						<label>Username</label>
+						<input id="admin-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Enstein92" autocomplete="off"></input>
+						<div id="admin-username-error"></div>
+						<br><br>
+						
+						<div class="btn-group" data-toggle="buttons">
+						<label class="btn btn-info">
+							<input type="radio" onfocus="togglePasswordVisibility(this);" name="admin-password-visibility" id="admin-show-password" autocomplete="off"> Show
+						</label>
+						<label class="btn btn-secondary">
+							<input type="radio" onfocus="togglePasswordVisibility(this);" name="admin-password-visibility" id="admin-hide-password" autocomplete="off" checked> Hide
+						</label>
+						</div><br>
+						
+						<label>Password</label>
+						<input id="admin-password"class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
+						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
+						<div id="admin-password-error"></div>
+						<br>
+
+						<label for="admin-passwordTwo">Repeat Password</label>
+						<input id="admin-passwordTwo" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+						<br>
+						<button id="reg-btn-admin" class="btn btn-primary" type="submit">Register</button>
+					</form>
+				</div>
+			</div>
+			</div>
+		</div>
+
+
+		</div><!-- accordian div end -->
+	</div> <!-- container div end  -->
+</body>
+<!-- // var params = new URLSearchParams(window.location.search); -->
+<!-- var error = params.has('error'); -->
+
+</html>
