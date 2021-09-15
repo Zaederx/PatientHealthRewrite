@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+
+import com.App.PatientHealth.requestObjects.PatientRegForm;
+
 import javax.persistence.ManyToOne;
 /**
  * 
@@ -18,8 +21,13 @@ public class Patient extends User {
 
     public Patient() {}
 
-    public Patient(String fname, String mnames, String lname, String username, String password, String email) {
-        super(fname,mnames,lname,username,password,email,"PATIENT");
+    public Patient(PatientRegForm p) {
+        super(p.getName(),p.getUsername(),
+        p.getPassword1(), p.getEmail(), "PATIENT");
+    }
+
+    public Patient(String name, String username, String password, String email) {
+        super(name,username,password,email,"PATIENT");
     }
 
     public Patient(String fname, String lname, String username, String email,List<Medication> medication, Doctor doctor) {
@@ -27,21 +35,6 @@ public class Patient extends User {
         this.doctor = doctor;
     }
 
-    public String getFname() {
-        return this.fname;
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public String getLname() {
-        return this.lname;
-    }
-
-    public void setLname(String lname) {
-        this.lname = lname;
-    }
 
     public List<Medication> getMedication() {
         return this.medication;

@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.App.PatientHealth.domain.Gmc;
 import com.App.PatientHealth.domain.User;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.PasswordResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("rest/validate")
@@ -25,7 +27,7 @@ public class RestValidate {
     @Autowired
     UserDetailsServiceImpl userServices;
 
-    @PostMapping(value = "/name", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/name", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public JsonResponse validateName(@RequestBody Map<String,String> request) {
         JsonResponse res = new JsonResponse();
         String name = request.get("name");
@@ -39,7 +41,7 @@ public class RestValidate {
         return res;
     }
 
-    @PostMapping(value = "/username", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/username", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public JsonResponse validateUsername(@RequestBody  Map<String,String> request) {
         JsonResponse res = new JsonResponse();
         String username = request.get("username");
@@ -61,7 +63,7 @@ public class RestValidate {
         return res;
     }
 
-    @PostMapping(value = "/email", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/email", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public JsonResponse validateEmail(@RequestBody  Map<String,String> request) {
         //create response object
         JsonResponse res = new JsonResponse();
@@ -101,7 +103,7 @@ public class RestValidate {
         return res;
     }
 
-    @PostMapping(value = "/password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public PasswordResponse validatePassword(@RequestBody  Map<String,String> request) {
         PasswordResponse res = new PasswordResponse();
         String password1 = request.get("password1");
@@ -113,14 +115,13 @@ public class RestValidate {
             return res;
         }
         //Password
-		
 		//Password Error messages
-		String passwordsMatch;
-		String passwordLength;
-		String specialCharacters;
-		String containsNumber;
-		String containsUppercase;
-		String containsLowercase;
+		String passwordsMatch = null;
+		String passwordLength = null;
+		String specialCharacters = null;
+		String containsNumber = null;
+		String containsUppercase = null;
+		String containsLowercase = null;
 
         //Password Regex rules
 		String spec = "[^a-z0-9]";
@@ -165,7 +166,42 @@ public class RestValidate {
 			containsLowercase = "- must contain a lowercased (common) letter";
             res.setContainsLowercase(containsLowercase);
 		}
+
+        if(passwordsMatch == null && passwordLength == null && specialCharacters == null
+        && containsNumber == null && containsUppercase == null && containsLowercase == null) {
+            res.setSuccess(true);
+        }
         
         return res;
+    }
+
+
+    @PostMapping(value = "/gmcNum")
+    public JsonResponse validateGmc(@RequestBody Map<String,String> request) {
+        JsonResponse res = new JsonResponse();
+        Double gmcNum = null;
+        try {
+            gmcNum = Double.parseDouble(request.get("gmcNum"));
+        } catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage("Please enter a valid number");
+            return res;
+        }
+        
+        Gmc gmcCheck = userServices.getGRepo().findByGmcNum(gmcNum);
+        
+        if (gmcCheck != null && gmcCheck.getUsed() == true) {
+            res.setSuccess(false);
+            res.setMessage("GMC number is already in use.");
+        } 
+        else if (gmcCheck == null){
+            res.setSuccess(false);
+            res.setMessage("GMC number is invalid");
+        }
+        else if (gmcCheck != null && gmcCheck.getUsed() == false) {
+            res.setSuccess(true);
+        }
+        return res;
+        
     }
 }

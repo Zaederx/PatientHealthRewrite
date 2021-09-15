@@ -6,8 +6,8 @@ import com.App.PatientHealth.domain.Patient;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface PatientRespository extends CrudRepository<Patient,Integer>{
-    List<Patient> findByFname(String fname);
-    List<Patient> findByLname(String lname);
+public interface PatientRespository extends CrudRepository<Patient,Integer> {
+    Patient findByUsername(String username);
+    List<Patient> findByName(String name);
     
 }

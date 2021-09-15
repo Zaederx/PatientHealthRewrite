@@ -8,7 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface DoctorRepository extends CrudRepository<Doctor,Integer>{
     
-    List<Doctor> findByFname(String fname);
-    List<Doctor> findByLname(String lname);
+    List<Doctor> findByName(String name);
     
 }

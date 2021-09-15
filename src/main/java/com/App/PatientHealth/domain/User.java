@@ -1,7 +1,5 @@
 package com.App.PatientHealth.domain;
 
-
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,34 +18,27 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int id;
     @Column
-    protected String fname;
-    @Column
-    protected String mnames;
-    @Column
-    protected String lname;
-    @Column
+    String name;
+    @Column(unique = true)
     protected String username;
     @Column
     protected String password;
-    @Column
+    @Column(unique = true)
     protected String email;
     @Column
     protected String role;
     @Transient
-    BCryptPasswordEncoder encoder;
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public User(){}
 
-    public User(String fname, String mnames, String lname, String username, String password, String email, String role) {
-        this.fname = fname;
-        this.mnames = mnames;
-        this.lname = lname;
+    public User(String name, String username, String password, String email, String role) {
+        this.name = name;
         this.username = username;
         this.password = encoder.encode(password);
         this.email = email;
         this.role = role;
     }
-
 
     public int getId() {
         return this.id;
@@ -56,29 +47,13 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getFname() {
-        return this.fname;
+    
+    public String getName() {
+        return name;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public String getMnames() {
-        return mnames;
-    }
-
-    public void setMnames(String mnames) {
-        this.mnames = mnames;
-    }
-
-    public String getLname() {
-        return this.lname;
-    }
-
-    public void setLname(String lname) {
-        this.lname = lname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUsername() {

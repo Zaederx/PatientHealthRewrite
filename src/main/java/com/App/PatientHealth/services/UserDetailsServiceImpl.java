@@ -10,13 +10,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+import com.App.PatientHealth.repository.AdminPaging;
 import com.App.PatientHealth.repository.AdminRepository;
+import com.App.PatientHealth.repository.DoctorPaging;
 import com.App.PatientHealth.repository.DoctorRepository;
+import com.App.PatientHealth.repository.GmcRepository;
+import com.App.PatientHealth.repository.PatientPaging;
 import com.App.PatientHealth.repository.PatientRespository;
+import com.App.PatientHealth.repository.UserPaging;
 import com.App.PatientHealth.repository.UserRepository;
 
-
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Autowired
@@ -31,26 +37,29 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     @Autowired
     AdminRepository aRepo;
 
+	@Autowired
+	UserPaging userPaging;
+
+	@Autowired
+	AdminPaging adminPaging;
+
+	@Autowired
+	DoctorPaging doctorPaging;
+
+	@Autowired
+	PatientPaging patientPaging;
+
+	@Autowired
+	GmcRepository gRepo;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("\n***************** LoadByUsername Called**************");
 		System.out.println(username);
-		String password = null;
+		// String password = null;
 		User u =  null;
 		u = userRepo.findByUsername(username);
 		
-		// OAuthUser oUser = null;
-		
-		// if (u == null) {
-		// 	oUser = oauthRepo.findOAuthUserByEmail(username);
-		// } else {
-		// 	password = u.getPassword();
-		// }
-		
-		// if (oUser != null) {
-		// 	u = oUser.getUser();
-		// 	password = encode("oauth");
-		// }
 		boolean enabled = true;
 		boolean accountNonExpired = true;
 		boolean credentialsNonExpired = true;
@@ -69,7 +78,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		 * that details submitted match these details that are being returned*/
 		return new org.springframework.security.core.userdetails.User(
 				u.getUsername(),
-				password,
+				u.getPassword(),
 				enabled, 
 				accountNonExpired,
 				credentialsNonExpired, 
@@ -95,5 +104,23 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         return this.aRepo;
     }
 
-    
+	public UserPaging getUserPaging() {
+		return userPaging;
+	}
+
+    public AdminPaging getAdminPaging() {
+		return adminPaging;
+	}
+
+	public DoctorPaging getDoctorPaging() {
+		return doctorPaging;
+	}
+
+	public PatientPaging getPatientPaging() {
+		return patientPaging;
+	}
+
+	public GmcRepository getGRepo() {
+		return gRepo;
+	}
 }

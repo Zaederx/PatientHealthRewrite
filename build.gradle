@@ -1,3 +1,4 @@
+import java.util.concurrent.TimeUnit;
 plugins {
 	id 'org.springframework.boot' version '2.5.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -14,6 +15,7 @@ repositories {
 
 dependencies {
 	implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.9'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -24,6 +26,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0-RC1'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
@@ -42,9 +45,7 @@ task compileSass() {
             .directory(projectDir)
             .command("npm", "run", "sass")
             .start();
-	doLast {
-		println "\u001B[32m"+"compileSass done!"
-	}
+	
 	ext.process.waitFor(5,TimeUnit.SECONDS);//wait for command to be executed
 	ext.process.destroy();
 	ext.process.waitFor(5,TimeUnit.SECONDS);//wait for destory to happen
@@ -56,6 +57,9 @@ task compileSass() {
 	// 	return "\u001B[32m"+standardOutput.toString();
 	// }
 	timeout = Duration.ofMinutes(1)
+	doLast {
+		println "\u001B[32m"+"compileSass done!"
+	}
 }
 //Calls npm to compile ts files into js files
 task compileTS() {
@@ -64,9 +68,7 @@ task compileTS() {
             .directory(projectDir)
             .command("npm", "run", "tsc")
             .start();
-	doLast { 
-		println "\u001B[32m"+"compileTS done!"
-	}
+	
 
 	ext.process.waitFor(5,TimeUnit.SECONDS);
 	ext.process.destroy();
@@ -79,6 +81,9 @@ task compileTS() {
 	// 	return "\u001B[32m"+standardOutput.toString();
 	// }
 	timeout = Duration.ofMinutes(1)
+	doLast { 
+		println "\u001B[32m"+"compileTS done!"
+	}
 }
 
 

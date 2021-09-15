@@ -5,7 +5,6 @@ package com.App.PatientHealth.config;
 import com.App.PatientHealth.services.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,11 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				
 			.and()
 				.authorizeRequests()
-				.antMatchers("/","/home","/resources/**", "/img/**.jpg").permitAll()
+				.antMatchers("/","/home","/resources/**", "/img/**.jpg","/js/**.js").permitAll()
 				.antMatchers("/h2-console/**").permitAll()//for viewing h2 console - would remove in real app senario
-				.antMatchers("/doctor/**","/doctor/rest/**").hasRole("DOCTOR")
-				.antMatchers("/patient/**","/patient/rest/**").hasRole("PATIENT")
-				.antMatchers("/admin/**","/admin/rest/**").hasRole("ADMIN")
+				.antMatchers("/doctor/**","/rest/doctor/**").hasRole("DOCTOR")
+				.antMatchers("/patient/**","/rest/patient/**").hasRole("PATIENT")
+				.antMatchers("/admin/**","/rest/**").hasRole("ADMIN")
 				.anyRequest().authenticated() // all request should be authenticated...
 				
 				
@@ -72,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					
 				.and().exceptionHandling().accessDeniedPage("/login-error") 
 //				.and().csrf().disable()
-				// same as error page so hackers can' tell whether there is a resource page at that request 
+				// same as error page so hackers can tell whether there is a resource page at that request 
 				.and().csrf().ignoringAntMatchers("/h2-console/**")
 				.and().headers().frameOptions().disable()//prevents h2-console frame problems
 		;

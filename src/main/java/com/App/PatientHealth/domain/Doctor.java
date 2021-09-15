@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.App.PatientHealth.requestObjects.DoctorRegForm;
+
 import java.util.List;
 
 @Entity
@@ -12,32 +14,27 @@ public class Doctor extends User {
     String specialisation;
     @OneToMany
     List<Patient> patients;
+    @Column
+    String gmcNum;
 
     public Doctor(){}
-    public Doctor(String fname, String mnames, String lname, String username, String password,String email,String specialisation) {
-        super(fname,lname,mnames,username,password,email, "DOCTOR");
+
+
+    public Doctor(DoctorRegForm d) {
+        super(d.getName(),d.getUsername(),
+        d.getPassword1(),d.getEmail(), "DOCTOR");
+        this.gmcNum = d.getGmcNum();
+    }
+
+    public Doctor(String name, String username, String password,String email,String specialisation) {
+        super(name,username,password,email, "DOCTOR");
         this.specialisation = specialisation;
     }
-    public Doctor(String fname, String mnames, String lname, String username, String password,String email,String specialisation, List<Patient> patients) {
-        super(fname,mnames,lname,username,password,email, "DOCTOR");
+
+    public Doctor(String name, String username, String password,String email,String specialisation, List<Patient> patients) {
+        super(name,username,password,email, "DOCTOR");
         this.specialisation = specialisation;
         this.patients = patients;
-    }
-
-    public String getFname() {
-        return this.fname;
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public String getLname() {
-        return this.lname;
-    }
-
-    public void setLname(String lname) {
-        this.lname = lname;
     }
 
     public String getSpecialisation() {
@@ -54,6 +51,14 @@ public class Doctor extends User {
 
     public void setPatients(List<Patient> patients) {
         this.patients = patients;
+    }
+
+    public String getGmcNum() {
+        return gmcNum;
+    }
+
+    public void setGmcNum(String gmcNum) {
+        this.gmcNum = gmcNum;
     }
 
 

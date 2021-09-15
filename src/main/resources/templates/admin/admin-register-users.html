@@ -32,7 +32,7 @@
 	<div>
 		<!-- Accordian (card container) -->	
 		<div id="accordion">
-			<!-- CARD 1 - Patient Registration -->
+			<!--SECTION CARD 1 - Patient Registration -->
 		<div class="card text-center">
 			<div class="card-header" id="headingOne">
 				<button class="username-error btn btn-link" data-toggle="collapse" data-target="#patientCollapse" aria-expanded="true" aria-controls="patientCollapse">
@@ -62,10 +62,10 @@
 					<!-- Toggle Password Visibility -->
 					<div class="btn-group" data-toggle="buttons">
 					<label class="btn btn-info">
-						<input type="radio" onfocus="togglePasswordVisibility(this);" name="patient-password-visibility" id="patient-show-password" autocomplete="off"> Show
+						<input type="radio" name="patient-password-visibility" id="patient-show-password" autocomplete="off"> Show
 					</label>
 					<label class="btn btn-secondary active">
-						<input type="radio" onfocus="togglePasswordVisibility(this);" name="patient-password-visibility" id="patient-hide-password" autocomplete="off" checked> Hide
+						<input type="radio" name="patient-password-visibility" id="patient-hide-password" autocomplete="off" checked> Hide
 					</label>
 					</div><br>
 					
@@ -73,7 +73,7 @@
 					<label for="patient-password1">Password</label>
 					<input id= "patient-password1" class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
 					pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
-					<div id="patient-password1-error" th:error="*{password1}"></div>
+					<div id="patient-password-error" th:error="*{password1}"></div>
 					<br>
 					<!-- Repeat Password -->
 					<label for="patient-password2">Repeat Password</label>
@@ -88,7 +88,7 @@
 			</div>
 		</div>
 
-		<!-- CARD 2 - Doctor Registration  -->
+		<!--SECTION CARD 2 - Doctor Registration  -->
 		<div class="card text-center">
 			<div class="card-header" id="headingTwo">
 				<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#doctorCollapse" aria-expanded="false" aria-controls="doctorCollapse">
@@ -105,8 +105,8 @@
 						<br>
 						
 						<label>GMC Reference Number</label><!--General Medical Council Number - Each doctor in UK is meant to have one  -->
-						<input id="doctor-gmc" class="form-control text-center" type="text" th:field="*{gmcNum}" placeholder="3494984098345" autocomplete="off"></input>
-						<div id="doctor-gmc-error"></div>
+						<input id="doctor-gmcNum" class="form-control text-center" type="text" th:field="*{gmcNum}" placeholder="3494984098345" autocomplete="off"></input>
+						<div id="doctor-gmcNum-error"></div>
 						<br>
 						
 						<label>Username</label>
@@ -119,24 +119,24 @@
 						<div id="doctor-email-error"></div>
 						<br><br>
 						
-						<!-- IMPORTANT - PASSWORD TOGGLE FUNCTIONALITY -->
+						<!-- PASSWORD TOGGLE FUNCTIONALITY -->
 						<div class="btn-group" data-toggle="buttons">
 						<label class="btn btn-info">
-							<input type="radio" onfocus="togglePasswordVisibility(this);" name="doctor-password-visibility" id="doctor-show-password" autocomplete="off"> Show
+							<input type="radio" name="doctor-password-visibility" id="doctor-show-password" autocomplete="off"> Show
 						</label>
 						<label class="btn btn-secondary">
-							<input type="radio" onfocus="togglePasswordVisibility(this);" name="doctor-password-visibility" id="doctor-hide-password" autocomplete="off" checked> Hide
+							<input type="radio" name="doctor-password-visibility" id="doctor-hide-password" autocomplete="off" checked> Hide
 						</label>
 						</div><br>
 					
 						<label>Password</label>
-						<input id="doctor-password" class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
+						<input id="doctor-password1" class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
 						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
 						<div id="doctor-password-error"></div>
 						<br>
 						
-						<label for="doctor-passwordTwo">Repeat Password</label>
-						<input id="doctor-passwordTwo" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+						<label for="doctor-password2">Repeat Password</label>
+						<input id="doctor-password2" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
 						
 						<br>
 						<button id="reg-btn-doctor" class="btn btn-primary" type="submit">Register</button>
@@ -146,10 +146,10 @@
 			</div>
 		</div>
 
-		<!-- CARD 3 - Admin Registration -->
+		<!--SECTION CARD 3 - Admin Registration -->
 		<div class="card text-center">
 			<div class="card-header text-center" id="headingThree">
-				<button onclick="setRegBtn('#reg-btn-admin');" class="btn btn-link collapsed" data-toggle="collapse" data-target="#adminCollapse" aria-expanded="false" aria-controls="adminCollapse">
+				<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#adminCollapse" aria-expanded="false" aria-controls="adminCollapse">
 				Admin
 				</button>
 			</div>
@@ -162,27 +162,27 @@
 						<div id="admin-name-error"></div>
 						
 						<label>Username</label>
-						<input id="admin-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Enstein92" autocomplete="off"></input>
+						<input id="admin-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Einstein92" autocomplete="off"></input>
 						<div id="admin-username-error"></div>
 						<br><br>
 						
 						<div class="btn-group" data-toggle="buttons">
 						<label class="btn btn-info">
-							<input type="radio" onfocus="togglePasswordVisibility(this);" name="admin-password-visibility" id="admin-show-password" autocomplete="off"> Show
+							<input type="radio" name="admin-password-visibility" id="admin-show-password" autocomplete="off"> Show
 						</label>
 						<label class="btn btn-secondary">
-							<input type="radio" onfocus="togglePasswordVisibility(this);" name="admin-password-visibility" id="admin-hide-password" autocomplete="off" checked> Hide
+							<input type="radio" name="admin-password-visibility" id="admin-hide-password" autocomplete="off" checked> Hide
 						</label>
 						</div><br>
 						
 						<label>Password</label>
-						<input id="admin-password"class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
+						<input id="admin-password1"class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
 						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
 						<div id="admin-password-error"></div>
 						<br>
 
-						<label for="admin-passwordTwo">Repeat Password</label>
-						<input id="admin-passwordTwo" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+						<label for="admin-password2">Repeat Password</label>
+						<input id="admin-password2" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
 						<br>
 						<button id="reg-btn-admin" class="btn btn-primary" type="submit">Register</button>
 					</form>
