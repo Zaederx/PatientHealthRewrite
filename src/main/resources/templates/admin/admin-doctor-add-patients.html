@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta th:name="_csrf" th:content="${_csrf.token}"/>
   
+  <script type="text/javascript" th:src="@{/js/admin-doctor-add-patients.js}" defer></script>
   <!-- <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script> -->
   <!-- CSS -->
    <link rel="stylesheet" type="text/css" th:href="@{/css/app-css.css}">
@@ -20,6 +21,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <!--FontAwesome-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
   <title>Admin - Manage Doctor Patients</title>
 </head>
 
@@ -50,7 +52,8 @@
 	    			<tbody class="highlight-table-body-row" id="doctor-search-table-body">
 	    			<!-- Fill via ajax method -->
 	    			</tbody>
-	    		</table>
+					<div id="doctor-table-buttons"></div>
+	    </table>
 	    </div>
     	<div class="row">
     	
