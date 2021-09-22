@@ -6,14 +6,14 @@ import java.util.List;
 import com.App.PatientHealth.domain.Doctor;
 
 public class DoctorJson extends UserJson {
-    
+    String specialisation;
     List<PatientJson> patientJsons;
 
     public DoctorJson() {}
     public DoctorJson(Doctor d) {
-        id = d.getId();
-        this.name = d.getName();
+        super(d);
         patientJsons = patientJsons(d);
+        this.specialisation = d.getSpecialisation();
     }
 
     public List<PatientJson> patientJsons(Doctor d) {
