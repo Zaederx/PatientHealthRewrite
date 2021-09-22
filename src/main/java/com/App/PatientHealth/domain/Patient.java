@@ -23,7 +23,7 @@ public class Patient extends User {
 
     public Patient(PatientRegForm p) {
         super(p.getName(),p.getUsername(),
-        p.getPassword1(), p.getEmail(), "PATIENT");
+        p.getPassword(), p.getEmail(), "PATIENT");
     }
 
     public Patient(String name, String username, String password, String email) {
