@@ -16,19 +16,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("rest/patient")
-@Controller
+@RestController
 public class PatientRest {
+
+    
     
     @Autowired
     UserDetailsServiceImpl userServices;
+    
+    public PatientRest(UserDetailsServiceImpl userServices) {
+        this.userServices = userServices;
+    }
 
     public PatientListResponse getPatient() {
         PatientListResponse res = new PatientListResponse();
@@ -48,14 +55,17 @@ public class PatientRest {
         return res;
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public JsonResponse createPatient(@RequestBody PatientRegForm form) {
         //create response object
         JsonResponse res = new JsonResponse();
         //check is user with that username already exists
-        User u = userServices.getUserRepo().findByUsername(form.getUsername());
+        User u = userServices
+        .getUserRepo()
+        .findByUsername(
+            form.getUsername());
         //save user if no user exists with that username
-        if (u != null) {
+        if (u == null) {
             Patient patient = new Patient(form);
             try {
                 userServices.getPRepo().save(patient);
