@@ -1,10 +1,7 @@
 package com.App.PatientHealth.controllers.rest;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.App.PatientHealth.domain.Gmc;
 import com.App.PatientHealth.domain.User;
@@ -14,11 +11,11 @@ import com.App.PatientHealth.services.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.ModelAttribute;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("rest/validate")
