@@ -22,7 +22,7 @@ public class Doctor extends User {
 
     public Doctor(DoctorRegForm d) {
         super(d.getName(),d.getUsername(),
-        d.getPassword1(),d.getEmail(), "DOCTOR");
+        d.getPassword(),d.getEmail(), "DOCTOR");
         this.gmcNum = d.getGmcNum();
     }
 
