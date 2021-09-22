@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/h2-console/**").permitAll()//for viewing h2 console - would remove in real app senario
 				.antMatchers("/doctor/**","/rest/doctor/**").hasRole("DOCTOR")
 				.antMatchers("/patient/**","/rest/patient/**").hasRole("PATIENT")
-				.antMatchers("/admin/**","/rest/**").hasRole("ADMIN")
+				.antMatchers("/admin/**","/rest/**", "/rest/doctor/**","/rest/patient/**").hasRole("ADMIN")
 				.anyRequest().authenticated() // all request should be authenticated...
 				
 				
@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.passwordParameter("password")
 				.usernameParameter("username")
 				.loginPage("/login") // for custom page - later on
-				.defaultSuccessUrl("/", true)
+				.defaultSuccessUrl("/?loginSuccess", true)
 				.loginProcessingUrl("/authenticateUser") //for custom Processing
 				.permitAll()	//...except default Spring Login page
 				
