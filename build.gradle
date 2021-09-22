@@ -27,12 +27,19 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0-RC1'
+	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
 	useJUnitPlatform()
+	//show tests info in standard output
+	testLogging.showStandardStreams = true
+	//show testLogging
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
 
 
