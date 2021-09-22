@@ -10,16 +10,14 @@ import com.App.PatientHealth.domain.Patient;
  * Converted by Jackson to JSON when
  * returned by REST controller to client.
  */
-public class PatientJson {
-    Integer id;
-    String name;
+public class PatientJson extends UserJson {
+
     String doctorName;
     List<String> medicationNames;
     public PatientJson(){}
 
     public PatientJson(Patient p){
-        this.id = p.getId();
-        this.name = p.getName();
+        super(p);
         this.doctorName = p.getDoctor().getName();
         this.medicationNames =  medicationNames(p);
     }
