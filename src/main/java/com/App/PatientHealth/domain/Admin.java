@@ -12,7 +12,7 @@ public class Admin extends User {
 
 
     public Admin(AdminRegForm a) {
-        super(a.getName(),a.getUsername(),a.getPassword1(),a.getEmail(),"ADMIN");
+        super(a.getName(),a.getUsername(),a.getPassword(),a.getEmail(),"ADMIN");
     }
     // public Admin(AdminRegForm a) {
     //     super(a.getFirstname(),a.getMiddlename(),a.getLastname(),a.getUsername(),
