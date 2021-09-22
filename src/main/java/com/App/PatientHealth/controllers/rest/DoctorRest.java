@@ -17,30 +17,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 
  */
 @RequestMapping("rest/doctor")
-@Controller
+@RestController
 public class DoctorRest {
     @Autowired
     UserDetailsServiceImpl userServices;
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public JsonResponse createPatient(@RequestBody DoctorRegForm form) {
         //create response object
         JsonResponse res = new JsonResponse();
         //check is user with that username already exists
         User u = userServices.getUserRepo().findByUsername(form.getUsername());
         //save user if no user exists with that username
-        if (u != null) {
+        if (u == null) {
             Doctor doctor = new Doctor(form);
             try {
                 userServices.getDocRepo().save(doctor);
@@ -56,13 +57,6 @@ public class DoctorRest {
         return res;
     }
 
-    @GetMapping("/doctor-jsons")
-    public List<DoctorJson> getDoctJsons() {
-        Iterable<Doctor> doctors = userServices.getDocRepo().findAll();
-        List<DoctorJson> dJson = new ArrayList<DoctorJson>();
-        doctors.forEach( d -> dJson.add(new DoctorJson(d)));
-        return dJson;
-    }
 
     @GetMapping("{doctorId}")
     public DoctorListResponse getDoctorById(@RequestParam Integer doctorId) {
@@ -81,6 +75,7 @@ public class DoctorRest {
         return res;
     }
 
+    //read doctor's patient info
     @GetMapping("{doctorId}/patients")
     public List<PatientJson> getPatientJsons(@RequestParam Integer doctorId) {
         //retrieve doctor
@@ -100,23 +95,11 @@ public class DoctorRest {
     }
 
 
-    //read doctor's patients
-    @GetMapping("doctor/{doctorId}")
-    public JsonResponse doctor(@RequestParam Integer doctorId) {
-        DoctorListResponse res = new DoctorListResponse();
-        Optional<Doctor> d = userServices.getDocRepo().findById(doctorId);
-        if(d.isPresent()) {
-            res.getDoctorJson().add(new DoctorJson(d.get()));
-            res.setSuccess(true);
-        }
-        return res;
-    }
-
-    //get doctor - by firstname
+    //get doctors - pagination method - by firstname
     @GetMapping("get-doctor/name/{name}/{pageNum}")
-    public JsonResponse findDoctorByFirstname(@RequestParam String name,@RequestParam Integer pageNum) {
+    public JsonResponse findDoctorByFirstname(@RequestParam String name, @RequestParam(defaultValue = "1") String pageNum) {
          //set page number and return up to 10 elements
-         Pageable page = PageRequest.of(pageNum, 10);
+         Pageable page = PageRequest.of(Integer.parseInt(pageNum), 10);
          //get list of users from that page
          Page<Doctor> uList = userServices.getDoctorPaging().findAllByName(name, page);
          //set response object with users
