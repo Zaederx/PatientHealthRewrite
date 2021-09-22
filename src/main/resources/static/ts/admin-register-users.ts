@@ -162,18 +162,29 @@ $('#reg-btn-patient').on('click', ()=> postPatient())
 
 /** Patient Registration */
 function postPatient() {
-    var pName = $('#patient-name').val()
-    var pUsername = $('#patient-username').val()
-    var pEmail = $('#patient-email').val()
-    var pPassword = $('#patient-password').val()
-    var pRepeat = $('#patient-password2').val()
+    var name = $('#patient-name').val()
+    var username = $('#patient-username').val()
+    var email = $('#patient-email').val()
+    var password = $('#patient-password1').val()
+    // var pRepeat = $('#patient-password2').val()
 
-    var patient = {pName,pUsername,pEmail,pPassword,pRepeat}
+    var patient = {name, username, email, password}
     $.ajax({
         url: "/rest/patient/create",
         type: "POST",
-        data: patient,
-        headers: {'X-CSRF-TOKEN':csrfToken}
+        data: JSON.stringify(patient),
+        contentType:"application/json",
+        dataType:"json",
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data:JsonResponse) => {
+            if(data.success) {
+                $('#message').html(message(data.message))
+                $('#message').show()
+            }
+            else {
+                $('#message').hide()
+            }
+        }
     })
 }
 
@@ -283,6 +294,7 @@ $('#doctor-password2').on('input', function () {
         success: (data) => handlePasswordSuccess(data,'#doctor-password-error', 'dPasswordValid', enableDoctorRegBtn, disableDoctorRegBtn)
     })
 })
+
 //post doctor registration form
 function postDoctor() {
     var dName = $('#doctor-name').val()
@@ -299,7 +311,16 @@ function postDoctor() {
         data: JSON.stringify(doctor),
         contentType: "application/json",
         dataType: "json",
-        headers: {'X-CSRF-TOKEN':csrfToken}
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data:JsonResponse) => {
+            if(data.success) {
+                $('#message').html(message(data.message))
+                $('#message').show()
+            }
+            else {
+                $('#message').hide()
+            }
+        }
     })
 }
 
@@ -415,12 +436,13 @@ function postAdmin() {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: function(data) {
-            if(data.success == false) {
-				$('#admin-message').html(message(data.message));
-			} 
+        success: (data:JsonResponse) => {
+            if(data.success) {
+                $('#message').html(message(data.message))
+                $('#message').show()
+            }
             else {
-                $('#admin-message').html(message(data.message));
+                $('#message').hide()
             }
         }
     })
