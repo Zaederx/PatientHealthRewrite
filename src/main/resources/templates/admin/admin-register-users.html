@@ -29,6 +29,9 @@
   </div>
 	<div class="alert alert-info" th:if=${param.success} th:text="${param.success}">
 	</div>
+	<div id="message">
+
+	</div>
 	<div>
 		<!-- Accordian (card container) -->	
 		<div id="accordion">
@@ -42,20 +45,20 @@
 			<div id="patientCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 			<div class="card-body">
 			<div class="container d-flex flex-sm-column col-sm-8 justify-content-center">
-				<form class="form-group" action="#" th:action="@{/admin/register-patient}" th:object="${patientRegForm}" method="POST">
+				<form class="form-group" action="#">
 					<!-- Name -->
 					<label for="patient-name">Name</label>
-					<input id="patient-name" class="form-control text-center" type="text" th:field="*{name}" placeholder="Henry Thompson" autocomplete="off"></input>
+					<input id="patient-name" class="form-control text-center" type="text" placeholder="Henry Thompson" autocomplete="off"></input>
 					<div id="patient-name-error"></div>
 
 					<!-- Username -->
 					<label for="patient-username">Username</label>
-					<input id="patient-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Einstein92" autocomplete="off"></input>
+					<input id="patient-username" class="form-control text-center" type="text" placeholder="Einstein92" autocomplete="off"></input>
 					<div id="patient-username-error"></div>
 					
 					<!-- Email -->
 					<label for="patient-email">Email</label>
-					<input id="patient-email" class="form-control text-center" type="text"  th:field="*{email}" placeholder="email@email.com" autocomplete="off"></input>
+					<input id="patient-email" class="form-control text-center" type="text"  placeholder="email@email.com" autocomplete="off"></input>
 					<div id="patient-email-error"></div>
 					<br><br>
 					
@@ -71,24 +74,25 @@
 					
 					<!-- Password -->
 					<label for="patient-password1">Password</label>
-					<input id= "patient-password1" class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
+					<input id= "patient-password1" class="form-control text-center" type="password"  placeholder="SomeThingICanRemeber!56" 
 					pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
 					<div id="patient-password-error" th:error="*{password1}"></div>
 					<br>
 					<!-- Repeat Password -->
 					<label for="patient-password2">Repeat Password</label>
-					<input id="patient-password2" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+					<input id="patient-password2" class="form-control text-center" type="password"  placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
 					<br>
 
-					<!-- Register Button -->
-					<button id="reg-btn-patient" class="btn btn-primary" type="submit">Register</button>
+					
 				</form>
+				<!-- Register Button -->
+				<button id="reg-btn-patient" class="btn btn-primary">Register</button>
 			</div>
 			</div>
 			</div>
 		</div>
 
-		<!--SECTION CARD 2 - Doctor Registration  -->
+		<!-- SECTION CARD 2 - Doctor Registration  -->
 		<div class="card text-center">
 			<div class="card-header" id="headingTwo">
 				<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#doctorCollapse" aria-expanded="false" aria-controls="doctorCollapse">
@@ -98,24 +102,24 @@
 			<div id="doctorCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 			<div class="card-body">
 				<div class="container d-flex flex-sm-column col-sm-8 justify-content-center">
-					<form class="form-group" action="#" th:action="@{/admin/register-doctor}" th:object="${doctorRegForm}" method="POST">
+					<form class="form-group" action="#">
 						<label>Name</label>
-						<input id="doctor-name"class="form-control text-center" type="text" th:field="*{name}" placeholder="Henry Thompson" pattern="{1,}" title="This field cannot be empty" autocomplete="off"></input>
+						<input id="doctor-name"class="form-control text-center" type="text"  placeholder="Henry Thompson" pattern="{1,}" title="This field cannot be empty" autocomplete="off"></input>
 						<div id="doctor-name-error"></div>
 						<br>
 						
 						<label>GMC Reference Number</label><!--General Medical Council Number - Each doctor in UK is meant to have one  -->
-						<input id="doctor-gmcNum" class="form-control text-center" type="text" th:field="*{gmcNum}" placeholder="3494984098345" autocomplete="off"></input>
+						<input id="doctor-gmcNum" class="form-control text-center" type="text"  placeholder="3494984098345" autocomplete="off"></input>
 						<div id="doctor-gmcNum-error"></div>
 						<br>
 						
 						<label>Username</label>
-						<input id="doctor-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Enstein92" autocomplete="off"></input>
+						<input id="doctor-username" class="form-control text-center" type="text"  placeholder="Enstein92" autocomplete="off"></input>
 						<div id="doctor-username-error"></div>
 						<br>
 						
 						<label for="doctor-email">Email</label>
-						<input id="doctor-email" class="form-control text-center" type="text"  th:field="*{email}" placeholder="email@email.com" autocomplete="off"></input>
+						<input id="doctor-email" class="form-control text-center" type="text"   placeholder="email@email.com" autocomplete="off"></input>
 						<div id="doctor-email-error"></div>
 						<br><br>
 						
@@ -130,17 +134,18 @@
 						</div><br>
 					
 						<label>Password</label>
-						<input id="doctor-password1" class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
+						<input id="doctor-password1" class="form-control text-center" type="password"  placeholder="SomeThingICanRemeber!56" 
 						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
 						<div id="doctor-password-error"></div>
 						<br>
 						
 						<label for="doctor-password2">Repeat Password</label>
-						<input id="doctor-password2" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+						<input id="doctor-password2" class="form-control text-center" type="password" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
 						
 						<br>
-						<button id="reg-btn-doctor" class="btn btn-primary" type="submit">Register</button>
+						
 					</form>
+					<button id="reg-btn-doctor" class="btn btn-primary" type="submit">Register</button>
 				</div>
 			</div>
 			</div>
@@ -156,13 +161,13 @@
 			<div id="adminCollapse" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 			<div class="card-body">
 				<div class="container d-flex flex-sm-column col-sm-8 justify-content-center">
-					<form class="form-group" action="#" th:action="@{/admin/register-admin}" th:object="${adminRegForm}" method="POST">
+					<form class="form-group" action="#">
 						<label>Name</label>
-						<input id="admin-name" class="form-control text-center" type="text" th:field="*{name}" placeholder="Henry Thompson" pattern="{1,}" title="This field cannot be empty" autocomplete="off"></input>
+						<input id="admin-name" class="form-control text-center" type="text" placeholder="Henry Thompson" pattern="{1,}" title="This field cannot be empty" autocomplete="off"></input>
 						<div id="admin-name-error"></div>
 						
 						<label>Username</label>
-						<input id="admin-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Einstein92" autocomplete="off"></input>
+						<input id="admin-username" class="form-control text-center" type="text"  placeholder="Einstein92" autocomplete="off"></input>
 						<div id="admin-username-error"></div>
 						<br><br>
 						
@@ -176,16 +181,17 @@
 						</div><br>
 						
 						<label>Password</label>
-						<input id="admin-password1"class="form-control text-center" type="password" th:field="*{password1}" placeholder="SomeThingICanRemeber!56" 
+						<input id="admin-password1"class="form-control text-center" type="password"  placeholder="SomeThingICanRemeber!56" 
 						pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
 						<div id="admin-password-error"></div>
 						<br>
 
 						<label for="admin-password2">Repeat Password</label>
-						<input id="admin-password2" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+						<input id="admin-password2" class="form-control text-center" type="password" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
 						<br>
-						<button id="reg-btn-admin" class="btn btn-primary" type="submit">Register</button>
+						
 					</form>
+					<button id="reg-btn-admin" class="btn btn-primary" type="submit">Register</button>
 				</div>
 			</div>
 			</div>
