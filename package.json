@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "sass": "sass src/main/resources/static/sass:src/main/resources/static/css",
+    "sass": "sass src/main/resources/static/scss:src/main/resources/static/css",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Zachary Ishmael",
   "license": "ISC",
   "devDependencies": {
-    "@types/jquery": "^3.5.6"
+    "@types/jquery": "^3.5.6",
+    "sass": "^1.42.1",
+    "typescript": "^4.4.3"
   }
 }
