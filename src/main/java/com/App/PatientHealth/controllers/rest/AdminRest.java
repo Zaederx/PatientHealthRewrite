@@ -41,12 +41,12 @@ public class AdminRest {
         //create response object
         JsonResponse res = new JsonResponse();
         //check is user with that username already exists
-        User u = userServices.getUserRepo().findByUsername(form.getUsername());
+        User u = userServices.getUserPaging().findByUsername(form.getUsername());
         //save user if no user exists with that username
         if (u == null) {
             Admin admin = new Admin(form);
             try {
-                userServices.getARepo().save(admin);
+                userServices.getAdminPaging().save(admin);
                 res.setMessage("Successfully registered admin.");
                 res.setSuccess(true);
             }
@@ -62,7 +62,7 @@ public class AdminRest {
     @GetMapping("/all")
     public AdminListResponse getAdmin() {
         AdminListResponse res = new AdminListResponse();
-        Iterable<Admin> admin = userServices.getARepo().findAll();
+        Iterable<Admin> admin = userServices.getAdminPaging().findAll();
 
         List<AdminJson> aJson = new ArrayList<AdminJson>();
         admin.forEach( a -> 
@@ -77,7 +77,7 @@ public class AdminRest {
         //create response object
         AdminListResponse res = new AdminListResponse();
 
-        Optional<Admin> adminOpt = userServices.getARepo().findById(adminId);
+        Optional<Admin> adminOpt = userServices.getAdminPaging().findById(adminId);
 
         List<AdminJson> aJsons = new ArrayList<AdminJson>();
         if (adminOpt.isPresent()) {
@@ -96,7 +96,7 @@ public class AdminRest {
         //create response object
         PatientListResponse res = new PatientListResponse();
         //get patient
-        Optional<Patient> p = userServices.getPRepo().findById(patientId);
+        Optional<Patient> p = userServices.getPatientPaging().findById(patientId);
         //if patient is present - add to response
         if(p.isPresent()) {
             res.getPatientJson().add(new PatientJson(p.get()));

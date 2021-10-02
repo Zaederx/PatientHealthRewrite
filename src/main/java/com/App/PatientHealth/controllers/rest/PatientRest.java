@@ -43,7 +43,7 @@ public class PatientRest {
         List<PatientJson> pJson = new ArrayList<PatientJson>();
 
         //Get iterable patients
-        Iterable<Patient> patients = userServices.getPRepo().findAll();
+        Iterable<Patient> patients = userServices.getPatientPaging().findAll();
 
         //add JSON of each patient to pJson
         patients.forEach( p -> 
@@ -61,14 +61,14 @@ public class PatientRest {
         JsonResponse res = new JsonResponse();
         //check is user with that username already exists
         User u = userServices
-        .getUserRepo()
+        .getUserPaging()
         .findByUsername(
             form.getUsername());
         //save user if no user exists with that username
         if (u == null) {
             Patient patient = new Patient(form);
             try {
-                userServices.getPRepo().save(patient);
+                userServices.getPatientPaging().save(patient);
                 res.setMessage("Successfully registered patient.");
                 res.setSuccess(true);
             }
@@ -86,7 +86,7 @@ public class PatientRest {
     @GetMapping("{patientId}")
     public PatientListResponse getPatientById(@RequestParam Integer patientId) {
         PatientListResponse res = new PatientListResponse();
-        Optional<Patient> patientOpt = userServices.getPRepo().findById(patientId);
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(patientId);
         if (patientOpt.isPresent()) {
             Patient p = patientOpt.get();
             res.getPatientJson().add(new PatientJson(p));
@@ -118,7 +118,7 @@ public class PatientRest {
     //read user by username
     @GetMapping("get-patient/username/{username}")
     public JsonResponse findPatientByUsername(@RequestParam String username) {
-        Patient u = userServices.getPRepo().findByUsername(username);
+        Patient u = userServices.getPatientPaging().findByUsername(username);
         PatientListResponse res = new PatientListResponse();
         res.getPatientJson().add(new PatientJson(u));
         return res;

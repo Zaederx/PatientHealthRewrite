@@ -30,7 +30,7 @@ public class AdminViewController {
 
     @GetMapping("/doctor/manage-patients")
     public String manageDoctors() {
-        return "admin-doctor-add-patients";
+        return "admin/admin-doctor-add-patients";
     }
 
 }

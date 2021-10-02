@@ -45,7 +45,7 @@ public class UserRest {
         if(request.get("usertype") == "admin") {
             Admin admin = new Admin(name,username,password,email);
             try {
-                userServices.getARepo().save(admin);
+                userServices.getAdminPaging().save(admin);
             }
             catch (Exception e) {
                 message = "Adding admin unsucessful";
@@ -57,7 +57,7 @@ public class UserRest {
             String specialty = request.get("specialty");
             Doctor doctor = new Doctor(name,username,password,email,specialty);
             try {
-                userServices.getDocRepo().save(doctor);
+                userServices.getDoctorPaging().save(doctor);
             }
             catch (Exception e) {
                 message = "Adding doctor unsucessful";
@@ -65,9 +65,9 @@ public class UserRest {
         }
         //if patient
         else if(request.get("usertype") == "patient") {
-            Patient patient = new Patient(name,username,password,email);
+            Patient patient = new Patient(name,username,password,email,"10/11/1995");
             try {
-                userServices.getPRepo().save(patient);
+                userServices.getPatientPaging().save(patient);
             }
             catch (Exception e) {
                 message = "Saving user unsuccessful";
@@ -97,7 +97,7 @@ public class UserRest {
     //read user by username
     @GetMapping("get-user/username/{username}")
     public JsonResponse findUserByUsername(@RequestParam String username) {
-        User u = userServices.getUserRepo().findByUsername(username);
+        User u = userServices.getUserPaging().findByUsername(username);
         UserListResponse res = new UserListResponse();
         res.getUserJson().add(new UserJson(u));
         return res;

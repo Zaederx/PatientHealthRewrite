@@ -2,7 +2,7 @@ package com.App.PatientHealth;
 
 import com.App.PatientHealth.controllers.rest.PatientRest;
 import com.App.PatientHealth.domain.Patient;
-import com.App.PatientHealth.repository.PatientRespository;
+import com.App.PatientHealth.repository.PatientPagingRepository;
 import com.App.PatientHealth.requestObjects.PatientRegForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.services.UserDetailsServiceImpl;
@@ -30,7 +30,7 @@ public class PatientRestTest {
     UserDetailsServiceImpl userServices;
 
     @Mock
-    PatientRespository pRepo;
+    PatientPagingRepository pRepo;
 
     
     PatientRegForm form = new PatientRegForm();
@@ -38,23 +38,23 @@ public class PatientRestTest {
     @InjectMocks
     PatientRest restController;
 
-    Patient p = new Patient("name","username", "password", "email@email.com");
+    Patient p = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
 
     @BeforeEach
     void setup() {
         given(userServices
-        .getPRepo())
+        .getPatientPaging())
         .willReturn(pRepo);
 
         given(pRepo
         .findByUsername("username"))
         .willReturn(p);
         
-        given(userServices.getPRepo().findByUsername("username")).willReturn(p);
+        given(userServices.getPatientPaging().findByUsername("username")).willReturn(p);
     }
     @Test
     void testMocks() {
-        Patient pTest = userServices.getPRepo().findByUsername("username");
+        Patient pTest = userServices.getPatientPaging().findByUsername("username");
         assertThat(pTest.getUsername(), is("username"));
     }
 

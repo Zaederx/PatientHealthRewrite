@@ -34,25 +34,25 @@ public class PatientHealthApplication implements CommandLineRunner{
 
 		Admin a3 = new Admin("a3", "a3", "password", "email3@email.com");
 
-		userServices.getARepo().save(a1);
-		userServices.getARepo().save(a2);
-		userServices.getARepo().save(a3);
+		userServices.getAdminPaging().save(a1);
+		userServices.getAdminPaging().save(a2);
+		userServices.getAdminPaging().save(a3);
 
-		Patient p1 = new Patient("p1", "p1", "password", "emailp1@email.com");
+		Patient p1 = new Patient("p1", "p1", "password", "emailp1@email.com", "10/11/1995");
 
-		Patient p2 = new Patient("p2", "p2", "password", "emailp2@email.com");
+		Patient p2 = new Patient("p2", "p2", "password", "emailp2@email.com", "10/11/1995");
 
-		Patient p3 = new Patient("p3", "p3", "password", "emailp3@email.com");
+		Patient p3 = new Patient("p3", "p3", "password", "emailp3@email.com", "10/11/1995");
 
-		Patient p4 = new Patient("p4", "p4", "password", "emailp4@email.com");
+		Patient p4 = new Patient("p4", "p4", "password", "emailp4@email.com", "10/11/1995");
 
-		Patient p5 = new Patient("p5", "p5", "password", "emailp5@email.com");
+		Patient p5 = new Patient("p5", "p5", "password", "emailp5@email.com", "10/11/1995");
 
-		userServices.getPRepo().save(p1);
-		userServices.getPRepo().save(p2);
-		userServices.getPRepo().save(p3);
-		userServices.getPRepo().save(p4);
-		userServices.getPRepo().save(p5);
+		userServices.getPatientPaging().save(p1);
+		userServices.getPatientPaging().save(p2);
+		userServices.getPatientPaging().save(p3);
+		userServices.getPatientPaging().save(p4);
+		userServices.getPatientPaging().save(p5);
 
 
 		Doctor d1 = new Doctor("d1", "d1", "password", "emaild1@email.com", "pediatrics");
@@ -65,11 +65,11 @@ public class PatientHealthApplication implements CommandLineRunner{
 
 		Doctor d5 = new Doctor("d5", "d5", "password", "emaild5@email.com", "optometry");
 
-		userServices.getDocRepo().save(d1);
-		userServices.getDocRepo().save(d2);
-		userServices.getDocRepo().save(d3);
-		userServices.getDocRepo().save(d4);
-		userServices.getDocRepo().save(d5);
+		userServices.getDoctorPaging().save(d1);
+		userServices.getDoctorPaging().save(d2);
+		userServices.getDoctorPaging().save(d3);
+		userServices.getDoctorPaging().save(d4);
+		userServices.getDoctorPaging().save(d5);
 		
 
 	}

@@ -7,17 +7,17 @@ import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.DoctorJson;
 
 public class DoctorListResponse extends JsonResponse {
-    List<DoctorJson> doctorJson;
+    List<DoctorJson> doctorJsons;
     public DoctorListResponse () {
-        this.doctorJson = new ArrayList<DoctorJson>();
+        this.doctorJsons = new ArrayList<DoctorJson>();
     }
 
-    public List<DoctorJson> getDoctorJson() {
-        return doctorJson;
+    public List<DoctorJson> getDoctorJsons() {
+        return doctorJsons;
     }
 
-    public void setDoctorJson(List<DoctorJson> doctorJson) {
-        this.doctorJson = doctorJson;
+    public void setDoctorJsons(List<DoctorJson> doctorJson) {
+        this.doctorJsons = doctorJson;
     }
     
 }

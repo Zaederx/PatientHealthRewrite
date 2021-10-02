@@ -44,7 +44,7 @@ public class RestValidate {
         String username = request.get("username");
         User u = null;
         if (!username.isEmpty()) {
-            u = userServices.getUserRepo().findByUsername(username);
+            u = userServices.getUserPaging().findByUsername(username);
         }
         if (username.length() != 0 && u == null) {
             res.setSuccess(true);
@@ -79,7 +79,7 @@ public class RestValidate {
 		}
 		
         //not valid is already in use
-        User u = userServices.getUserRepo().findByEmail(email);
+        User u = userServices.getUserPaging().findByEmail(email);
 		try {
 			if (u != null) {
 				res.setSuccess(false);
@@ -93,7 +93,7 @@ public class RestValidate {
         catch (Exception e) {
 			res.setSuccess(false);
 			res.setMessage("There seems to be a problem."
-					+ " Please contact our administrative team for assistance.");//TODO
+					+ " Please contact our administrative team for assistance.");
 			return res;
 		}
 		res.setSuccess(true);

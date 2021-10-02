@@ -88,4 +88,12 @@ public class User {
         return role;
     }
 
+    @Override
+    public String toString() {
+        String userString = "name:"+this.name + "\n" + 
+                            "username:"+this.username+ "\n" + 
+                            "role:"+this.role;
+        return userString;
+    }
+
 }

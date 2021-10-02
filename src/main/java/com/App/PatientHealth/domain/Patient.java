@@ -2,6 +2,7 @@ package com.App.PatientHealth.domain;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Patient extends User {
     
+    @Column
+    String DOB;
     @OneToMany
     List<Medication> medication;
     @ManyToOne
@@ -26,12 +29,14 @@ public class Patient extends User {
         p.getPassword(), p.getEmail(), "PATIENT");
     }
 
-    public Patient(String name, String username, String password, String email) {
+    public Patient(String name, String username, String password, String email, String DOB) {
         super(name,username,password,email,"PATIENT");
+        this.DOB = DOB;
     }
 
-    public Patient(String fname, String lname, String username, String email,List<Medication> medication, Doctor doctor) {
+    public Patient(String fname, String lname, String username, String email,List<Medication> medication, String DOB, Doctor doctor) {
         this.medication = medication;
+        this.DOB = DOB;
         this.doctor = doctor;
     }
 

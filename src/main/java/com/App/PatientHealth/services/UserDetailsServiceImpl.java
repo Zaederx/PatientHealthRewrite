@@ -12,42 +12,26 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.App.PatientHealth.repository.AdminPaging;
-import com.App.PatientHealth.repository.AdminRepository;
-import com.App.PatientHealth.repository.DoctorPaging;
-import com.App.PatientHealth.repository.DoctorRepository;
+import com.App.PatientHealth.repository.AdminPagingRepository;
+import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.GmcRepository;
-import com.App.PatientHealth.repository.PatientPaging;
-import com.App.PatientHealth.repository.PatientRespository;
-import com.App.PatientHealth.repository.UserPaging;
-import com.App.PatientHealth.repository.UserRepository;
+import com.App.PatientHealth.repository.PatientPagingRepository;
+import com.App.PatientHealth.repository.UserPagingRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 
-    @Autowired
-    UserRepository userRepo;
-
-    @Autowired
-    DoctorRepository docRepo;
-
-    @Autowired
-    PatientRespository pRepo;
-
-    @Autowired
-    AdminRepository aRepo;
+	@Autowired
+	UserPagingRepository userPaging;
 
 	@Autowired
-	UserPaging userPaging;
+	AdminPagingRepository adminPaging;
 
 	@Autowired
-	AdminPaging adminPaging;
+	DoctorPagingRepository doctorPaging;
 
 	@Autowired
-	DoctorPaging doctorPaging;
-
-	@Autowired
-	PatientPaging patientPaging;
+	PatientPagingRepository patientPaging;
 
 	@Autowired
 	GmcRepository gRepo;
@@ -58,7 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		System.out.println(username);
 		// String password = null;
 		User u =  null;
-		u = userRepo.findByUsername(username);
+		u = userPaging.findByUsername(username);
 		
 		boolean enabled = true;
 		boolean accountNonExpired = true;
@@ -87,36 +71,19 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 				);
     }
 
-
-    public UserRepository getUserRepo() {
-        return this.userRepo;
-    }
-
-    public DoctorRepository getDocRepo() {
-        return this.docRepo;
-    }
-
-    public PatientRespository getPRepo() {
-        return this.pRepo;
-    }
-
-    public AdminRepository getARepo() {
-        return this.aRepo;
-    }
-
-	public UserPaging getUserPaging() {
+	public UserPagingRepository getUserPaging() {
 		return userPaging;
 	}
 
-    public AdminPaging getAdminPaging() {
+    public AdminPagingRepository getAdminPaging() {
 		return adminPaging;
 	}
 
-	public DoctorPaging getDoctorPaging() {
+	public DoctorPagingRepository getDoctorPaging() {
 		return doctorPaging;
 	}
 
-	public PatientPaging getPatientPaging() {
+	public PatientPagingRepository getPatientPaging() {
 		return patientPaging;
 	}
 

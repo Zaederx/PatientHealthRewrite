@@ -8,7 +8,7 @@
   <script type="text/javascript" th:src="@{/js/admin-doctor-add-patients.js}" defer></script>
   <!-- <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script> -->
   <!-- CSS -->
-   <link rel="stylesheet" type="text/css" th:href="@{/css/app-css.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/app.css}">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
   <!-- jQuery library -->
@@ -51,9 +51,16 @@
 	    			</thead>
 	    			<tbody class="highlight-table-body-row" id="doctor-search-table-body">
 	    			<!-- Fill via ajax method -->
+					<td colspan="4">ENTER DOCTOR'S NAME INTO SEARCH BAR</td>
 	    			</tbody>
-					<div id="doctor-table-buttons"></div>
+					
 	    </table>
+		<div id="doctor-table-buttons">
+			<span id="btn-prev" class="btn btn-primary">Prev</span>
+			<span id="pageNum" class="pageNum" contenteditable="true"></span>
+			<span id="btn-go" class="btn btn-primary">Go to page</span>
+			<span id="btn-next" class="btn btn-primary">Next</span>
+		</div>
 	    </div>
     	<div class="row">
     	
