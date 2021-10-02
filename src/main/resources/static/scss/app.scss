@@ -1,0 +1,62 @@
+$light-blue:#86dcff;
+$light-red:#fad6bb;
+$yellow:#fdfc8a;
+$tomato:#f05c35;
+
+.highlight {
+    background-color:$light-blue;
+}
+
+.highlight-red {
+    background-color:$light-red;
+}
+
+.highlight-yellow{
+    background-color:$yellow;
+}
+
+/* Done this way (double statement) to override bootstrap while hovering
+    * on tables with this class
+    */
+.highlight-table-body-row.highlight-table-body-row tr:hover {
+    background-color:$light-blue;
+}
+
+.highlight-red-table-body-row.highlight-red-table-body-row tr:hover {
+    background-color: $light-red;
+}
+
+.hr-divider{
+    border: 1px solid #9ca9a9;
+    border-radius: 5px;
+}
+
+.bar-space{
+    margin-right: 30px;
+    margin-left:30px;
+    margin-bottom:5px;
+}
+.btn-wdith{
+    width:20%;
+}
+.btn-space {
+    margin-right:30px;
+    margin-bottom:5px;
+}
+.btn-space-left {
+    margin-left: 30px;
+    margin-bottom:5px;
+}
+
+/* Note: using Table Flow as alternative to Bootstrap table-responsive, 
+    * which doesn't work well in some situations
+    * Apply table-flow to div outside desired table*/
+.table-flow { 
+    overflow-x:auto;
+}
+
+.pageNum {
+    border: solid rgb(41,120,237);
+    padding: 5px 15px;
+    margin: 10px;
+}
