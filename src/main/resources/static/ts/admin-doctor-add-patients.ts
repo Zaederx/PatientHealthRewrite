@@ -1,166 +1,116 @@
-var csrfToken = $("meta[name='_csrf']").attr("content");//needed for post requests
+import { addPatientToDoctor, displayDoctorsPatientDetails, highlightRow, plain, searchForDoctor, searchForPatient, yellow } from "./admin-module1.js";
+
+var csrfToken = $("meta[name='_csrf']").attr("content") as string//needed for post requests
 //SECTION doctor-searchbar
 $('#doctor-searchbar').on('input', ()=> {
     //if no page number given - it uses current page number
     var name = $('#doctor-searchbar').val() as string;
-    searchForDoctor(name)
-    var tableBody = document.querySelector('#doctor-search-table-body') as HTMLTableElement;
-    makeClickableTableRows(tableBody)
+    searchForDoctor(name,doctorTableCurrentPageNum,csrfToken)
 })
 
-/**
- * Data to rows
- * @param data - AJAX response DoctorResponseList
- * @returns 
- */
-function doctorDataToRows(data:DoctorResponseList) {
-    var rows = '';
-    data.doctorJsons.forEach( d => {
-        var cell = '<tr data-docId="'+d.id+'" data-selected="false">'+
-                        '<td>'+d.name+'</td>' + 
-                        '<td>'+d.username+'</td>'+
-                        '<td>'+d.specialisation+'</td>'+
-                        '<td>'+d.email+'</td>'+
-                    '</tr>';
-        rows += cell
-    })
-    return rows;
-}
-
-/**
- * Take Ajax response data (DoctorResponseList) and returns
- * table rows of patient data
- * @param data DoctorResponseList
- * @returns rows - of patient data
- */
-function doctorPatientsDataToRows(data:DoctorResponseList) {
-    var rows = '';
-    data.doctorJsons[0].patients.forEach( p => {
-        var cell = '<tr data-docId="'+p.id+'" data-selected="false">'+
-                        '<td>'+p.name+'</td>'+ 
-                        '<td>'+p.username+'</td>'+
-                        '<td>'+p.DOB+'</td>'+
-                        '<td>'+p.email+'</td>'+
-                    '</tr>';
-        rows += cell
-    })
-    return rows
-}
-
-const light_blue = '#86f9d6'
-const light_red = '#fad6bb'
-const yellow = '#fdfc8a'
-const plain = ''
-
-/**
- * Take a tableBody and adds EventListeners 
- * @param tableBody - tableBody
- */
-function makeClickableTableRows(tableBody:HTMLTableElement) {
-    var rows = tableBody?.querySelectorAll('tr');
-    rows.forEach( row => {
-        row.addEventListener('clicked', () => {
-            var selected = row.getAttribute('data-selected')
-            var docId = row.getAttribute('data-docId') as string
-            if (selected == 'false') {
-                highlightRow(row,yellow)
-                displayDoctorsPatientDetails(docId)
-                row.setAttribute('data-selected', 'true')
-            }
-            else {
-                highlightRow(row,plain)
-                clearDoctorsPatientsDetailsTable()
-                row.setAttribute('data-selected', 'false')
-            }
-        })
-    })
-}
-
-function highlightRow(row:HTMLTableRowElement, colour:string) {
-    row.style.backgroundColor = colour;
-}
-
-function displayDoctorsPatientDetails(doctorId:string) {
-    $.ajax({
-        url: "rest/doctor/get-patients/"+doctorId,
-        type: "GET",
-        dataType:"json",
-        headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data:DoctorResponseList) => {
-            if(data.success) {
-                var rows = doctorPatientsDataToRows(data)
-                $('#patient-search-table-body').html(rows)
-            }
-            else {
-                var errorMsg = '<tr colspan="4">'+'NO PATIENTS TO DISPLAY'+'</tr>'
-                $('#patient-search-table-body').html(errorMsg)
-            }
-        }
-    })
-}
-
-function clearDoctorsPatientsDetailsTable() {
-    $('#patient-search-table-body').html('');
-}
-
 /**the current page number */
-var tableCurrentPageNum = 1
-var tablePagePrev = 1
-var tablePageNext = 2
-var totalPages = 1
+var doctorTableCurrentPageNum = 1
+var doctorTablePagePrev = 1
+var doctorTablePageNext = 2
 
 function setPageNumVars(currentPageNum:number) {
-    tableCurrentPageNum = currentPageNum;
-    tablePagePrev = tableCurrentPageNum - 1;
-    tablePageNext = tableCurrentPageNum + 1;
+    doctorTableCurrentPageNum = currentPageNum;
+    doctorTablePagePrev = doctorTableCurrentPageNum - 1;
+    doctorTablePageNext = doctorTableCurrentPageNum + 1;
 }
-
-function setTotalPages(total:number) {
-    totalPages = total
+function getSelectedDoctorId() {
+    var tableBody = document.querySelector('#doctor-search-table-body') as HTMLTableElement
+    var currentlySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
+    var docId = currentlySelected.getAttribute('data-docId') as string
+    return docId
 }
-
 $('#btn-prev').on('click', () => {
     var name = $('#doctor-searchbar').val() as string;
-    searchForDoctor(name,tablePagePrev)
+    //ajax request for doctors - on previous page of results
+    searchForDoctor(name,doctorTablePagePrev,csrfToken)
+    //set current page to previous page & update prev and next page numbers
+    setPageNumVars(doctorTablePagePrev as number)
 })
 $('#btn-next').on('click', () => {
     var name = $('#doctor-searchbar').val() as string;
-    searchForDoctor(name,tablePageNext)
+    //ajax request for doctors - on previous page of results
+    searchForDoctor(name,doctorTablePageNext,csrfToken)
+    //set current page to next page & update prev and next page numbers
+    setPageNumVars(doctorTablePageNext as number)
 })
 $('#btn-go').on('click', () => {
     var name = $('#doctor-searchbar').val() as string;
     var pageNum = Number($('#pageNum').html() as string)
-
-    searchForDoctor(name,pageNum)
+    //ajax request for doctors - on previous page of results
+    searchForDoctor(name,pageNum,csrfToken)
+    //set current page to the entered page number & update prev and next page numbers
+    setPageNumVars(pageNum as number)
 })
 
-function searchForDoctor(name:string, pageNum:number = tableCurrentPageNum) {
-    setPageNumVars(pageNum as number)
-    $('#pageNum').html(String(pageNum));
-    console.log("pageNum set to :",pageNum)
-    $.ajax({
-        url: "/rest/doctor/get-doctor/name/"+name+'/'+pageNum,
-        type: "GET",
-        dataType:"json",
-        headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data:DoctorResponseList) => {
-            if(data.success) {
-                //fetch results from json response
-                var doctorRows = doctorDataToRows(data);
-                //display results
-                $('#doctor-search-table-body').html(doctorRows)
-                setTotalPages(data.totalPages)
-            }
-            else {
-                //display error message
-                var cell = '<td colspan="4">'+'NO RESULTS TO DISPLAY'+'</td>'
-                $('#doctor-search-table-body').html(cell)
-            }
-        },
-        error: () => {
-            var cell = '<td colspan="4">'+'ERROR FETCHING RESULTS'+'</td>'
-            $('#doctor-search-table-body').html(cell)
-        }
-    })
+function getSelectedPatientId() {
+    var tableBody = document.querySelector('#patient-search-table-body') as HTMLTableElement
+    var currentlySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
+    var pId = currentlySelected.getAttribute('data-pId') as string
+    return pId
+}
+
+$('#patient-searchbar').on('input', ()=> {
+    var name = $("#patient-searchbar").val() as string
+    //ajax request for patients - on current page number
+    searchForPatient(name,patientTableCurrentPageNum,csrfToken)
+})
+
+$('#p-btn-prev').on('click', () => {
+    var name = $('#patient-searchbar').val() as string;
+    searchForPatient(name,patientTablePagePrev,csrfToken)
+    //set current page to previous page & update prev and next page numbers
+    setPatientPageNumVars(patientTablePagePrev as number)
+})
+$('#p-btn-next').on('click', () => {
+    var name = $('#patient-searchbar').val() as string;
+    searchForPatient(name,patientTablePageNext,csrfToken)
+    //set current page to next page & update prev and next page numbers
+    setPatientPageNumVars(patientTablePageNext as number)
+})
+$('#p-btn-go').on('click', () => {
+    var name = $('#patient-searchbar').val() as string;
+    var pageNum = Number($('#p-pageNum').html() as string)
+
+    searchForPatient(name,pageNum,csrfToken)
+    //set current page to entered page number & update prev and next page numbers
+    setPatientPageNumVars(pageNum as number)
+})
+
+
+
+/**the current page number */
+var patientTableCurrentPageNum = 1
+var patientTablePagePrev = 1
+var patientTablePageNext = 2
+var patientTotalPages = 1
+
+function setPatientPageNumVars(currentPageNum:number) {
+    patientTableCurrentPageNum = currentPageNum;
+    patientTablePagePrev = patientTableCurrentPageNum - 1;
+    patientTablePageNext = patientTableCurrentPageNum + 1;
+}
+
+function setTotalPatientPages(total:number) {
+    patientTotalPages = total
+}
+
+$('#btn-add-selected-patient').on('click', ()=> {
+    var docId = getSelectedDoctorId()
+    var pId = getSelectedPatientId()
+    clickAddPatient(pId,docId,csrfToken)
+})
+
+function clickAddPatient(pId:string,docId:string,csrfToken:string) {
+    //send request to add patient to doctor's patients list
+    addPatientToDoctor(pId,docId,csrfToken).then(
+        //send request to fetch updated doctor's patients list
+        () => displayDoctorsPatientDetails(docId,csrfToken)
+    )
+    
 }
 

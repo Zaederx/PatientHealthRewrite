@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,20 +39,27 @@ public class PatientRest {
         this.userServices = userServices;
     }
 
-    public PatientListResponse getPatient() {
+    @GetMapping(value = "/get-patient/name/{name}/{pageNum}")
+    public PatientListResponse getPatientByName(@PathVariable String name, @PathVariable String pageNum) {
         PatientListResponse res = new PatientListResponse();
         //initialise list of patientsJson
         List<PatientJson> pJson = new ArrayList<PatientJson>();
 
+        //set page number and return up to 10 elements
+        Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 10, Sort.by("name").ascending());
+
         //Get iterable patients
-        Iterable<Patient> patients = userServices.getPatientPaging().findAll();
+        Page<Patient> patients = userServices.getPatientPaging().findAllByNameContaining(name, pageable);
 
-        //add JSON of each patient to pJson
-        patients.forEach( p -> 
-           pJson.add(new PatientJson(p))
-        );
-
-        res.setPatientJson(pJson);
+        if (patients.hasContent()) {
+            //add JSON of each patient to pJson
+            patients.getContent().forEach( p -> 
+                pJson.add(new PatientJson(p))
+            );
+            res.setPatientJsons(pJson);
+            res.setSuccess(true);
+        }
+        
         //return json to front end 
         return res;
     }
@@ -89,7 +98,7 @@ public class PatientRest {
         Optional<Patient> patientOpt = userServices.getPatientPaging().findById(patientId);
         if (patientOpt.isPresent()) {
             Patient p = patientOpt.get();
-            res.getPatientJson().add(new PatientJson(p));
+            res.getPatientJsons().add(new PatientJson(p));
         }
         
         return res;
@@ -97,21 +106,7 @@ public class PatientRest {
 
      /***********Patient - By Firsname Lastname *************** */
     
-    //get patient - by firstname
-    @GetMapping("get-patient/name/{name}/{pageNum}")
-    public JsonResponse findPatientByFirstname(@RequestParam String name,@RequestParam Integer pageNum) {
-         //set page number and return up to 10 elements
-         Pageable page = PageRequest.of(pageNum, 10);
-         //get list of users from that page
-         Page<Patient> uList = userServices.getPatientPaging().findAllByName(name, page);
-         //set response object with users
-         PatientListResponse res = new PatientListResponse();
-         uList.forEach( u -> 
-             res.getPatientJson().add(new PatientJson(u))
-         );
-         res.setTotalPages(uList.getTotalPages());
-         return res;
-    }
+   
     /************************** */
 
 
@@ -120,7 +115,7 @@ public class PatientRest {
     public JsonResponse findPatientByUsername(@RequestParam String username) {
         Patient u = userServices.getPatientPaging().findByUsername(username);
         PatientListResponse res = new PatientListResponse();
-        res.getPatientJson().add(new PatientJson(u));
+        res.getPatientJsons().add(new PatientJson(u));
         return res;
    }
 }

@@ -99,7 +99,7 @@ public class AdminRest {
         Optional<Patient> p = userServices.getPatientPaging().findById(patientId);
         //if patient is present - add to response
         if(p.isPresent()) {
-            res.getPatientJson().add(new PatientJson(p.get()));
+            res.getPatientJsons().add(new PatientJson(p.get()));
         }
         return res;
     }

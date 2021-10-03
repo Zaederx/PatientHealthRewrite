@@ -65,6 +65,7 @@ public class PatientHealthApplication implements CommandLineRunner{
 
 		Doctor d5 = new Doctor("d5", "d5", "password", "emaild5@email.com", "optometry");
 
+
 		userServices.getDoctorPaging().save(d1);
 		userServices.getDoctorPaging().save(d2);
 		userServices.getDoctorPaging().save(d3);

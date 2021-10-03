@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta th:name="_csrf" th:content="${_csrf.token}"/>
   
-  <script type="text/javascript" th:src="@{/js/admin-doctor-add-patients.js}" defer></script>
+  <script type="module" th:src="@{/js/admin-doctor-add-patients.js}" defer></script>
   <!-- <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script> -->
   <!-- CSS -->
   <link rel="stylesheet" type="text/css" th:href="@{/css/app.css}">
@@ -58,14 +58,13 @@
 		<div id="doctor-table-buttons">
 			<span id="btn-prev" class="btn btn-primary">Prev</span>
 			<span id="pageNum" class="pageNum" contenteditable="true"></span>
+			<span id="pageTotal" class="pageTotal"></span>
 			<span id="btn-go" class="btn btn-primary">Go to page</span>
 			<span id="btn-next" class="btn btn-primary">Next</span>
 		</div>
 	    </div>
+
     	<div class="row">
-    	
-	    	
-	    	
 	    	<!-- Current Patients -->
 	    	<div class="col-sm-12"> 
 	    		<!-- Table -->
@@ -88,21 +87,25 @@
 	    		</table>
 	    	</div>
     	</div><!-- End of row  -->
-    	<button class="btn btn-primary btn-space-left col-sm-4" onclick="removePatient();">Remove Selected Patient</button>
+    	<button class="btn btn-primary btn-space-left col-sm-4">
+			Remove Selected Patient
+		</button>
+
+		<div id="message"></div>
     	<div id="add-patient-accordion">
-    	<!-- CARD 2 - Doctor Registration  -->
+    	<!-- CARD 2 - Add Patient to Doctor Table  -->
 		  <div class="card text-center">
 		    <div class="card-header" id="headingOne">
-		        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#doctorCollapse" aria-expanded="false" aria-controls="doctorCollapse">
+		        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#patientCollapse" aria-expanded="false" aria-controls="patientCollapse">
 		          Add Patient to Doctor
 		        </button>
 		    </div>
-		    <div id="doctorCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#add-patient-accordion">
+		    <div id="patientCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#add-patient-accordion">
 		      <div class="card-body">
 		    		<div class="row">
 			    		<!-- Patient Search Bar -->
 			    		<input id="patient-searchbar" class="form-control col-sm-6 bar-space" type="text" placeholder="Search Patients...">
-			    		<button class="btn btn-primary btn-space-left col-sm-4" onclick="addPatient();">Add Selected Patient</button>
+			    		<button id="btn-add-selected-patient" class="btn btn-primary btn-space-left col-sm-4">Add Selected Patient</button>
 			    	</div>
 			    	<br>
 			    	<div class="row table-flow"><!--table-flow - See style tag in header -->
@@ -122,6 +125,13 @@
 		    				<!-- Fill via ajax method -->
 		    			</tbody>
 			    		</table>
+						<div id="patient-table-buttons">
+							<span id="p-btn-prev" class="btn btn-primary">Prev</span>
+							<span id="p-pageNum" class="pageNum" contenteditable="true"></span>
+							<span id="p-pageTotal" class="pageTotal"></span>
+							<span id="p-btn-go" class="btn btn-primary">Go to page</span>
+							<span id="p-btn-next" class="btn btn-primary">Next</span>
+						</div>
 		    		</div>
 		      </div>
 		    </div>

@@ -2,15 +2,18 @@ package com.App.PatientHealth.controllers.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.App.PatientHealth.domain.Doctor;
+import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.User;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.DoctorJson;
 import com.App.PatientHealth.responseObject.domain.PatientJson;
 import com.App.PatientHealth.responseObject.lists.DoctorListResponse;
+import com.App.PatientHealth.responseObject.lists.PatientListResponse;
 import com.App.PatientHealth.services.UserDetailsServiceImpl;
 
 import org.slf4j.Logger;
@@ -68,13 +71,11 @@ public class DoctorRest {
 
     @GetMapping("{doctorId}")
     public DoctorListResponse getDoctorById(@PathVariable String doctorId) {
-        //create resonse object
+        //create response object
         DoctorListResponse res = new DoctorListResponse();
 
         //find doctor by id
         Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(Integer.parseInt(doctorId));
-
-       
 
         //add doctor to response
         List<DoctorJson> docJsons = new ArrayList<DoctorJson>();
@@ -86,11 +87,12 @@ public class DoctorRest {
     }
 
     //read doctor's patient info
-    @GetMapping("get-patients/{doctorId}")
-    public List<PatientJson> getDoctorsPatients(@PathVariable String doctorId) {
+    @GetMapping("/get-patients/{doctorId}")
+    public JsonResponse getDoctorsPatients(@PathVariable String doctorId) {
         //retrieve doctor
         Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(Integer.parseInt(doctorId));
         Doctor doctor;
+        PatientListResponse res = new PatientListResponse();
         List<PatientJson> pJson = new ArrayList<PatientJson>();
         //if present return doctor
         if(doctorOpt.isPresent()) {
@@ -99,13 +101,19 @@ public class DoctorRest {
             doctor.getPatients().forEach( p -> 
                 pJson.add(new PatientJson(p))
             );
+            res.setPatientJsons(pJson);
+            res.setSuccess(true);
         }
-        return pJson;
+        else {
+            res.setSuccess(false);
+        }
+        
+        return res;
     }
 
 
     //get doctors - pagination method - by firstname
-    @GetMapping("get-doctor/name/{name}/{pageNum}")
+    @GetMapping("/get-doctor/name/{name}/{pageNum}")
     public JsonResponse findDoctorByFirstname(@PathVariable String name, @PathVariable String pageNum) {
         logger.trace("findDoctorByFirstname");
         logger.trace("pageNum:"+pageNum);
@@ -135,6 +143,47 @@ public class DoctorRest {
     }
    
     
-    /***************************/
+    @PostMapping("/add-patient")
+    public JsonResponse addPatientToDoctor(@RequestBody Map<String,String> request) {
+        String doctorId = request.get("docId");
+        String patientId = request.get("pId");
+        //create new repsonse object
+        JsonResponse res = new JsonResponse();
+
+        //find doctorId
+        Optional<Doctor> d = userServices.getDoctorPaging().findById(Integer.parseInt(doctorId));
+
+        //find patient
+        Optional<Patient> p = userServices.getPatientPaging().findById(Integer.parseInt(patientId));
+        if (!p.isPresent()) {
+            res.setMessage("No Patient found with id:" + patientId);
+            res.setSuccess(true);
+            return res;
+        }
+        //add patient to doctor list
+        if (d.isPresent()) {
+            d.get().getPatients().add(p.get());
+            p.get().setDoctor(d.get());
+            //save changes
+            try {
+                userServices.getDoctorPaging().save(d.get());
+                userServices.getPatientPaging().save(p.get());
+                res.setSuccess(true);
+            }
+            catch (Exception e) {
+                res.setMessage("Patient may already be asssigned a Doctor.");
+                res.setSuccess(false);
+            }
+            
+        }
+        else {
+            res.setMessage("No Patient found with id:" + patientId);
+            res.setSuccess(true);
+            return res;
+        }
+
+        //return response
+        return res;
+    }
     
 }

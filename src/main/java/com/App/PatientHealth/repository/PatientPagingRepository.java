@@ -14,5 +14,7 @@ public interface PatientPagingRepository extends PagingAndSortingRepository<Pati
     Patient findByUsername(String username);
     List<Patient> findByName(String name);
     Page<Patient> findAllByUsername(String username, Pageable pageable);
+    Page<Patient> findAllByUsernameContaining(String username, Pageable pageable);
     Page<Patient> findAllByName(String name, Pageable pageable);
+    Page<Patient> findAllByNameContaining(String name, Pageable pageable);
 }

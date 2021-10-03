@@ -18,8 +18,12 @@ public class PatientJson extends UserJson {
 
     public PatientJson(Patient p){
         super(p);
-        this.doctorName = p.getDoctor().getName();
-        this.medicationNames =  medicationNames(p);
+        if (p.getDoctor() != null) {
+            this.doctorName = p.getDoctor().getName();
+        }
+        if (p.getMedication() != null) {
+            this.medicationNames =  medicationNames(p);
+        }
     }
 
     /**

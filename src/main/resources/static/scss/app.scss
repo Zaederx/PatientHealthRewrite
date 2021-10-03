@@ -2,6 +2,7 @@ $light-blue:#86dcff;
 $light-red:#fad6bb;
 $yellow:#fdfc8a;
 $tomato:#f05c35;
+$btn-blue: rgb(41,120,237);
 
 .highlight {
     background-color:$light-blue;
@@ -56,7 +57,16 @@ $tomato:#f05c35;
 }
 
 .pageNum {
-    border: solid rgb(41,120,237);
+    border: solid $btn-blue;
     padding: 5px 15px;
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 0px;
+}
+.pageTotal {
+    border: solid $btn-blue;
+    background-color: $btn-blue;
+    color:white;
+    padding: 5px 15px;
+    margin-left: 0px;
+    margin-right: 10px;
 }
