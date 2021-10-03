@@ -33,14 +33,14 @@ export function makeClickableDoctorTableRows(tableBody:HTMLTableElement, csrfTok
             var selected = row.getAttribute('data-selected')
             var docId = row.getAttribute('data-docId') as string
             if (selected == 'false') {
-                //get currently selected row and unselected
-                var currentlySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
-                if (currentlySelected) {
-                    highlightRow(currentlySelected,plain)
-                    currentlySelected.setAttribute('data-selected','false')
+                //unselect previously selected row
+                var previouslySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
+                if (previouslySelected) {
+                    highlightRow(previouslySelected,plain)
+                    previouslySelected.setAttribute('data-selected','false')
                 }
                 
-                //highlight new row
+                //highlight newly selected row
                 highlightRow(row,yellow)
                 displayDoctorsPatientDetails(docId,csrfToken)
                 //select doctor row
@@ -64,6 +64,9 @@ export function displayDoctorsPatientDetails(doctorId:string, csrfToken:string) 
             if(data.success) {
                 var rows = patientDataToRows(data)
                 $('#current-patient-table-body').html(rows)
+                //make table rows clickable
+                var tableBody = document.querySelector('#current-patient-table-body') as HTMLTableElement;
+                makeClickablePatientTableRows(tableBody)
             }
             else {
                 var errorMsg = '<tr colspan="4">'+'NO PATIENTS TO DISPLAY'+'</tr>'
@@ -164,14 +167,14 @@ export function makeClickablePatientTableRows(tableBody:HTMLTableElement = patie
             var selected = row.getAttribute('data-selected')
             var pId = row.getAttribute('data-pId') as string
             if (selected == 'false') {
-                //get currently selected row and unselected
-                var currentlySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
-                if (currentlySelected) {
-                    highlightRow(currentlySelected,plain)
-                    currentlySelected.setAttribute('data-selected','false')
+                //unselected previously selected row
+                var previouslySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
+                if (previouslySelected) {
+                    highlightRow(previouslySelected,plain)
+                    previouslySelected.setAttribute('data-selected','false')
                 }
                 
-                //highlight new row
+                //highlight newly selected row
                 highlightRow(row,yellow)
                 row.setAttribute('data-selected', 'true')
             }
@@ -197,7 +200,30 @@ export async function addPatientToDoctor(pId:string,docId:string,csrfToken:strin
             }
         },
         error: ()=> {
-            $('#message').html('Error adding patient to doctor')
+            $('#message').html('<div class="alert alert-danger">Error adding patient to doctor</div>')
+        }
+    })
+}
+
+export function removePatientFromDoctor(pId:string,docId:string,csrfToken:string) {
+    var data = {pId,docId}
+    return $.ajax({
+        url: "/rest/doctor/remove-patient",
+        type: "DELETE",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType:"json",
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data:PatientResponseList) => {
+            if(data.success) {
+                $('#message').html('<div class="alert alert-info">'+data.message+'</div>')
+            }
+            else {
+                $('#message').html('<div class="alert alert-warning">'+data.message+'</div>')
+            }
+        },
+        error: ()=> {
+            $('#message').html('<div class="alert alert-danger">Error removing patient from doctor</div>')
         }
     })
 }

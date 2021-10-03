@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.App.PatientHealth.domain.Doctor;
 import com.App.PatientHealth.domain.Patient;
@@ -26,12 +27,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -69,7 +70,7 @@ public class DoctorRest {
     }
 
 
-    @GetMapping("{doctorId}")
+    @GetMapping("/{doctorId}")
     public DoctorListResponse getDoctorById(@PathVariable String doctorId) {
         //create response object
         DoctorListResponse res = new DoctorListResponse();
@@ -185,5 +186,37 @@ public class DoctorRest {
         //return response
         return res;
     }
+
     
+
+    @DeleteMapping("/remove-patient")
+    public JsonResponse removePatientFromDoctor(@RequestBody Map<String, String> request) {
+        String docId = request.get("docId");
+        String pId = request.get("pId");
+        JsonResponse res = new JsonResponse();
+        Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(Integer.parseInt(docId));
+
+        int pidInt = Integer.parseInt(pId);
+        if(doctorOpt.isPresent()) {
+            //remove patient from doctors list
+            List<Patient> patients = doctorOpt.get().getPatients().stream().dropWhile(p -> p.getId() == pidInt).collect(Collectors.toList());
+            doctorOpt.get().setPatients(patients);
+            try {
+                //save changes
+                userServices.getDoctorPaging().save(doctorOpt.get());
+                res.setSuccess(true);
+                res.setMessage("Removing patient successful.");
+            }
+            catch (Exception e) {
+                res.setMessage("Removing patient unsuccessful.");
+                logger.trace(e.getMessage());
+            }
+            
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No doctor avaialbe with id:"+docId);
+        }
+        return res;
+    }
 }

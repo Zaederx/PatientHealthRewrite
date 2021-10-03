@@ -58,6 +58,7 @@ public class PatientRest {
             );
             res.setPatientJsons(pJson);
             res.setSuccess(true);
+            res.setTotalPages(patients.getTotalPages());
         }
         
         //return json to front end 

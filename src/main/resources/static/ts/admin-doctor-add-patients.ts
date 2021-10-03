@@ -1,4 +1,4 @@
-import { addPatientToDoctor, displayDoctorsPatientDetails, highlightRow, plain, searchForDoctor, searchForPatient, yellow } from "./admin-module1.js";
+import { addPatientToDoctor, displayDoctorsPatientDetails, searchForDoctor, searchForPatient, removePatientFromDoctor } from "./admin-module1.js";
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string//needed for post requests
 //SECTION doctor-searchbar
@@ -54,6 +54,13 @@ function getSelectedPatientId() {
     return pId
 }
 
+function getSelectedRemovePatientId() {
+    var tableBody = document.querySelector('#current-patient-table-body') as HTMLTableElement
+    var currentlySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
+    var pId = currentlySelected.getAttribute('data-pId') as string
+    return pId
+}
+
 $('#patient-searchbar').on('input', ()=> {
     var name = $("#patient-searchbar").val() as string
     //ajax request for patients - on current page number
@@ -81,22 +88,15 @@ $('#p-btn-go').on('click', () => {
     setPatientPageNumVars(pageNum as number)
 })
 
-
-
 /**the current page number */
 var patientTableCurrentPageNum = 1
 var patientTablePagePrev = 1
 var patientTablePageNext = 2
-var patientTotalPages = 1
 
 function setPatientPageNumVars(currentPageNum:number) {
     patientTableCurrentPageNum = currentPageNum;
     patientTablePagePrev = patientTableCurrentPageNum - 1;
     patientTablePageNext = patientTableCurrentPageNum + 1;
-}
-
-function setTotalPatientPages(total:number) {
-    patientTotalPages = total
 }
 
 $('#btn-add-selected-patient').on('click', ()=> {
@@ -111,6 +111,20 @@ function clickAddPatient(pId:string,docId:string,csrfToken:string) {
         //send request to fetch updated doctor's patients list
         () => displayDoctorsPatientDetails(docId,csrfToken)
     )
-    
+}
+
+$('#btn-remove-selected-patient').on('click', ()=> {
+    var pId = getSelectedRemovePatientId();
+    var docId = getSelectedDoctorId();
+    clickRemovePatient(pId,docId)
+})
+
+function clickRemovePatient(pId:string,docId:string) {
+    //send ajax request to remove patient from doctor
+    removePatientFromDoctor(pId,docId,csrfToken).then(
+        //send request to fetch updated doctor's patients list
+        () => displayDoctorsPatientDetails(docId,csrfToken)
+    )
+
 }
 
