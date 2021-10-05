@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta th:name="_csrf" th:content="${_csrf.token}"/>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/app-css.css}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+  <!-- JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <title>Edit User</title>
+</head>
+
+<body>
+  <div class="jumbotron text-center">
+    <h1>Admin - Edit User</h1>
+    <h3></h3>
+     <div th:replace="admin/admin-nav"></div><!-- navigation -->
+  </div>
+	<div class="alert alert-info" th:if=${param.success} th:text="${param.success}">
+	</div>
+	<!-- Container Div -->
+	<div class="container text-center col-sm-10 align-items-center">
+	
+		<div class="btn-group" data-toggle="buttons">
+		  <label class="btn btn-info">
+		    <input type="radio" name="user-search-type" id="user-search-username" autocomplete="off"> Username
+		  </label>
+		  <label class="btn btn-secondary active">
+		    <input type="radio" name="user-search-type" id="user-search-name" autocomplete="off" checked> Name
+		  </label>
+		</div><br>
+	   <input id="user-searchbar" class="form-control" type="text" placeholder="Search Users...">
+	   <div class="table-flow">
+	    <table id="user-details-table" class="table table-bordered table-striped">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="4">Users</th>
+	    				</tr>
+	    				<tr>
+		    				<th colspan="1">Type</th>
+		    				<th colspan="1">Username</th>
+		    				<th colspan="1">Name</th>
+		    				<th colspan="1">Email</th>
+			    		</tr>
+	    			</thead>
+	    			<tbody id="user-search-table-body" class="highlight-table-body-row">
+	    			<!-- Fill via ajax method -->
+	    			
+	    			</tbody>
+	    		</table>
+	    		
+	    		<button id="btn-edit" onclick="editUser();" class="btn btn-primary">Edit</button>
+	    </div>
+	    <br>
+	    <hr class="hr-divider">
+	    <br>
+	    <table class="container text-center table table-bordered">
+	    	<tr>
+	    		<th>Edit User</th>
+	    	</tr>
+	    </table>
+	    
+	    <div class="container col-sm-10 justify-content-center">
+	    
+	   	<form class="form-group" action="#" th:action="@{/admin/register-user}" th:object="${userRegForm}" method="POST">
+	   	
+	   		<input type="hidden" id="user-type" name="user-type" th:field="*{type}">
+	   		<input type="hidden" id="user-id" th:field="*{id}">
+		   	<label for="user-name">Name</label>
+		   	<input id="user-name" class="form-control text-center" type="text" th:field="*{name}" placeholder="Henry Thompson" autocomplete="off"></input>
+		   <!--TODO - dismiss th:if alerts  -->
+		   	<p class="alert alert-info" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+		   	<div id="user-name-error"></div>
+		   	
+		   	<div id="doctor-gmc-elements" style="display:none">
+			   	<label>GMC Reference Number</label><!--General Medical Council Number - Each doctor in UK is meant to have one  -->
+	    		<input id="doctor-gmc" class="form-control text-center"  th:field="*{gmcNum}" placeholder="3494984098345" autocomplete="off"></input>
+			   	<div id="doctor-gmc-error"></div>
+			   	<br>
+		   	</div>
+		   	
+		   	<label for="user-username">Username</label>
+		   	<input id="user-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Enstein92" autocomplete="off"></input>
+		   	<div id="user-username-error"></div>
+		   	
+		   	<label for="user-email">Email</label>
+		   	<input id="user-email" class="form-control text-center" type="text"  th:field="*{email}" placeholder="email@email.com" autocomplete="off"></input>
+		  	<div id="user-email-error"></div>
+		   	<br><br>
+		   	
+		   	
+		   	
+		   	<div class="btn-group" data-toggle="buttons">
+			  <label class="btn btn-info">
+			    <input type="radio" onfocus="togglePasswordVisibility(this);" name="user-password-visibility" id="user-show-password" autocomplete="off"> Show
+			  </label>
+			  <label class="btn btn-secondary active">
+			    <input type="radio" onfocus="togglePasswordVisibility(this);" name="user-password-visibility" id="user-hide-password" autocomplete="off" checked> Hide
+			  </label>
+			</div><br>
+		   	
+		   	<label for="user-password">Password</label>
+		   	<input id= "user-password" class="form-control text-center" type="password" th:field="*{password}" placeholder="SomeThingICanRemeber!56" 
+		   	pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
+		   	<div id="user-password-error" th:error="*{password}"></div>
+		   	<br>
+		   	<label for="user-passwordTwo">Repeat Password</label>
+		   	<input id="user-passwordTwo" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+		   	
+		   	<br>
+		   	<button id="reg-btn-user" class="btn btn-primary" type="submit">Submit Edit Form</button>
+    	</form>
+	    
+	 </div>
+
+	    
+	</div> <!-- container div end  -->
+
+</body>
+
+</html>
