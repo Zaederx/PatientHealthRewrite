@@ -22,8 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,22 +70,28 @@ public class AdminRest {
         admin.forEach( a -> 
             aJson.add(new AdminJson(a))
         );
-        res.setAdminJson(aJson);
+        res.setAdminJsons(aJson);
         return res;
     }
 
-    @GetMapping("{adminId}")
-    public AdminListResponse getAdminById(@RequestParam Integer adminId) {
+    @GetMapping("/{adminId}")
+    public AdminListResponse getAdminById(@PathVariable String adminId) {
         //create response object
         AdminListResponse res = new AdminListResponse();
-
-        Optional<Admin> adminOpt = userServices.getAdminPaging().findById(adminId);
+        int id = Integer.parseInt(adminId);
+        Optional<Admin> adminOpt = userServices.getAdminPaging().findById(id);
 
         List<AdminJson> aJsons = new ArrayList<AdminJson>();
         if (adminOpt.isPresent()) {
             aJsons.add(new AdminJson(adminOpt.get()));
+            res.setAdminJsons(aJsons);
+            res.setSuccess(true);
         }
-        res.setAdminJson(aJsons);
+        else {
+            res.setSuccess(false);
+            res.setMessage("No details available");
+        }
+        
         return res;
     }
 
@@ -122,55 +130,30 @@ public class AdminRest {
     /***********Admin - By Firsname Lastname *************** */
     //get admin - by firstname
     @GetMapping("get-admin/name/{name}/{pageNum}")
-    public JsonResponse findAdminByFirstname(@RequestParam String name,@RequestParam Integer pageNum) {
+    public JsonResponse findAdminByFirstname(@PathVariable String name, @PathVariable String pageNum) {
          //set page number and return up to 10 elements
-         Pageable page = PageRequest.of(pageNum, 10);
+         Pageable page = PageRequest.of(Integer.parseInt(pageNum)-1, 10, Sort.by("name").ascending());
          //get list of users from that page
-         Page<Admin> uList = userServices.getAdminPaging().findAllByName(name, page);
+         Page<Admin> uList = userServices.getAdminPaging().findAllByNameContaining(name, page);
          //set response object with users
-         UserListResponse res = new UserListResponse();
-         uList.forEach( u -> 
-             res.getUserJson().add(new UserJson(u))
-         );
-         res.setTotalPages(uList.getTotalPages());
+         AdminListResponse res = new AdminListResponse();
+         try {
+            uList.forEach( u -> 
+                res.getAdminJsons().add(new AdminJson(u))
+            );
+            res.setTotalPages(uList.getTotalPages());
+            res.setSuccess(true);
+         }
+         catch (Exception e) {
+             res.setMessage("Error retrieving admins that match.");
+             res.setSuccess(false);
+         }
+         
          return res;
     }
-
-    /*********** *************** */
-
-    /***********Doctor - By Firsname Lastname *************** */
     
     
+    //TODO update admin
 
-
-    
-
-
-
-    /***********User - By Firsname Lastname *************** */
-    //read list of user's by lastname
-    @GetMapping("get-user/name/{name}/{pageNum}")
-    public JsonResponse findUserByLastname(@RequestParam String name, @RequestParam Integer pageNum) {
-        //set page number and return up to 10 elements
-        Pageable page = PageRequest.of(pageNum, 10);
-        //get list of users from that page
-        Page<User> uList = userServices.getUserPaging().findAllByName(name, page);
-        //set response object with users
-        UserListResponse res = new UserListResponse();
-        uList.forEach( u -> 
-            res.getUserJson().add(new UserJson(u))
-        );
-        res.setTotalPages(uList.getTotalPages());
-        return res;
-   }
-
-
-  /*********** *************** */
-
-    
-
-
-    //update user
-
-    //delete user
+    //TODO delete admin
 }

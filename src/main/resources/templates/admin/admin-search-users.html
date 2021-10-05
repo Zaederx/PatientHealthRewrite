@@ -3,6 +3,8 @@
 
 <head>
   <meta charset="utf-8">
+
+  <script type="module" th:src="@{/js/admin-search-users.js}" defer></script>
   <!-- CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
@@ -35,166 +37,60 @@
 	<label class="custom-control-label" for="search-switch">Search by Name/Username</label>
 </div>
 
-<div id="messages"></div>
+<div id="message"></div>
 
-<table id="results" class="table" >
+<table id="user-select-table" class="table table-bordered table-striped">
+	<thead id="user-select-thead">
+		<tr>
+			<th>Name</th>
+			<th>Username</th>
+		</tr>
+	</thead>
+	<tbody id="user-select-tbody">
+
+	</tbody>
 </table>
-    <div id="accordian">
-    
-    <!--Card 1 Seach Doctor  -->
-      <div class="card">
-        <div class="card-header">
-          <a class="card-link" data-toggle="collapse" href="#c1">Search Doctor</a>
-        </div>
-      </div>
-      <div id="c1" class="collapse show" data-parent="#accordian">
-        <div class="card-body">
-         <label class="label">Search</label>
-          <input id="doctor-search-input" onfocus="setInputId('doctor-search-input');setUrl('0');" class="form-control text-center" type="text" placeholder="Please Enter a Name"/>
-        </div>
-      </div>
-      
-      <!--Card 2 Search Patient -->
-      <div class="card">
-        <div class="card-header">
-          <a class="card-link" data-toggle="collapse" href="#c2">Search Patient</a>
-        </div>
-      </div>
-      <div id="c2" class="collapse" data-parent="#accordian">
-        <div class="card-body">
-        	<label class="label">Search</label>
-          <input id="patient-search-input" onfocus="setInputId('patient-search-input');setUrl('1');" class="form-control text-center" type="text" placeholder="Please Enter a Name"/>
-        </div>
-      </div>
-      
-      <!--Card 2 Search Admin -->
-        <div class="card">
-          <div class="card-header">
-            <a class="card-link" data-toggle="collapse" href="#c3">Search Admin</a>
-          </div>
-        </div>
-        <div id="c3" class="collapse" data-parent="#accordian">
-          <div class="card-body">
-			<label class="label">Search</label>
-          <input id="admin-search-input" onfocus="setInputId('admin-search-input');setUrl('2');" class="form-control text-center" type="text" placeholder="Please Enter a Name"/>
-      </div>
-    </div>
-  </div>
+
+<table id="user-info-table" class="table table-bordered table-striped">
+	<thead id="user-info-thead">
+		
+	</thead>
+	<tbody id="user-info-tbody">
+
+	</tbody>
+</table>
+
+<table id="user-additional-table" class="table table-bordered table-striped">
+
+	<thead id="user-additional-thead">
+		
+	</thead>
+
+	<tbody id="user-additional-tbody">
+	</tbody>
+</table>
+
+<button id="btn-user-info" class="btn btn-primary">
+	Get Selected User Info
+  </button>
+
+
+	<div id="radio-buttons">
+		<label for="r1">Patient</label>
+		<input id="r1" type="radio" name="user-type" value="patient" checked>
+		<label for="r2">Doctor</label>
+		<input id="r2" type="radio" name="user-type" value="doctor">
+		<label for="r3">Admin</label>
+		<input id="r3" type="radio" name="user-type" value="admin">
+	</div>
+
+	
+
+
+	<input id="user-search-input" class="form-control text-center" type="text" placeholder="Please Enter a Name"/>
+
 </div>
 
 
 </body>
-<script> 
-var searchByName = true;
-var inputId = '';
-var type = '';
-
-/* function flipSwitch() {
-	console.log('******** flipSwitch called ********');
-	if (document.getElementById('search-switch').checked) {
-		searchByName = true;
-	} 
-	else {
-		searchByName = false;
-	}
-} */
-function setInputId(id) {
-	console.log('******** setInputId called ********');
-	inputId = id;
-}
-function setUrl(address) {
-	console.log('******** setUrl called ********');
-	type = address;
-}
-/*search ajax url - search by name OR by username*/
-function searchUrl () {
-	console.log('******** searchUrl called ********');
-	var input = $('#'+inputId).val();
-	if (document.getElementById('search-switch').checked) {
-		console.log('******** switch checked ********');
-		searchByUsername(input);
-	} 
-	else {
-		searchByN(input);
-	}
-
-}
-
-/*keep as searchByN - "searchByName" is skipped by parser for some reason - 
- * possibly parser optimisation bug.*/
-function searchByN (input) {
-	console.log('******** searchByName called ********');
-	$.ajax({
-		type:'GET',
-		url :'/ajax/search-name/'+input+'/'+type,
-		success: function (d) {
-			var data = JSON.stringify(d);
-			var res = JSON.parse(data);
-			var m = '';
-			
-			if (res.response == true) {
-				console.log('******** response true ********');
-				console.log('******** count'+res.count+'********');
-				m += '<tr><th>Name</th><th>Username</th><th>Role</th></tr>';
-				for (var i=0; i < res.count; i++) {
-					m += '<row><td>'+res.users[i].name+'</td><td>'+res.users[i].username+'</td><td>'+res.users[i].role+'</td><row>';
-				}
-				$('#results').html(m);
-			}
-			else {
-				for (var i=0; i < res.count; i++) {
-					m += '<p>'+res.users[i].name+'</p>';
-				}
-				$('#messages').html(m);
-			}
-			
-		},
-		 error: function () {
-			$('messages').html('<p>Error occured. Please trying logging in again.</p>');
-		}
-	});
-}
-
-function searchByUsername(input) {
-	console.log('******** searchByUsername called ********');
-	$.ajax({
-		type:'GET',
-		url :'/ajax/search-user/'+input+'/'+type,
-		success: function (d) {
-			var data = JSON.stringify(d);
-			var res = JSON.parse(data);
-			
-			if (res.response == true) {
-				var m = '';
-				console.log('******** response true ********');
-				console.log('******** count'+res.count+'********');
-				console.log('******** count'+res.user.name+'********');
-				m += '<tr><th>Name</th><th>Username</th><th>Role</th></tr>';
-				console.log(res.user.name);
-				m += '<row><td>'+res.user.name+'</td><td>'+res.user.username+'</td><td>'+res.user.role+'</td><row>';
-				
-				$('#results').html(m);
-				
-			}
-			else {
-				for (var i = 0; i < res.count; i++) {
-					m += '<p>'+res.messages[i]+'</p>';
-				}
-				$('#messages').html(m);
-			}
-			
-		}
-/* 		,
-		 error: function () {//change later - more correct implementation
-			$('#messages').html('<p class="alert alert-danger">Empty Field</p>');
-		} */
-	});
-
-}
-
-
-$(document).ready($(':input').keyup(function(){
-	searchUrl();
-}))
-</script>
 </html>

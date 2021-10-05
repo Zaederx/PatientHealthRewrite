@@ -14,4 +14,5 @@ public interface AdminPagingRepository extends PagingAndSortingRepository<Admin,
     List<Admin> findByName(String name);
     Page<Admin> findAllByUsername(String username, Pageable pageable);
     Page<Admin> findAllByName(String name, Pageable pageable);
+    Page<Admin> findAllByNameContaining(String name, Pageable page);
 }

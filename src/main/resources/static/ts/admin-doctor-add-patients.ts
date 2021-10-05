@@ -21,7 +21,7 @@ function setPageNumVars(currentPageNum:number) {
 function getSelectedDoctorId() {
     var tableBody = document.querySelector('#doctor-search-table-body') as HTMLTableElement
     var currentlySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
-    var docId = currentlySelected.getAttribute('data-docId') as string
+    var docId = currentlySelected.getAttribute('data-id') as string
     return docId
 }
 $('#btn-prev').on('click', () => {
@@ -50,14 +50,14 @@ $('#btn-go').on('click', () => {
 function getSelectedPatientId() {
     var tableBody = document.querySelector('#patient-search-table-body') as HTMLTableElement
     var currentlySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
-    var pId = currentlySelected.getAttribute('data-pId') as string
+    var pId = currentlySelected.getAttribute('data-id') as string
     return pId
 }
 
 function getSelectedRemovePatientId() {
     var tableBody = document.querySelector('#current-patient-table-body') as HTMLTableElement
     var currentlySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
-    var pId = currentlySelected.getAttribute('data-pId') as string
+    var pId = currentlySelected.getAttribute('data-id') as string
     return pId
 }
 

@@ -1,9 +1,9 @@
 class Doctor extends User {
     specialisation:string
-    patients:Patient[]
+    patientsJsons:Patient[]
     constructor(id:number, name:string, username:string, email:string, specialisation:string, patients:Patient[]) {
         super(id,name,username,email);
-        this.patients = patients;
+        this.patientsJsons = patients;
         this.specialisation = specialisation;
     }
 }

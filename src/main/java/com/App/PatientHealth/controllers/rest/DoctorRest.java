@@ -76,13 +76,19 @@ public class DoctorRest {
         DoctorListResponse res = new DoctorListResponse();
 
         //find doctor by id
-        Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(Integer.parseInt(doctorId));
+        int id = Integer.parseInt(doctorId);
+        Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(id);
 
         //add doctor to response
         List<DoctorJson> docJsons = new ArrayList<DoctorJson>();
         if(doctorOpt.isPresent()) {
             docJsons.add(new DoctorJson(doctorOpt.get()));
             res.setDoctorJsons(docJsons);
+            res.setSuccess(true);
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No details available");
         }
         return res;
     }
@@ -128,7 +134,6 @@ public class DoctorRest {
         DoctorListResponse res = new DoctorListResponse();
         logger.trace("Doctor List size:"+Integer.toString(doctorPage.getContent().size()));
         logger.trace("Page Content:"+doctorPage.getContent().toString());
-        //IMPORTANT - METHOD DOES NOT RETURN ANY DOCTORS 
         try {
             doctorPage.getContent().forEach( u -> {
                 logger.trace(u.toString());
@@ -219,4 +224,5 @@ public class DoctorRest {
         }
         return res;
     }
+
 }

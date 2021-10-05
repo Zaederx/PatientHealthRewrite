@@ -57,4 +57,11 @@ public class Patient extends User {
         this.doctor = doctor;
     }
 
+    public String getDOB() {
+        return DOB;
+    }
+
+    public void setDOB(String dOB) {
+        DOB = dOB;
+    }
 }

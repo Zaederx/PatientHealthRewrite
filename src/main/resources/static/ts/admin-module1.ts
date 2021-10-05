@@ -5,7 +5,7 @@
 export function doctorDataToRows(data:DoctorResponseList) {
    var rows = '';
    data.doctorJsons.forEach( d => {
-       var cell = '<tr data-docId="'+d.id+'" data-selected="false">'+
+       var cell = '<tr data-id="'+d.id+'" data-selected="false" data-userType="doctor">'+
                        '<td>'+d.name+'</td>' + 
                        '<td>'+d.username+'</td>'+
                        '<td>'+d.specialisation+'</td>'+
@@ -26,12 +26,12 @@ export const plain = ''
  * Take a tableBody and adds EventListeners 
  * @param tableBody - tableBody
  */
-export function makeClickableDoctorTableRows(tableBody:HTMLTableElement, csrfToken:string) {
+export function makeClickableDoctorTableRows(tableBody:HTMLTableElement, csrfToken?:string) {
     var rows = tableBody?.querySelectorAll('tr');
     rows.forEach( row => {
         row.addEventListener('click', () => {
             var selected = row.getAttribute('data-selected')
-            var docId = row.getAttribute('data-docId') as string
+            var id = row.getAttribute('data-id') as string
             if (selected == 'false') {
                 //unselect previously selected row
                 var previouslySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
@@ -42,7 +42,9 @@ export function makeClickableDoctorTableRows(tableBody:HTMLTableElement, csrfTok
                 
                 //highlight newly selected row
                 highlightRow(row,yellow)
-                displayDoctorsPatientDetails(docId,csrfToken)
+                if(csrfToken) {
+                    displayDoctorsPatientDetails(id,csrfToken)
+                }
                 //select doctor row
                 row.setAttribute('data-selected', 'true')
             }
@@ -62,9 +64,10 @@ export function displayDoctorsPatientDetails(doctorId:string, csrfToken:string) 
         headers: {'X-CSRF-TOKEN':csrfToken},
         success: (data:PatientResponseList) => {
             if(data.success) {
+                //get doctor's patient's data
                 var rows = patientDataToRows(data)
                 $('#current-patient-table-body').html(rows)
-                //make table rows clickable
+                //make doctor's patients table rows clickable
                 var tableBody = document.querySelector('#current-patient-table-body') as HTMLTableElement;
                 makeClickablePatientTableRows(tableBody)
             }
@@ -147,7 +150,7 @@ function searchForPatient(name:string, pageNum:number, csrfToken:string) {
 export function patientDataToRows(data:PatientResponseList) {
     var rows = '';
     data.patientJsons.forEach( p => {
-        var cell = '<tr data-pId="'+p.id+'" data-selected="false">'+
+        var cell = '<tr data-id="'+p.id+'" data-selected="false" data-userType="patient">'+
                         '<td>'+p.name+'</td>'+ 
                         '<td>'+p.username+'</td>'+
                         '<td>'+p.DOB+'</td>'+
@@ -160,12 +163,12 @@ export function patientDataToRows(data:PatientResponseList) {
 
 var patientSearchTable = document.querySelector('#patient-search-table-body') as HTMLTableElement
 
-export function makeClickablePatientTableRows(tableBody:HTMLTableElement = patientSearchTable, ) {
+export function makeClickablePatientTableRows(tableBody:HTMLTableElement = patientSearchTable ) {
     var rows = tableBody?.querySelectorAll('tr');
     rows.forEach( row => {
         row.addEventListener('click', () => {
             var selected = row.getAttribute('data-selected')
-            var pId = row.getAttribute('data-pId') as string
+            var id = row.getAttribute('data-id') as string
             if (selected == 'false') {
                 //unselected previously selected row
                 var previouslySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement

@@ -30,14 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PatientRest {
 
-    
-    
     @Autowired
     UserDetailsServiceImpl userServices;
     
-    public PatientRest(UserDetailsServiceImpl userServices) {
-        this.userServices = userServices;
-    }
 
     @GetMapping(value = "/get-patient/name/{name}/{pageNum}")
     public PatientListResponse getPatientByName(@PathVariable String name, @PathVariable String pageNum) {
@@ -93,23 +88,27 @@ public class PatientRest {
 
 
 
-    @GetMapping("{patientId}")
-    public PatientListResponse getPatientById(@RequestParam Integer patientId) {
+    @GetMapping("/{patientId}")
+    public PatientListResponse getPatientById(@PathVariable String patientId) {
+        //create response object
         PatientListResponse res = new PatientListResponse();
-        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(patientId);
+        //find by id
+        int id = Integer.parseInt(patientId);
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(id);
+        
+        //set patient json response list
         if (patientOpt.isPresent()) {
             Patient p = patientOpt.get();
             res.getPatientJsons().add(new PatientJson(p));
+            res.setSuccess(true);
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No details available");
         }
         
         return res;
     }
-
-     /***********Patient - By Firsname Lastname *************** */
-    
-   
-    /************************** */
-
 
     //read user by username
     @GetMapping("get-patient/username/{username}")

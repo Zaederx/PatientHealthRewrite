@@ -96,7 +96,6 @@ class PatientHealthApplicationTests {
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	void expect_patientCreated() throws Exception {
-		
 		mock.perform(get(baseUrl+"/admin/register-users")).andExpect(status().isOk()).andExpect(view().name("admin/admin-register-users"));
 		//register a patient
 		mock.perform(post(baseUrl+"/rest/patient/create").contentType(MediaType.APPLICATION_JSON_VALUE).content("{name:\"testingPatientCreated\", username:\"pTestUsername\", email:\"pTestEmail@email.com\", password:\"password\"}").with(csrf())).andExpect(status().isOk());

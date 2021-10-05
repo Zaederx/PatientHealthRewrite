@@ -8,14 +8,14 @@ import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.AdminJson;
 
 public class AdminListResponse extends JsonResponse{
-    List<AdminJson> adminJson;
+    List<AdminJson> adminJsons;
 
     public AdminListResponse() {
-        this.adminJson = new ArrayList<AdminJson>();
+        this.adminJsons = new ArrayList<AdminJson>();
     }
 
     public AdminListResponse(List<Admin> list) {
-        this.adminJson = adminListToAdminJson(list);
+        this.adminJsons = adminListToAdminJson(list);
     }
 
     private List<AdminJson> adminListToAdminJson(List<Admin> list) {
@@ -25,11 +25,11 @@ public class AdminListResponse extends JsonResponse{
     }
 
     
-    public List<AdminJson> getAdminJson() {
-        return adminJson;
+    public List<AdminJson> getAdminJsons() {
+        return adminJsons;
     }
 
-    public void setAdminJson(List<AdminJson> adminJson) {
-        this.adminJson = adminJson;
+    public void setAdminJsons(List<AdminJson> adminJson) {
+        this.adminJsons = adminJson;
     }
 }

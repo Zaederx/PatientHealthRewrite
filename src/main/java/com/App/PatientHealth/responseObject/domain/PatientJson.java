@@ -12,14 +12,22 @@ import com.App.PatientHealth.domain.Patient;
  */
 public class PatientJson extends UserJson {
 
+    String DOB;
     String doctorName;
+    String doctorEmail;
     List<String> medicationNames;
     public PatientJson(){}
 
     public PatientJson(Patient p){
         super(p);
+        this.DOB = p.getDOB();
         if (p.getDoctor() != null) {
             this.doctorName = p.getDoctor().getName();
+            this.doctorEmail = p.getDoctor().getEmail();
+        }
+        else {
+            this.doctorName = "N/A";
+            this.doctorEmail = "N/A";
         }
         if (p.getMedication() != null) {
             this.medicationNames =  medicationNames(p);
@@ -38,4 +46,30 @@ public class PatientJson extends UserJson {
         );
         return medicationNames;
     }
+
+
+    public String getDoctorName() {
+        return this.doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+
+    public String getDoctorEmail() {
+        return this.doctorEmail;
+    }
+
+    public void setDoctorEmail(String doctorEmail) {
+        this.doctorEmail = doctorEmail;
+    }
+
+    public List<String> getMedicationNames() {
+        return this.medicationNames;
+    }
+
+    public void setMedicationNames(List<String> medicationNames) {
+        this.medicationNames = medicationNames;
+    }
+
 }

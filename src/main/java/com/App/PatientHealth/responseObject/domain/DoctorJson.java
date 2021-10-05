@@ -21,4 +21,22 @@ public class DoctorJson extends UserJson {
           d.getPatients().forEach(p -> patients.add(new PatientJson(p)));
         return patients;
     }
+
+
+    public String getSpecialisation() {
+        return this.specialisation;
+    }
+
+    public void setSpecialisation(String specialisation) {
+        this.specialisation = specialisation;
+    }
+
+    public List<PatientJson> getPatientJsons() {
+        return this.patientJsons;
+    }
+
+    public void setPatientJsons(List<PatientJson> patientJsons) {
+        this.patientJsons = patientJsons;
+    }
+
 }

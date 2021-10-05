@@ -11,6 +11,7 @@ public class PatientListResponse extends JsonResponse{
     public PatientListResponse() {
         this.patientJsons = new ArrayList<PatientJson>();
     }
+    
     public List<PatientJson> getPatientJsons() {
         return patientJsons;
     }
