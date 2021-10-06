@@ -44,7 +44,7 @@ public class PatientRest {
         Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 10, Sort.by("name").ascending());
 
         //Get iterable patients
-        Page<Patient> patients = userServices.getPatientPaging().findAllByNameContaining(name, pageable);
+        Page<Patient> patients = userServices.getPatientPaging().findAllByNameContainingIgnoreCase(name, pageable);
 
         if (patients.hasContent()) {
             //add JSON of each patient to pJson

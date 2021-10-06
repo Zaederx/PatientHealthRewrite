@@ -1,7 +1,9 @@
-/* Data to rows
-* @param data - AJAX response DoctorResponseList
-* @returns 
-*/
+/** 
+ * *** NOTE: use with admin 'search-users' view - TABLE 1***
+ * Data to rows
+ * @param data - AJAX response DoctorResponseList
+ * @returns 
+ */
 export function doctorDataToRows(data:DoctorResponseList) {
    var rows = '';
    data.doctorJsons.forEach( d => {
@@ -23,31 +25,53 @@ export const yellow = '#fdfc8a'
 export const plain = ''
 
 /**
- * Take a tableBody and adds EventListeners 
- * @param tableBody - tableBody
+ * Selects a table row
+ * @param tableBody 
+ * @param row 
+ * @param csrfToken 
  */
-export function makeClickableDoctorTableRows(tableBody:HTMLTableElement, csrfToken?:string) {
+export function selectRow(tableBody:HTMLTableElement,row:HTMLTableRowElement, csrfToken?:string) {
+    var selected = row.getAttribute('data-selected')
+    var id = row.getAttribute('data-id') as string
+    if (selected == 'false') {
+        //get previously selected row if there is one
+        var previouslySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
+        //if there is - unselect this row
+        if (previouslySelected) {
+            highlightRow(previouslySelected,plain)
+            previouslySelected.setAttribute('data-selected','false')
+        }
+        
+        //highlight newly selected row
+        highlightRow(row,yellow)
+        if(csrfToken) {
+            displayDoctorsPatientDetails(id,csrfToken)
+        }
+        //set newlyselected row attribute 'data-selected' to true
+        row.setAttribute('data-selected', 'true')
+    }    
+        
+}
+
+/**
+ * Makes rows of a table selectable/clickable.
+ * @param tableBody 
+ * @param selectRow 
+ * @param csrfToken 
+ */
+export function makeClickableTableRows(tableBody:HTMLTableElement,selectRow:Function, csrfToken?:string) {
     var rows = tableBody?.querySelectorAll('tr');
     rows.forEach( row => {
         row.addEventListener('click', () => {
-            var selected = row.getAttribute('data-selected')
-            var id = row.getAttribute('data-id') as string
-            if (selected == 'false') {
-                //unselect previously selected row
-                var previouslySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
-                if (previouslySelected) {
-                    highlightRow(previouslySelected,plain)
-                    previouslySelected.setAttribute('data-selected','false')
-                }
-                
-                //highlight newly selected row
-                highlightRow(row,yellow)
-                if(csrfToken) {
-                    displayDoctorsPatientDetails(id,csrfToken)
-                }
-                //select doctor row
-                row.setAttribute('data-selected', 'true')
+            //doctor user csrfToken
+            if(csrfToken) {
+                selectRow(tableBody,row,csrfToken)
             }
+            //if not doctor using csrfToken
+            else {
+                selectRow(tableBody,row)
+            }
+            
         })
     })
 }
@@ -69,7 +93,7 @@ export function displayDoctorsPatientDetails(doctorId:string, csrfToken:string) 
                 $('#current-patient-table-body').html(rows)
                 //make doctor's patients table rows clickable
                 var tableBody = document.querySelector('#current-patient-table-body') as HTMLTableElement;
-                makeClickablePatientTableRows(tableBody)
+                makeClickableTableRows(tableBody,selectRow)
             }
             else {
                 var errorMsg = '<tr colspan="4">'+'NO PATIENTS TO DISPLAY'+'</tr>'
@@ -97,7 +121,7 @@ export function searchForDoctor(name:string, pageNum:number,csrfToken:string) {
                 $('#pageTotal').html("of "+data.totalPages)
                 //make table rows clickable
                 var tableBody = document.querySelector('#doctor-search-table-body') as HTMLTableElement;
-                makeClickableDoctorTableRows(tableBody,csrfToken)
+                makeClickableTableRows(tableBody,selectRow,csrfToken)
             }
             else {
                 //display error message
@@ -131,7 +155,7 @@ function searchForPatient(name:string, pageNum:number, csrfToken:string) {
                 $('#p-pageTotal').html("of "+data.totalPages)
                 //make table rows clickable
                 var tableBody = document.querySelector('#patient-search-table-body') as HTMLTableElement;
-                makeClickablePatientTableRows(tableBody)
+                makeClickableTableRows(tableBody,selectRow)
             }
             else {
                 //display error message
@@ -163,27 +187,6 @@ export function patientDataToRows(data:PatientResponseList) {
 
 var patientSearchTable = document.querySelector('#patient-search-table-body') as HTMLTableElement
 
-export function makeClickablePatientTableRows(tableBody:HTMLTableElement = patientSearchTable ) {
-    var rows = tableBody?.querySelectorAll('tr');
-    rows.forEach( row => {
-        row.addEventListener('click', () => {
-            var selected = row.getAttribute('data-selected')
-            var id = row.getAttribute('data-id') as string
-            if (selected == 'false') {
-                //unselected previously selected row
-                var previouslySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
-                if (previouslySelected) {
-                    highlightRow(previouslySelected,plain)
-                    previouslySelected.setAttribute('data-selected','false')
-                }
-                
-                //highlight newly selected row
-                highlightRow(row,yellow)
-                row.setAttribute('data-selected', 'true')
-            }
-        })
-    })
-}
 
 export async function addPatientToDoctor(pId:string,docId:string,csrfToken:string) {
     var data = {pId,docId}

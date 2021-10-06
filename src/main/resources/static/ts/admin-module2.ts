@@ -1,11 +1,18 @@
-import { highlightRow, makeClickableDoctorTableRows, makeClickablePatientTableRows, plain, yellow } from "./admin-module1.js"
+import { highlightRow,  makeClickableTableRows,  plain, selectRow, yellow } from "./admin-module1.js"
 
 /**
  * Represents an html table's id and body content.
- * idRoot example:
+ * This class assumes the table follows the follow naming convention:
+ * ```
+ * //all table elements should have the same root i.e.
  * idRoot = '#user-select-'
+ * //and should end with the element name
+ * tableId = '#user-select-table'
+ * tableHeadId = '#user-select-thead'
+ * tableBodyId = '#user-select-tbody'
+ * ```
  */
-class Table {
+export class Table {
     idRoot:string;
     thead:string;
     tbody:string;
@@ -34,7 +41,7 @@ class Table {
  * i.e. There are three tables in admin-search-users.html view
  * and this object helps to match information to the right table
  */
-class TableData {
+export class TableData {
     table1:Table;
     table2:Table;
     table3:Table;
@@ -67,7 +74,10 @@ export function message(message:string,type:string):string {
     return '<p class="alert '+type+'">'+message+'</p>'
 }
 //SECTION - DOCTOR
-/** Take multiple doctors data and converts them to html
+/** 
+ * *** NOTE: use with admin 'search-users' view - TABLE 1***
+ * 
+ * Takes multiple doctors data and converts them to html
  * table rows
  * @param data - AJAX response DoctorResponseList
  * @returns 
@@ -88,6 +98,7 @@ export function doctorsToRows(data:DoctorResponseList) {
  }
 
  /**
+  * *** NOTE: use with admin 'search-users' view - TABLE 2 & 3***
   * Takes single doctor's infomation and displays on the table 2
   * and table 3
   * Data object should just have one doctor avaialble in
@@ -109,6 +120,9 @@ export function doctorsToRows(data:DoctorResponseList) {
                         '</tr>';
 
     rows.table3.thead = '<tr>'+
+		    				'<th colspan="3">Patients</th>'+
+	    				'</tr>'+
+                        '<tr>'+
                             '<th>Patients Name</th>'+
                             '<th>Username</th>'+
                             '<th>Email</th>'+
@@ -169,7 +183,7 @@ export function searchForDoctor(name:string, pageNum:number, csrfToken:string) {
             //display doctname name and username
             $(t1.getTbodyId()).html(t1.tbody)
             var tableBody = document.querySelector(t1.getTbodyId()) as HTMLTableElement
-            makeClickableDoctorTableRows(tableBody)
+            makeClickableTableRows(tableBody,selectRow)
         },
         error: () => {
             $('#message').html(message('Error retrieving doctor information','alert-danger'))
@@ -289,7 +303,7 @@ export function searchForPatient(name:string, pageNum:number, csrfToken:string) 
                 //display doctor name name and username
                 $(t1.getTbodyId()).html(t1.tbody)
                 var tableBody = document.querySelector(t1.getTbodyId()) as HTMLTableElement
-                makeClickablePatientTableRows(tableBody)
+                makeClickableTableRows(tableBody,selectRow)
             }
             else {
                 $('#message').html(message(data.message,'alert-warning'))
@@ -438,5 +452,3 @@ function makeClickableAdminTableRows(tableBody:HTMLTableElement) {
 }
 
 
-
- 

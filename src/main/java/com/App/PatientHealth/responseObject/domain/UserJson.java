@@ -7,6 +7,7 @@ public class UserJson {
     String name;
     String username;
     String email;
+    String role;
 
     public UserJson() {}
     public UserJson(User u) {
@@ -14,6 +15,7 @@ public class UserJson {
         this.name = u.getName();
         this.username = u.getUsername();
         this.email = u.getEmail();
+        this.role = u.getRole();
     }
 
 
@@ -50,5 +52,12 @@ public class UserJson {
         this.email = email;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
     
 }

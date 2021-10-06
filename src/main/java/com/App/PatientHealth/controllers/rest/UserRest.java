@@ -1,6 +1,7 @@
 package com.App.PatientHealth.controllers.rest;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.App.PatientHealth.domain.Admin;
 import com.App.PatientHealth.domain.Doctor;
@@ -15,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,27 +82,84 @@ public class UserRest {
     }
 
     //get doctor - by firstname
-    @GetMapping("get-user/name/{name}/{pageNum}")
-    public JsonResponse findUserByFirstname(@RequestParam String name,@RequestParam Integer pageNum) {
-         //set page number and return up to 10 elements
-         Pageable page = PageRequest.of(pageNum, 10);
-         //get list of users from that page
-         Page<User> uList = userServices.getUserPaging().findAllByName(name, page);
-         //set response object with users
-         UserListResponse res = new UserListResponse();
-         uList.forEach( u -> 
-             res.getUserJson().add(new UserJson(u))
-         );
-         res.setTotalPages(uList.getTotalPages());
-         return res;
+    @GetMapping("/get-user/name/{name}/{pageNum}")
+    public JsonResponse findUserByFirstname(@PathVariable String name,@PathVariable String pageNum) {
+        int pageNumInt = Integer.parseInt(pageNum);
+        //set page number and return up to 10 elements
+        //note -1 because of zero indexed for pages (i.e. starts at zero)
+        Pageable page = PageRequest.of(pageNumInt-1, 10, Sort.by("name").ascending());
+        //get page of users
+        Page<User> uPage = userServices.getUserPaging().findAllByNameContainingIgnoreCase(name, page);
+        //set response object with users
+        UserListResponse res = new UserListResponse();
+        if(uPage.hasContent()) {
+            uPage.forEach( u -> 
+                res.getUserJsons().add(new UserJson(u))
+            );
+            res.setTotalPages(uPage.getTotalPages());
+            res.setSuccess(true);
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No results to display");
+        }
+        
+        return res;
     }
 
     //read user by username
     @GetMapping("get-user/username/{username}")
-    public JsonResponse findUserByUsername(@RequestParam String username) {
+    public JsonResponse findUserByUsername(@PathVariable String username) {
         User u = userServices.getUserPaging().findByUsername(username);
         UserListResponse res = new UserListResponse();
-        res.getUserJson().add(new UserJson(u));
+        res.getUserJsons().add(new UserJson(u));
         return res;
+   }
+
+   @PostMapping("/edit")
+   public JsonResponse updateUser(@RequestBody Map<String,String> request) {
+
+       int id = Integer.parseInt(request.get("id"));
+       String name = request.get("name");
+       String username = request.get("username");
+       String email = request.get("email");
+       String password = request.get("password");
+
+       //create response object
+       JsonResponse res = new JsonResponse();
+
+       //find user
+       Optional<User> userOpt = userServices.getUserPaging().findById(id);
+       if (userOpt.isPresent()) {
+           //get user
+            User user = userOpt.get();
+
+            //make changes if values are not empty strings or null
+            if (!name.isEmpty() && name != null ) {
+                user.setName(name);
+            }
+            if (!username.isEmpty() && username != null ) {
+                user.setUsername(username);
+            }
+            if (!email.isEmpty() && email != null ) {
+                user.setEmail(email);
+            }
+            if (!password.isEmpty() && password != null ) {
+                user.setPassword(password);
+            }
+
+            try {
+                //save changes
+                userServices.getUserPaging().save(user);
+                res.setSuccess(true);
+            }
+            catch (Exception e) {
+                res.setSuccess(false);
+                res.setMessage("Error editing user");
+            }
+       }
+       
+       //return response object
+       return res;
    }
 }

@@ -1,10 +1,20 @@
-var csrfToken = $("meta[name='_csrf']").attr("content");//needed for post requests
+import { validateEmail } from "./admin-module4.js";
+
+var csrfToken = $("meta[name='_csrf']").attr("content") as string;//needed for post requests
+//global boolean window variables - to identify which fields have passed as valid
+var pNameValid = false
+var pUsernameValid = false 
+var pEmailValid = false
+var pPasswordValid = false
+
 function showPassword(id:string){
+    //show both passwords as plain text
     $(id+'1').attr('type', 'text');
 	$(id+'2').attr('type', 'text');
 }
 
 function hidePassword(id:string){
+    //show both password fields as dots / hidden text
     $(id+'1').attr('type', 'password');
 	$(id+'2').attr('type', 'password');
 }
@@ -13,6 +23,11 @@ function message(message:string):string {
     return '<p class="alert alert-info">'+message+'</p>'
 }
 
+/**
+ * Retrieve password response messages as html to be displayed.
+ * @param data 
+ * @returns 
+ */
 function passwordMessages(data:PasswordResponse) {
     var m = ''
     data.passwordsMatch != undefined ? m += message(data.passwordsMatch) : null
@@ -24,7 +39,15 @@ function passwordMessages(data:PasswordResponse) {
     return m
 }
 
-function handleSuccess(data:JsonResponse,errorId:string, validBool:string, enableBtn:Function, disableBtn:Function) {
+/**
+ * Handle success of an jQuery ajax request
+ * @param data server response object
+ * @param errorId id of error message div - to display error message there
+ * @param validBool name of boolean global window variable to be set true or false (response returns 'success' as true)
+ * @param enableBtn id of button to be enabled if response returns success as true
+ * @param disableBtn id of button to be dispable if repsonse returns success as false
+ */
+export function handleSuccess(data:JsonResponse,errorId:string, validBool:string, enableBtn:Function, disableBtn:Function) {
     if(data.success == false) {
         $(errorId).html(message(data.message));
         $(errorId).show()
@@ -40,7 +63,15 @@ function handleSuccess(data:JsonResponse,errorId:string, validBool:string, enabl
     }
 }
 
-function handlePasswordSuccess(data:PasswordResponse,errorId:string, validBool:string, enableBtn:Function, disableBtn:Function) {
+/**
+ * Handles success of a password response from the server
+ * 
+ * @param errorId id of error message div - to display error message there
+ * @param validBool name of boolean global window variable to be set true or false (response returns 'success' as true)
+ * @param enableBtn id of button to be enabled if response returns success as true
+ * @param disableBtn id of button to be dispable if repsonse returns success as false
+ */
+export function handlePasswordSuccess(data:PasswordResponse,errorId:string, validBool:string, enableBtn:Function, disableBtn:Function) {
     if(data.success == false) {
         var m = passwordMessages(data)
         $(errorId).html(m);
@@ -66,10 +97,7 @@ $('#admin-hide-password').on('focus', () => hidePassword('#admin-password'))
 $('#doctor-show-password').on('focus', () => showPassword('#doctor-password'))
 $('#doctor-hide-password').on('focus', () => hidePassword('#doctor-password'))
 
-var pNameValid = false
-var pUsernameValid = false 
-var pEmailValid = false
-var pPasswordValid = false
+
 
 /*SECTION Patient Validation & Registration */
 function disablePatientRegBtn() {
@@ -116,18 +144,12 @@ $('#patient-username').on('input', function () {
 })
 
 $('#patient-email').on('input', function () {
-    var email = $('#patient-email').val() as string
-    var data = {email}
-    $.ajax({
-        url: "/rest/validate/email",
-        type: "POST",
-        data: JSON.stringify(data),
-        contentType:"application/json",
-        dataType:"json",
-        headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#patient-email-error', "pEmailValid", enablePatientRegBtn, disablePatientRegBtn)
-    })
+    validateEmail('#patient-email', csrfToken,handleSuccessEmail)
 })
+
+function handleSuccessEmail(data:JsonResponse) {
+    handleSuccess(data,'#patient-email-error', "pEmailValid", enablePatientRegBtn, disablePatientRegBtn)
+}
 
 $('#patient-password1').on('input', function () {
     var password1 = $('#patient-password1').val() as string

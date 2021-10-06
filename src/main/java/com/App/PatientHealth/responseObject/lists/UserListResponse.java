@@ -7,16 +7,16 @@ import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.UserJson;
 
 public class UserListResponse extends JsonResponse {
-    List<UserJson> userJson;
+    List<UserJson> userJsons;
     
     public UserListResponse() {
-        this.userJson = new ArrayList<UserJson>();
+        this.userJsons = new ArrayList<UserJson>();
     }
-    public List<UserJson> getUserJson() {
-        return userJson;
+    public List<UserJson> getUserJsons() {
+        return userJsons;
     }
 
-    public void setUserJson(List<UserJson> userJson) {
-        this.userJson = userJson;
+    public void setUserJsons(List<UserJson> userJson) {
+        this.userJsons = userJson;
     }
 }

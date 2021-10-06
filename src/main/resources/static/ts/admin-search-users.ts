@@ -9,6 +9,7 @@ $('#user-search-input').on('input', () => {
 
     var userType = getUserSearchType()
     console.log('userType:',userType)
+    
     switch (userType) {
         case 'patient': 
             searchForPatient(name, pageNum,csrfToken);
@@ -43,9 +44,9 @@ function getUserSearchType() {
  * Returns the id of the user in that row.
  * @returns 
  */
- function getSelectedUserId() {
+ export function getSelectedUserId(tableBodyId: string): string {
     //get table
-    var tableBody = document.querySelector('#user-select-table') as HTMLTableElement;
+    var tableBody = document.querySelector(tableBodyId) as HTMLTableElement;
     //get selected row
     var row = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
     var id = row.getAttribute('data-id') as string
@@ -63,7 +64,7 @@ function getUserSearchType() {
  */
 function fetchUserDetails() {
     //get selected User
-    var id = getSelectedUserId()
+    var id = getSelectedUserId('#user-select-table')
     console.log('user id:',id)
     //identify usertype
     var usertype = getSelectedUserType();

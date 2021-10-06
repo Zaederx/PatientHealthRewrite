@@ -4,18 +4,20 @@
 <head>
   <meta charset="utf-8">
   <meta th:name="_csrf" th:content="${_csrf.token}"/>
-  
+  <!-- Page JavaScript -->
+  <script type="module" th:src="@{/js/admin-edit-users.js}" defer></script>
+
   <!-- CSS -->
-  <link rel="stylesheet" type="text/css" th:href="@{/css/app-css.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/app.css}">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
   <!-- jQuery library -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-  <!-- Popper JS -->
+  <!-- Popper JS (also for Bootstrap)-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
-  <!-- JavaScript -->
+  <!-- Bootstrap JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <title>Edit User</title>
 </head>
@@ -24,8 +26,7 @@
   <div class="jumbotron text-center">
     <h1>Admin - Edit User</h1>
     <h3></h3>
-     <div th:replace="admin/admin-nav"></div><!-- navigation -->
-  </div>
+     <div th:replace="admin/admin-nav"></div><!-- navigation --></div>
 	<div class="alert alert-info" th:if=${param.success} th:text="${param.success}">
 	</div>
 	<!-- Container Div -->
@@ -53,13 +54,21 @@
 		    				<th colspan="1">Email</th>
 			    		</tr>
 	    			</thead>
-	    			<tbody id="user-search-table-body" class="highlight-table-body-row">
+	    			<tbody id="user-details-tbody" class="highlight-table-body-row">
 	    			<!-- Fill via ajax method -->
 	    			
 	    			</tbody>
 	    		</table>
+
+				<div id="paging-buttons">
+					<span id="btn-prev" class="btn btn-primary">Prev</span>
+					<span id="pageNum" class="pageNum" contenteditable="true"></span>
+					<span id="pageTotal" class="pageTotal"></span>
+					<span id="btn-go" class="btn btn-primary">Go to page</span>
+					<span id="btn-next" class="btn btn-primary">Next</span>
+				</div>
 	    		
-	    		<button id="btn-edit" onclick="editUser();" class="btn btn-primary">Edit</button>
+	    		<button id="btn-edit" class="btn btn-primary">Edit</button>
 	    </div>
 	    <br>
 	    <hr class="hr-divider">
@@ -72,54 +81,51 @@
 	    
 	    <div class="container col-sm-10 justify-content-center">
 	    
-	   	<form class="form-group" action="#" th:action="@{/admin/register-user}" th:object="${userRegForm}" method="POST">
+		<div id="message"></div>
+	   	<form class="form-group" action="#">
 	   	
-	   		<input type="hidden" id="user-type" name="user-type" th:field="*{type}">
-	   		<input type="hidden" id="user-id" th:field="*{id}">
+			<input id="user-id" type="hidden"></input>
 		   	<label for="user-name">Name</label>
-		   	<input id="user-name" class="form-control text-center" type="text" th:field="*{name}" placeholder="Henry Thompson" autocomplete="off"></input>
-		   <!--TODO - dismiss th:if alerts  -->
-		   	<p class="alert alert-info" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+		   	<input id="user-name" class="form-control text-center" type="text" placeholder="Henry Thompson" autocomplete="off"></input>
 		   	<div id="user-name-error"></div>
 		   	
 		   	<div id="doctor-gmc-elements" style="display:none">
 			   	<label>GMC Reference Number</label><!--General Medical Council Number - Each doctor in UK is meant to have one  -->
-	    		<input id="doctor-gmc" class="form-control text-center"  th:field="*{gmcNum}" placeholder="3494984098345" autocomplete="off"></input>
+	    		<input id="doctor-gmc" class="form-control text-center" placeholder="3494984098345" autocomplete="off"></input>
 			   	<div id="doctor-gmc-error"></div>
 			   	<br>
 		   	</div>
 		   	
 		   	<label for="user-username">Username</label>
-		   	<input id="user-username" class="form-control text-center" type="text" th:field="*{username}" placeholder="Enstein92" autocomplete="off"></input>
+		   	<input id="user-username" class="form-control text-center" type="text" placeholder="Einstein92" autocomplete="off"></input>
 		   	<div id="user-username-error"></div>
 		   	
 		   	<label for="user-email">Email</label>
-		   	<input id="user-email" class="form-control text-center" type="text"  th:field="*{email}" placeholder="email@email.com" autocomplete="off"></input>
+		   	<input id="user-email" class="form-control text-center" type="text"   placeholder="email@email.com" autocomplete="off"></input>
 		  	<div id="user-email-error"></div>
 		   	<br><br>
 		   	
-		   	
-		   	
 		   	<div class="btn-group" data-toggle="buttons">
 			  <label class="btn btn-info">
-			    <input type="radio" onfocus="togglePasswordVisibility(this);" name="user-password-visibility" id="user-show-password" autocomplete="off"> Show
+			    <input type="radio" name="user-password-visibility" id="user-show-password" autocomplete="off"> Show
 			  </label>
 			  <label class="btn btn-secondary active">
-			    <input type="radio" onfocus="togglePasswordVisibility(this);" name="user-password-visibility" id="user-hide-password" autocomplete="off" checked> Hide
+			    <input type="radio" name="user-password-visibility" id="user-hide-password" autocomplete="off" checked> Hide
 			  </label>
 			</div><br>
 		   	
 		   	<label for="user-password">Password</label>
-		   	<input id= "user-password" class="form-control text-center" type="password" th:field="*{password}" placeholder="SomeThingICanRemeber!56" 
+		   	<input id= "user-password" class="form-control text-center" type="password" placeholder="SomeThingICanRemeber!56" 
 		   	pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autocomplete="off"></input>
-		   	<div id="user-password-error" th:error="*{password}"></div>
+		   	<div id="user-password-error"></div>
 		   	<br>
 		   	<label for="user-passwordTwo">Repeat Password</label>
-		   	<input id="user-passwordTwo" class="form-control text-center" type="password" th:field="*{password2}" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
+		   	<input id="user-passwordTwo" class="form-control text-center" type="password" placeholder="SomeThingICanRemeber!56" autocomplete="off"/>
 		   	
 		   	<br>
-		   	<button id="reg-btn-user" class="btn btn-primary" type="submit">Submit Edit Form</button>
+		   	
     	</form>
+		<button id="btn-submit-edit" class="btn btn-primary">Submit Edit Form</button>
 	    
 	 </div>
 

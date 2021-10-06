@@ -1,3 +1,6 @@
 //IMPORTANT Using @Query for more control over DB query's https://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-introduction-to-query-methods/  
 
 Spring JPA Query Methods - https://www.ronaldjamesgroup.com/blog/spring-data-jpa-query-methods-by-bruno-drugowick
+
+
+Logging in Spring - https://docs.spring.io/spring-boot/docs/2.1.7.RELEASE/reference/html/boot-features-logging.html

@@ -223,7 +223,7 @@ public class DoctorRest {
         }
         else {
             res.setSuccess(false);
-            res.setMessage("No doctor avaialbe with id:"+docId);
+            res.setMessage("No doctor available with id:"+docId);
         }
         return res;
     }

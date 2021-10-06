@@ -33,4 +33,9 @@ public class AdminViewController {
         return "admin/admin-doctor-add-patients";
     }
 
+    @GetMapping("/edit-users")
+    public String editUsers() {
+        return "admin/admin-edit-users";
+    }
+
 }
