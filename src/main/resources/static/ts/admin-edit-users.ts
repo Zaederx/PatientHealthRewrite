@@ -2,7 +2,6 @@ import { message, Table } from "./admin-module2.js"
 import { searchForUser } from "./admin-module3.js"
 import { validateEmail, validatePassword, validateUsername } from "./admin-module4.js"
 import { handlePasswordSuccess, handleSuccess } from "./admin-register-users.js"
-import { getSelectedUserId } from "./admin-search-users.js"
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string
 var searchBy:'name'|'username' = 'name'
@@ -81,6 +80,16 @@ $('#btn-go').on('click', () => {
 })
 //set edit button
 $('#btn-edit').on('click', () => displaySelectedUserInForm())
+
+//show / hide password fields
+$('#btn-show-password').on('click', () => {
+    $(passwordInputId).attr('type','text')
+    $(password2InputId).attr('type','text')
+})
+$('#btn-hide-password').on('click', () => {
+    $(passwordInputId).attr('type','password')
+    $(password2InputId).attr('type','password')
+})
 
 /**
  * Displays users information in the edit user form
