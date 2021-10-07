@@ -23,27 +23,47 @@ export function usersToRows(data:UserResponseList) {
     return tables;
 }
 
-function handleSearchForUserSuccess(data:UserResponseList) {
+/**
+ * Function to handle the response from search for user function
+ * @param data server response object
+ * @param pageTotalId id of element to display total page number
+ */
+function handleSearchForUserSuccess(data:UserResponseList, pageTotalId:string) {
         var tables:TableData = usersToRows(data)
         var t1 = tables.table1
         //display admin name and username
         $(t1.getTbodyId()).html(t1.tbody)
         var tableBody = document.querySelector(t1.getTbodyId()) as HTMLTableElement
         makeClickableTableRows(tableBody,selectRow)
+
+        //show total number of pages
+        $(pageTotalId).html(String(data.totalPages))
 }
 
 
-
-export function searchForUser(name:string, pageNum:number, csrfToken:string) {
+/**
+ * Function to search for users
+ * @param name 
+ * @param pageNum 
+ * @param csrfToken 
+ */
+export function searchForUser(name:string, pageNum:number, csrfToken:string, pageTotalElementId:string, by:'name'|'username') {
+    var url = ''
+    if (by == 'name') {
+        url = "/rest/user/get-user/name/"
+    } 
+    else if (by == 'username') {
+        url = "/rest/user/get-user/username/"
+    }
     console.log("searchForAdmin called")
     $('#pageNum').html(String(pageNum));
     console.log("pageNum set to:",pageNum)
     $.ajax({
-        url: "/rest/user/get-user/name/"+name+'/'+pageNum,
+        url: url+name+'/'+pageNum,
         type: "GET",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) =>  handleSearchForUserSuccess(data),
+        success: (data) =>  handleSearchForUserSuccess(data,pageTotalElementId),
         error: () => {
             $('#message').html(message('Error retrieving admin information','alert-danger'))
         }

@@ -108,11 +108,27 @@ public class UserRest {
     }
 
     //read user by username
-    @GetMapping("get-user/username/{username}")
-    public JsonResponse findUserByUsername(@PathVariable String username) {
-        User u = userServices.getUserPaging().findByUsername(username);
+    @GetMapping("/get-user/username/{username}/{pageNum}")
+    public JsonResponse findUserByUsername(@PathVariable String username, @PathVariable String pageNum) {
+        int pageNumInt = Integer.parseInt(pageNum);
+        //set page number and return up to 10 elements
+        //note -1 because of zero indexed for pages (i.e. starts at zero)
+        Pageable page = PageRequest.of(pageNumInt-1, 10, Sort.by("username").ascending());
+        //get page of users
+        Page<User> uPage = userServices.getUserPaging().findAllByUsernameIgnoreCase(username, page);
+        //set response object with users
         UserListResponse res = new UserListResponse();
-        res.getUserJsons().add(new UserJson(u));
+        if(uPage.hasContent()) {
+            uPage.forEach( u -> 
+                res.getUserJsons().add(new UserJson(u))
+            );
+            res.setTotalPages(uPage.getTotalPages());
+            res.setSuccess(true);
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No results to display");
+        }
         return res;
    }
 

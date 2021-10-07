@@ -5,6 +5,7 @@ import { handlePasswordSuccess, handleSuccess } from "./admin-register-users.js"
 import { getSelectedUserId } from "./admin-search-users.js"
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string
+var searchBy:'name'|'username' = 'name'
 const searchbarId = '#user-searchbar'
 const pageNumId = '#pageNum'
 //input ids
@@ -14,6 +15,9 @@ const usernameInputId = '#user-username'
 const emailInputId = '#user-email'
 const passwordInputId = '#user-password'
 const password2InputId = '#user-passwordTwo'
+
+//page total id
+const pageTotalElementId = '#pageTotal'
 
 //submit btn id
 const submitBtnId = '#btn-submit-edit'
@@ -31,12 +35,12 @@ $(searchbarId).on('input',()=>{
     var name = $(searchbarId).val() as string;
     var pageNum = $(pageNumId).val() as number
     if(!pageNum) {pageNum = 1}
-    searchForUser(name,pageNum,csrfToken)
+    searchForUser(name,pageNum,csrfToken,pageTotalElementId,searchBy)
 })
 
 /**the current page number */
 var userTableCurrentPageNum = 1
-var userTablePagePrev = 1
+var userTablePagePrev = 0
 var userTablePageNext = 2
 
 function setPageNumVars(currentPageNum:number) {
@@ -45,17 +49,25 @@ function setPageNumVars(currentPageNum:number) {
     userTablePageNext = userTableCurrentPageNum + 1;
 }
 
+$('#btn-search-username').on('click', () => {
+    searchBy = 'username'
+})
+
+$('#btn-search-name').on('click', () => {
+    searchBy = 'name'
+})
+
 $('#btn-prev').on('click', () => {
     var name = $(searchbarId).val() as string;
     //ajax request for doctors - on previous page of results
-    searchForUser(name,userTablePagePrev,csrfToken)
+    searchForUser(name,userTablePagePrev,csrfToken,pageTotalElementId,searchBy)
     //set current page to previous page & update prev and next page numbers
     setPageNumVars(userTablePagePrev as number)
 })
 $('#btn-next').on('click', () => {
     var name = $(searchbarId).val() as string;
     //ajax request for doctors - on previous page of results
-    searchForUser(name,userTablePageNext,csrfToken)
+    searchForUser(name,userTablePageNext,csrfToken,pageTotalElementId,searchBy)
     //set current page to next page & update prev and next page numbers
     setPageNumVars(userTablePageNext as number)
 })
@@ -63,16 +75,12 @@ $('#btn-go').on('click', () => {
     var name = $(searchbarId).val() as string;
     var pageNum = Number($(pageNumId).html() as string)
     //ajax request for doctors - on previous page of results
-    searchForUser(name,pageNum,csrfToken)
+    searchForUser(name,pageNum,csrfToken,pageTotalElementId,searchBy)
     //set current page to the entered page number & update prev and next page numbers
     setPageNumVars(pageNum as number)
 })
-
-$('#btn-edit').on('click', () => {
-    console.log('#btn-edit clicked')
-    //display in edit user form
-    displaySelectedUserInForm()
-})
+//set edit button
+$('#btn-edit').on('click', () => displaySelectedUserInForm())
 
 /**
  * Displays users information in the edit user form
@@ -137,8 +145,8 @@ $(passwordInputId).on('input', () => {
 })
 
 //validate second password field
-$(password2InputId).on('click', () => {
-    validatePassword(passwordInputId,password2InputId,csrfToken, 
+$(password2InputId).on('input', () => {
+    validatePassword(passwordInputId,password2InputId,csrfToken,
         (data:PasswordResponse) => {
             handlePasswordSuccess(data,passwordInputId+'-error', "passwordValid", enableSubmitBtn, disableSubmitBtn)
         },
@@ -158,7 +166,7 @@ $('#btn-submit-edit').on('click', () => {
     var password = $(passwordInputId).val()
 
     var data = {id,name,username,email,password}
-    //submit changes 
+    //submit changes
     $.ajax({
         url: "/rest/user/edit",
         type: "POST",
