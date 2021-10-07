@@ -24,7 +24,7 @@ public class PatientHealthApplication implements CommandLineRunner{
 	@Override
 	@Transactional
 	public void run (String ... strings) throws Exception {
-		// testUsers();
+		testUsers();
 	}
 
 	public void testUsers() {

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -176,6 +177,33 @@ public class UserRest {
        }
        
        //return response object
+       return res;
+   }
+
+   @DeleteMapping("/delete/{id}")
+   public JsonResponse deleteUser(@PathVariable String id) {
+       JsonResponse res = new JsonResponse();
+       //check if user exists
+       int idInt = Integer.parseInt(id);
+       Optional<User> userOpt = userServices.getUserPaging().findById(idInt);
+       if (userOpt.isPresent()) {
+           try {
+                //delete user
+                userServices.getUserPaging().deleteById(idInt);
+                res.setSuccess(true);
+                res.setMessage("User successfully deleted");
+           }
+           catch (Exception e) {
+               res.setSuccess(false);
+               res.setMessage("Problem deleting user");
+           }
+           
+       }
+       else {
+           res.setSuccess(false);
+           res.setMessage("User does not exist");
+       }
+
        return res;
    }
 }

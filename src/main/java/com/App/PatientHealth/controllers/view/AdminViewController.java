@@ -38,4 +38,8 @@ public class AdminViewController {
         return "admin/admin-edit-users";
     }
 
+    @GetMapping("/delete-users")
+    public String deleteUsers() {
+        return "admin/admin-delete-users";
+    }
 }

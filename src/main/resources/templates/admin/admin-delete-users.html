@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta th:name="_csrf" th:content="${_csrf.token}"/>
+  <!-- Page JavaScript -->
+  <script type="module" th:src="@{/js/admin-delete-users.js}" defer></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/app.css}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Popper JS (also for Bootstrap)-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+  <!-- Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <title>Edit User</title>
+</head>
+
+<body>
+  <div class="jumbotron text-center">
+    <h1>Admin - Edit User</h1>
+    <h3></h3>
+     <div th:replace="admin/admin-nav"></div><!-- navigation --></div>
+	<div class="alert alert-info" th:if=${param.success} th:text="${param.success}">
+	</div>
+	<!-- Container Div -->
+	<div class="container text-center col-sm-10 align-items-center">
+	
+		<div class="btn-group" data-toggle="buttons">
+		  <label id="btn-search-username" class="btn btn-info">
+		    <input type="radio" name="user-search-type" id="user-search-username" autocomplete="off"> Username
+		  </label>
+		  <label id="btn-search-name" class="btn btn-secondary active">
+		    <input type="radio" name="user-search-type" id="user-search-name" autocomplete="off" checked> Name
+		  </label>
+		</div><br>
+	   <input id="user-searchbar" class="form-control" type="text" placeholder="Search Users...">
+	   <div class="table-flow">
+	    <table id="user-details-table" class="table table-bordered table-striped">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="4">Users</th>
+	    				</tr>
+	    				<tr>
+		    				<th colspan="1">Type</th>
+		    				<th colspan="1">Username</th>
+		    				<th colspan="1">Name</th>
+		    				<th colspan="1">Email</th>
+			    		</tr>
+	    			</thead>
+	    			<tbody id="user-details-tbody" class="highlight-table-body-row">
+	    			<!-- Fill via ajax method -->
+	    			
+	    			</tbody>
+	    		</table>
+
+				<div id="paging-buttons">
+					<span id="btn-prev" class="btn btn-primary">Prev</span>
+					<span id="pageNum" class="pageNum" contenteditable="true"></span>
+					<span id="pageTotal" class="pageTotal"></span>
+					<span id="btn-go" class="btn btn-primary">Go to page</span>
+					<span id="btn-next" class="btn btn-primary">Next</span>
+				</div>
+	    		
+	    </div>
+	    <br>
+	    <hr class="hr-divider">
+	    <br>
+	    <table class="container text-center table table-bordered">
+	    	<tr>
+	    		<th>Delete User</th>
+	    	</tr>
+	    </table>
+	    
+	    <div class="container col-sm-10 justify-content-center">
+	    
+		<div id="message"></div>
+	   	
+		<button id="btn-delete-user" class="btn btn-danger">Delete User</button>
+	    
+	 </div>
+
+	    
+	</div> <!-- container div end  -->
+
+</body>
+
+</html>
