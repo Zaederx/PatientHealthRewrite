@@ -93,12 +93,13 @@ class PatientHealthApplicationTests {
 		mock.perform(post(baseUrl+"/authenticateUser").param("username", "d1").param("password", "password").with(csrf())).andExpect(redirectedUrl("/?loginSuccess"));
 	}
 
+	//Admin Integration Tests
 	@Test
 	@WithMockUser(roles = "ADMIN")
 	void expect_patientCreated() throws Exception {
 		mock.perform(get(baseUrl+"/admin/register-users")).andExpect(status().isOk()).andExpect(view().name("admin/admin-register-users"));
 		//register a patient
-		mock.perform(post(baseUrl+"/rest/patient/create").contentType(MediaType.APPLICATION_JSON_VALUE).content("{name:\"testingPatientCreated\", username:\"pTestUsername\", email:\"pTestEmail@email.com\", password:\"password\"}").with(csrf())).andExpect(status().isOk());
+		mock.perform(post(baseUrl+"/rest/patient/create").contentType(MediaType.APPLICATION_JSON_VALUE).content("{\"name\":\"testingPatientCreated\", \"username\":\"pTestUsername\", \"email\":\"pTestEmail@email.com\", \"password\":\"password\"}").with(csrf())).andExpect(status().isOk());
 	}
 	
 	// @Test
@@ -108,7 +109,7 @@ class PatientHealthApplicationTests {
 	// 	//got to register users page
 	// 	mock.perform(get(baseUrl+"/admin/register-users")).andExpect(status().isOk()));
 	// 	//register a patient
-	// 	mock.perform(post(baseUrl+"rest/patient/create").contentType(MediaType.APPLICATION_JSON_VALUE).content("{name:\"testingPatientCreated\", username:\"pTestUsername\", email: \"pTestEmail@email.com\" ,password:\"password\"}").with(csrf())).andExpect(status().isOk());
+	// 	mock.perform(post(baseUrl+"/rest/patient/create").contentType(MediaType.APPLICATION_JSON_VALUE).content("{name:\"testingPatientCreated\", username:\"pTestUsername\", email: \"pTestEmail@email.com\" ,password:\"password\"}").with(csrf())).andExpect(status().isOk());
 	// }
 
 	//https://docs.spring.io/spring-security/site/docs/4.0.x/reference/htmlsingle/#running-as-a-user-in-spring-mvc-test-with-annotations

@@ -39,7 +39,7 @@ public class AdminRest {
     UserDetailsServiceImpl userServices;
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public JsonResponse createPatient(@RequestBody AdminRegForm form) {
+    public JsonResponse createAdmin(@RequestBody AdminRegForm form) {
         //create response object
         JsonResponse res = new JsonResponse();
         //check is user with that username already exists
@@ -57,22 +57,14 @@ public class AdminRest {
                 res.setSuccess(false);
             }
         }
+        else {
+            res.setMessage("User already exists with username:"+form.getUsername());
+            res.setSuccess(false);
+        }
         //return response to client
         return res;
     }
 
-    @GetMapping("/all")
-    public AdminListResponse getAdmin() {
-        AdminListResponse res = new AdminListResponse();
-        Iterable<Admin> admin = userServices.getAdminPaging().findAll();
-
-        List<AdminJson> aJson = new ArrayList<AdminJson>();
-        admin.forEach( a -> 
-            aJson.add(new AdminJson(a))
-        );
-        res.setAdminJsons(aJson);
-        return res;
-    }
 
     @GetMapping("/{adminId}")
     public AdminListResponse getAdminById(@PathVariable String adminId) {
@@ -97,57 +89,61 @@ public class AdminRest {
 
     
     //SECTION read users
-  
-    //read patient's doctor
-    @GetMapping("patient/{patientId}")
-    public JsonResponse patientDoctors(@RequestParam Integer patientId) {
-        //create response object
-        PatientListResponse res = new PatientListResponse();
-        //get patient
-        Optional<Patient> p = userServices.getPatientPaging().findById(patientId);
-        //if patient is present - add to response
-        if(p.isPresent()) {
-            res.getPatientJsons().add(new PatientJson(p.get()));
-        }
-        return res;
-    }
     
     //List of admin - pagination
-    @GetMapping("list-admin/{pageNum}")
-    public JsonResponse listAdmin(@RequestParam Integer pageNum) {
+    @GetMapping("/list-admin/{pageNum}")
+    public AdminListResponse listAdmin(@PathVariable String pageNum) {
+        int pageNumInt = Integer.parseInt(pageNum);
         //set page number and return up to 10 elements
-        Pageable page = PageRequest.of(pageNum, 10);
+        Pageable pageable = PageRequest.of(pageNumInt-1, 10);
         //retrieve page from AdminPaging repository 
-        Page<Admin> adminPages = userServices.getAdminPaging().findAll(page);
-        //get list of admin
-        List<Admin> adminList = adminPages.getContent();
-        //put list in response object
-        AdminListResponse res = new AdminListResponse(adminList);
-        res.setTotalPages(adminPages.getTotalPages());
+        Page<Admin> adminPage = userServices.getAdminPaging().findAll(pageable);
+        AdminListResponse res = new AdminListResponse();
+        if(adminPage.hasContent()) {
+            //get list of admin
+            List<Admin> adminList = adminPage.getContent();
+            //put list in response object
+            res = new AdminListResponse(adminList);
+            res.setTotalPages(adminPage.getTotalPages());
+            res.setSuccess(true);
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No admins to display");
+        }
+        
         return res;
     }
 
     /***********Admin - By Firsname Lastname *************** */
     //get admin - by firstname
-    @GetMapping("get-admin/name/{name}/{pageNum}")
-    public JsonResponse findAdminByFirstname(@PathVariable String name, @PathVariable String pageNum) {
-         //set page number and return up to 10 elements
-         Pageable page = PageRequest.of(Integer.parseInt(pageNum)-1, 10, Sort.by("name").ascending());
-         //get list of users from that page
-         Page<Admin> uList = userServices.getAdminPaging().findAllByNameContaining(name, page);
-         //set response object with users
-         AdminListResponse res = new AdminListResponse();
-         try {
-            uList.forEach( u -> 
-                res.getAdminJsons().add(new AdminJson(u))
-            );
-            res.setTotalPages(uList.getTotalPages());
-            res.setSuccess(true);
-         }
-         catch (Exception e) {
-             res.setMessage("Error retrieving admins that match.");
-             res.setSuccess(false);
-         }
+    @GetMapping("/get-admin/name/{name}/{pageNum}")
+    public AdminListResponse findAdminByFirstname(@PathVariable String name, @PathVariable String pageNum) {
+        //set page number and return up to 10 elements
+        Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 10, Sort.by("name").ascending());
+        //get list of users from that page
+        Page<Admin> adminPage = userServices.getAdminPaging().findAllByNameContaining(name, pageable);
+        //set response object with users
+        AdminListResponse res = new AdminListResponse();
+        if (adminPage.hasContent()) {
+            try {
+                adminPage.forEach( u -> 
+                    res.getAdminJsons().add(new AdminJson(u))
+                );
+                res.setTotalPages(adminPage.getTotalPages());
+                res.setSuccess(true);
+            }
+            catch (Exception e) {
+                res.setMessage("Error retrieving admins that match.");
+                res.setSuccess(false);
+            }
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No content to return");
+            res.setTotalPages(0);
+        }
+        
          
          return res;
     }

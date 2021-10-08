@@ -34,6 +34,40 @@ public class PatientRest {
     UserDetailsServiceImpl userServices;
     
 
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public JsonResponse createPatient(@RequestBody PatientRegForm form) {
+        //create response object
+        JsonResponse res = new JsonResponse();
+        //check if user with that username already exists
+        //NOTE: validation is handled before this point of form submission. 
+        //This is just additional double check for username
+        User u = userServices
+        .getUserPaging()
+        .findByUsername(
+            form.getUsername());
+
+        //save user if no user exists with that username
+        if (u == null) {
+            Patient patient = new Patient(form);
+            try {
+                userServices.getPatientPaging().save(patient);
+                res.setMessage("Successfully registered patient.");
+                res.setSuccess(true);
+            }
+            catch (Error e) {
+                res.setMessage("Error registering patient.");
+                res.setSuccess(false);
+            }
+        }
+        else {
+            res.setMessage("User already exists with this username.");
+            res.setSuccess(false);
+        }
+        //return response to client
+        return res;
+    }
+
+
     @GetMapping(value = "/get-patient/name/{name}/{pageNum}")
     public PatientListResponse getPatientByName(@PathVariable String name, @PathVariable String pageNum) {
         PatientListResponse res = new PatientListResponse();
@@ -60,32 +94,7 @@ public class PatientRest {
         return res;
     }
 
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public JsonResponse createPatient(@RequestBody PatientRegForm form) {
-        //create response object
-        JsonResponse res = new JsonResponse();
-        //check is user with that username already exists
-        User u = userServices
-        .getUserPaging()
-        .findByUsername(
-            form.getUsername());
-        //save user if no user exists with that username
-        if (u == null) {
-            Patient patient = new Patient(form);
-            try {
-                userServices.getPatientPaging().save(patient);
-                res.setMessage("Successfully registered patient.");
-                res.setSuccess(true);
-            }
-            catch (Error e) {
-                res.setMessage("Error registering patient.");
-                res.setSuccess(false);
-            }
-        }
-        //return response to client
-        return res;
-    }
-
+    
 
 
     @GetMapping("/{patientId}")
@@ -113,9 +122,20 @@ public class PatientRest {
     //read user by username
     @GetMapping("get-patient/username/{username}")
     public JsonResponse findPatientByUsername(@RequestParam String username) {
-        Patient u = userServices.getPatientPaging().findByUsername(username);
+        //get patient from user services
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
         PatientListResponse res = new PatientListResponse();
-        res.getPatientJsons().add(new PatientJson(u));
+
+        //set response object
+        if (patientOpt.isPresent()) {
+            res.getPatientJsons().add(new PatientJson(patientOpt.get()));
+            res.setSuccess(true);
+        } 
+        else {
+            res.setSuccess(false);
+            res.setMessage("No patient found for username:" + username);
+        }
+        
         return res;
    }
 }

@@ -31,12 +31,12 @@ public class PatientLoginViewTest {
     LoginViewController viewController;
     
     @Test
-    void login() {
+    void loginViewController() {
         //when
         String view = viewController.login(model);
 
         //then
         assertThat(view, is("home/login"));
-        then(model).should().addAttribute(ArgumentMatchers.contains("userLoginForm "), ArgumentMatchers.any(UserLoginForm.class));
+        then(model).should().addAttribute(ArgumentMatchers.contains("userLoginForm"), ArgumentMatchers.any(UserLoginForm.class));
     }
 }
