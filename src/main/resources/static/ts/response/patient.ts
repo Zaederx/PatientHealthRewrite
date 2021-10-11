@@ -4,7 +4,7 @@ class Patient extends User {
     doctorEmail:string;
     medicationNames:string[];
     constructor(id:number, name:string, username:string, email:string, doctorName:string, doctorEmail:string, medicationNames:string[], DOB:string) {
-        super(id, name, username, email);
+        super(id, name, username, email,'patient');
         this.doctorName = doctorName;
         this.doctorEmail = doctorEmail;
         this.medicationNames = medicationNames;
