@@ -200,7 +200,6 @@ public class DoctorRest {
         String pId = request.get("pId");
         logger.debug("pId:"+ pId+" docId:"+docId);
         JsonResponse res = new JsonResponse();
-        // Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(Integer.parseInt(docId));
 
         Optional<Patient> patientOpt = userServices.getPatientPaging().findById(Integer.parseInt(pId));
 
@@ -214,7 +213,7 @@ public class DoctorRest {
            res.setMessage("Removing patient successful.");
         }
         else {
-            res.setSuccess(true);
+            res.setSuccess(false);
             res.setMessage("Problem removing patient.");
         }
 
