@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.App.PatientHealth.domain.Patient;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Class to represent Patient as JSON.
@@ -12,6 +13,7 @@ import com.App.PatientHealth.domain.Patient;
  */
 public class PatientJson extends UserJson {
 
+    @JsonProperty("DOB")
     String DOB;
     String doctorName;
     String doctorEmail;
@@ -70,6 +72,14 @@ public class PatientJson extends UserJson {
 
     public void setMedicationNames(List<String> medicationNames) {
         this.medicationNames = medicationNames;
+    }
+
+    public String getDOB() {
+        return DOB;
+    }
+
+    public void setDOB(String DOB) {
+        this.DOB = DOB;
     }
 
 }
