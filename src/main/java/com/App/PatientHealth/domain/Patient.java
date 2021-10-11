@@ -20,7 +20,7 @@ public class Patient extends User {
     String DOB;
     @OneToMany
     List<Medication> medication;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     Doctor doctor;
 
     public Patient() {}

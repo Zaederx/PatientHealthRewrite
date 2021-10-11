@@ -173,7 +173,7 @@ public class DoctorRest {
             //save changes
             try {
                 userServices.getDoctorPaging().save(d.get());
-                userServices.getPatientPaging().save(p.get());
+                // userServices.getPatientPaging().save(p.get());
                 res.setSuccess(true);
             }
             catch (Exception e) {
@@ -200,31 +200,25 @@ public class DoctorRest {
         String pId = request.get("pId");
         logger.debug("pId:"+ pId+" docId:"+docId);
         JsonResponse res = new JsonResponse();
-        Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(Integer.parseInt(docId));
+        // Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(Integer.parseInt(docId));
 
-        int pidInt = Integer.parseInt(pId);
-        if(doctorOpt.isPresent()) {
-            //remove patient from doctors list
-            logger.debug("patients before patient removal:"+ doctorOpt.get().getPatients() +"size:"+doctorOpt.get().getPatients().size());
-            List<Patient> patients = doctorOpt.get().getPatients().stream().filter(p -> (p.getId() != pidInt)).collect(Collectors.toList());
-            logger.debug("patients not removed from doctor:"+ patients +"size:"+patients.size());
-            doctorOpt.get().setPatients(patients);
-            try {
-                //save changes
-                userServices.getDoctorPaging().save(doctorOpt.get());
-                res.setSuccess(true);
-                res.setMessage("Removing patient successful.");
-            }
-            catch (Exception e) {
-                res.setMessage("Removing patient unsuccessful.");
-                logger.trace("Removing patient unsuccessful:",e.getMessage());
-            }
-            
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(Integer.parseInt(pId));
+
+        //delete doctor-patient entity relationship from owning side - patient side
+        //otherwise causes problems
+        if(patientOpt.isPresent()) {
+           Patient p = patientOpt.get();
+           p.setDoctor(null);
+           userServices.getPatientPaging().save(p);
+           res.setSuccess(true);
+           res.setMessage("Removing patient successful.");
         }
         else {
-            res.setSuccess(false);
-            res.setMessage("No doctor available with id:"+docId);
+            res.setSuccess(true);
+            res.setMessage("Problem removing patient.");
         }
+
+        
         return res;
     }
 
