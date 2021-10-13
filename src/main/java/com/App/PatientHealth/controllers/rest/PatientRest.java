@@ -94,8 +94,6 @@ public class PatientRest {
         return res;
     }
 
-    
-
 
     @GetMapping("/{patientId}")
     public PatientListResponse getPatientById(@PathVariable String patientId) {

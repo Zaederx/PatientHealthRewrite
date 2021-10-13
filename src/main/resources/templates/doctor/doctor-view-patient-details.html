@@ -63,83 +63,16 @@
 	    			<!-- Fill via ajax method -->
 	    			</tbody>
 	    		</table>
-    	<div class="row">
-    	
-    		
-    		<!-- Patient Details -->
-	    	<div class="col-sm-2"> 
-	    		<!-- Table -->
-	    		<table id="individual-patient-details-table" class="table table-bordered table-striped">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Patient Details</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="individual-patient-details-table-body">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    		
-	    	</div>
-	    	
-	    	
-	    	<!-- Control Drugs -->
-	    	<div class="col-sm-3"> 
-	    		<!-- Table -->
-	    		<table class="table table-bordered table-striped">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Control Drugs</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="patient-control-drugs">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	
-	    	
-	    	<!-- Current Selection Information -->
-	    	<div class="col-sm-4"> 
-	    		<!-- Table -->
-	    		<table class="table table-bordered table-striped">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Information</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="information">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	
-	    	
-	    	<!--Non-Control Drugs -->
-	    	<div class="col-sm-3">
-	    		<!-- Table -->
-	    		<table class="table table-bordered table-striped">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Non-Control Drugs</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="patient-non-control-drugs">
-		    		<!-- Filled via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	
-    	</div><!-- End of row  -->
     	
     	<div class="row">
-    	<!-- Last Message -->
+    	<!-- Prescriptions Message -->
     	<div class="col-sm-4"> 
+				<div id="btn-add-prescription" class="btn btn-primary"> Add Prescription</div>
 	    		<!-- Table -->
 	    		<table class="table table-bordered table-striped">
 	    			<thead>
 	    				<tr>
-		    				<th colspan="2">Last Message</th>
+		    				<th colspan="2">Prescriptions</th>
 	    				</tr>
 	    			</thead>
 	    			<tbody id="messages">
@@ -150,6 +83,7 @@
 	    	
     	<!-- Notes -->
     	<div class="col-sm-4"> 
+			<div id="btn-add-note" class="btn btn-primary"> Add Medical Note</div>
 	    		<!-- Table -->
 	    		<table class="table table-bordered table-striped">
 	    			<thead>
@@ -163,13 +97,14 @@
 	    		</table>
 	    	</div>
 	    	
-	    	<!-- Patient Medical Journal -->
+	    	<!-- Appointment Requests -->
 	    	<div class="col-sm-4"> 
 	    		<!-- Table -->
+				<div id="btn-add-request" class="btn btn-primary"> Add Appointment Request</div>
 	    		<table class="table table-bordered table-striped">
 	    			<thead>
 	    				<tr>
-		    				<th colspan="2">Patient Medical Journal</th>
+		    				<th colspan="2">Appointment Requests</th>
 	    				</tr>
 	    			</thead>
 	    			<tbody id="patient-medical-journal">
@@ -182,115 +117,5 @@
 	</div>
 
 </body>
-<script>
 
-/*For List of all patients*/
-var dataPatientsList;
-var dataDoctorsList;
-//For Details of a selected Patient
-var dataPatient;
-
-
-function getDoctorsList() {
-	$.ajax({
-		type:'GET'.
-		url:'/ajax/doctor/doctorList',
-		success: function(data) {
-			if(data.response == false) {
-				$('#doctor-details-table-body').html(data.message);
-			} 
-			else {
-				var m = "";//message
-				  for (var i = 0 ; i < data.listSize; i++ ) {
-					  m += '<row onclick="selectDoctorByIndex('+i+')"><td>'+data.doctorList[i].name+'</td>'
-					  + '<td>'+data.doctorList[i].email+'</td>'
-					  + '<td>'+data.doctorList[i].specialty+'</td></row>';
-				  }
-				  console.log('doctorList:'+m);
-				  $('#doctor-details-table-body').html(m);
-			}
-		}
-		error: function() {
-			$('#doctor-details-table-body').html('<row><td>Error retrieving doctors, please try again or contact administration for help.</td></row>');
-		}
-	})
-}
-
-
-function getPatientsList() {
-	$.ajax({
-		type:'GET'.
-		url:'/ajax/doctor/patientList',
-		success: function(data) {
-			if(data.response == false) {
-				$('#patient-details-table-body').html(data.message);
-			} 
-			else {
-				var m = "";//message
-				  for (var i = 0 ; i < data.listSize; i++ ) {
-					  m += '<row onclick="selectPatientByIndex('+i+')"><td>'+data.patientList[i].name+'</td>'
-					  + '<td>'+data.patientList[i].email+'</td>'
-					  + '<td>'+data.patientList[i].mainCondition+'</td></row>';
-				  }
-				  console.log('patientList:'+m);
-				  $('#patient-details-table-body').html(m);
-			}
-		}
-		error: function() {
-			$('#patient-details-table-body').html('<row><td>Error retrieving patient, please try again or contact administration for help.</td></row>');
-		}
-	})
-}
-
-/*Fecthes selected patient data from backend.
- * Stores data in dataPatient variable
- * */
-function getSelectedPatientData(patientId) {
-	$.ajax({
-		type:'GET'.
-		url:'/ajax/doctor/patient/data/'+patientId,
-		success: function(data) {
-			dataPatient = data;
-			if(data.response == false) {
-				$('#individual-patient-details-table-body').html(data.message);
-			} 
-			else {
-				  var m += '<row><td>'+data.patient.name+'</td><row>'
-				  + '<row><td>'+data.patient.email+'</td></row>'
-				  + '<row><td>'+data.patient.phoneNumber+'</td></row>'
-				  + '<row><td>'+data.patient.mainCondition+'</td></row>';
-				  console.log('patient:'+m);
-				  $('#individual-patient-details-table-body').html(m);
-			}
-		}
-		error: function() {
-			$('#individual-patient-details-table-body').html('<row><td>Error retrieving patient details, please try again or contact administration for help.</td></row>');
-		}
-	})
-}
-
-/*displays Control Drugs and Non-Control Drugs table*/
-function displayPatientPrescriptions() {
-	var controlDrugs = "";
-	var nonControlDrugs = "";
-	for (int i=0; i < dataPatient.controlDrugCount; i++) {
-	controlDrugs += '<row><td>'+dataPatient.controlDrugPrescription[i].medication.name+'</td><td>'+dataPatient.controlDrugPrescription[i].directions+'</td></row>';
-	}
-	for (int i=0; i < dataPatient.nonControlDrugCount; i++) {
-	nonControlDrugs +='<row><td>'dataPatient.nonControlDrugPrescription[i].medication.name+'</td><td>'dataPatient.nonControlDrugPrescription[i].directions+'</td></row>';
-	
-	$('#patient-control-drugs').(controlDrugs);
-	$('#patient-non-control-drugs').(nonControlDrugs);
-	}
-}
-//Function to perform Patient List Filtering
-$(document).ready(function() {
-	$('patient-searchbar').on('keyup', function () {
-		var value = $(this).val().toLowerCase();
-		$('patient-details-table-body').filter(function() {
-			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-		});
-	});
-});
-</script>
 </html>

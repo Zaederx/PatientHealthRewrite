@@ -31,7 +31,7 @@ public class PatientJson extends UserJson {
             this.doctorName = "N/A";
             this.doctorEmail = "N/A";
         }
-        if (p.getMedication() != null) {
+        if (p.getPrescriptions() != null) {
             this.medicationNames =  medicationNames(p);
         }
     }
@@ -43,7 +43,7 @@ public class PatientJson extends UserJson {
      */
     public static List<String> medicationNames(Patient p) {
         List<String> medicationNames = new ArrayList<String>();
-        p.getMedication().forEach( (med) -> 
+        p.getPrescriptions().forEach( (med) -> 
             medicationNames.add(med.getName())
         );
         return medicationNames;

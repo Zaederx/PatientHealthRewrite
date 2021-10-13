@@ -55,7 +55,6 @@ public class PatientRestTest {
     PatientRest restController;
 
     
-
     User u = new User("name", "username", "password", "email@email.com","USER");
 
 
@@ -83,6 +82,7 @@ public class PatientRestTest {
         assertThat(pTest.get(), is(patient));
     }
 
+    //create patient tests
     @Test
     void createPatientIsNotSuccessfulGivenExistingUsername() {
         //given
@@ -141,6 +141,7 @@ public class PatientRestTest {
         assertThat(res.getMessage(), is("Successfully registered patient."));
     }
 
+    //get patient tests
     @Test
     void getPatientByNameShouldReturnPatients() {
 
@@ -173,7 +174,6 @@ public class PatientRestTest {
         assertThat(res.getMessage(), is(""));
         assertThat(res.getPatientJsons().size(), is(patientList.size()));
     }
-
 
     @Test
     void getPatientByIdShouldNotReturnPatients() {
@@ -225,6 +225,7 @@ public class PatientRestTest {
         assertThat(res.getPatientJsons().size(), is(1));
     }
 
+    //find patient tests
     @Test
     void findPatientByUsernameReturnsPatient() {
         /* Given */
@@ -243,7 +244,6 @@ public class PatientRestTest {
         assertThat(res.getSuccess(), is(true));
         assertThat(res.getMessage(), is("")); 
     }
-
 
     @Test
     void findPatientByUsernameReturnResponseWithErrorMessage() {

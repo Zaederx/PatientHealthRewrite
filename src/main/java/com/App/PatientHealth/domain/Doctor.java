@@ -7,6 +7,7 @@ import javax.persistence.OneToMany;
 
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,18 +19,22 @@ public class Doctor extends User {
     @Column
     String gmcNum;
 
-    public Doctor(){}
+    public Doctor(){
+        this.patients = new ArrayList<Patient>();
+    }
 
 
     public Doctor(DoctorRegForm d) {
         super(d.getName(),d.getUsername(),
         d.getPassword(),d.getEmail(), "DOCTOR");
         this.gmcNum = d.getGmcNum();
+        this.patients = new ArrayList<Patient>();
     }
 
     public Doctor(String name, String username, String password,String email,String specialisation) {
         super(name,username,password,email, "DOCTOR");
         this.specialisation = specialisation;
+        this.patients = new ArrayList<Patient>();
     }
 
     public Doctor(String name, String username, String password,String email,String specialisation, List<Patient> patients) {

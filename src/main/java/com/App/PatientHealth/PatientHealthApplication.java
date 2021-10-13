@@ -55,15 +55,15 @@ public class PatientHealthApplication implements CommandLineRunner{
 		userServices.getPatientPaging().save(p5);
 
 
-		Doctor d1 = new Doctor("d1", "d1", "password", "emaild1@email.com", "pediatrics");
+		Doctor d1 = new Doctor("D1's Name", "d1", "password", "emaild1@email.com", "pediatrics");
 
-		Doctor d2 = new Doctor("d2", "d2", "password", "emaild2@email.com", "dental medicine");
+		Doctor d2 = new Doctor("D2's Name", "d2", "password", "emaild2@email.com", "dental medicine");
 
-		Doctor d3 = new Doctor("d3", "d3", "password", "emaild3@email.com", "renal medicine");
+		Doctor d3 = new Doctor("D3's Name", "d3", "password", "emaild3@email.com", "renal medicine");
 
-		Doctor d4 = new Doctor("d4", "d4", "password", "emaild4@email.com", "radiology");
+		Doctor d4 = new Doctor("D4's Name", "d4", "password", "emaild4@email.com", "radiology");
 
-		Doctor d5 = new Doctor("d5", "d5", "password", "emaild5@email.com", "optometry");
+		Doctor d5 = new Doctor("D5's Name", "d5", "password", "emaild5@email.com", "optometry");
 
 
 		userServices.getDoctorPaging().save(d1);

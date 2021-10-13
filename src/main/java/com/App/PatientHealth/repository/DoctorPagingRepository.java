@@ -19,7 +19,7 @@ public interface DoctorPagingRepository extends PagingAndSortingRepository<Docto
     Page<Doctor> findByName(String name, Pageable pageable);
     Page<Doctor> findAllByUsername(String username, Pageable pageable);
     Page<Doctor> findAllByName(String name, Pageable pageable);
-    Page<Doctor> findAllByNameContaining(String name, Pageable pageable);
+    Page<Doctor> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
     
     
 }

@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("rest/admin")
@@ -83,7 +82,6 @@ public class AdminRest {
             res.setSuccess(false);
             res.setMessage("No details available");
         }
-        
         return res;
     }
 
@@ -115,7 +113,7 @@ public class AdminRest {
         return res;
     }
 
-    /***********Admin - By Firsname Lastname *************** */
+    /*********** Admin - By Firsname Lastname *************** */
     //get admin - by firstname
     @GetMapping("/get-admin/name/{name}/{pageNum}")
     public AdminListResponse findAdminByFirstname(@PathVariable String name, @PathVariable String pageNum) {
@@ -144,8 +142,7 @@ public class AdminRest {
             res.setTotalPages(0);
         }
         
-         
-         return res;
+        return res;
     }
     
     
