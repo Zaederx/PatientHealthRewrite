@@ -40,9 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/","/home","/resources/**", "/img/**.jpg","/js/**.js").permitAll()
 				.antMatchers("/h2-console/**").permitAll()//for viewing h2 console - would remove in real app senario
-				.antMatchers("/doctor/**","/rest/doctor/**").hasRole("DOCTOR")
+				.antMatchers("/doctor/**","/rest/doctor/**", "/rest/patient/**").hasRole("DOCTOR")
 				.antMatchers("/patient/**","/rest/patient/**").hasRole("PATIENT")
-				.antMatchers("/admin/**","/rest/**", "/rest/doctor/**","/rest/patient/**").hasRole("ADMIN")
+				.antMatchers("/admin/**","/rest/admin/**").hasRole("ADMIN")
+				.antMatchers("/rest/patient/**").hasAnyRole("PATIENT", "DOCTOR", "ADMIN")
+				.antMatchers("/rest/doctor/**").hasAnyRole("DOCTOR","ADMIN")
 				.anyRequest().authenticated() // all request should be authenticated...
 				
 				
