@@ -3,7 +3,9 @@ package com.App.PatientHealth.responseObject.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.App.PatientHealth.domain.DoctorNote;
 import com.App.PatientHealth.domain.Patient;
+import com.App.PatientHealth.domain.Prescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -17,8 +19,12 @@ public class PatientJson extends UserJson {
     String DOB;
     String doctorName;
     String doctorEmail;
-    List<String> medicationNames;
-    public PatientJson(){}
+    List<PrescriptionJson> prescriptions;
+    List<DoctorNoteJson> doctorNotes;
+    public PatientJson(){
+        this.prescriptions = new ArrayList<PrescriptionJson>();
+        this.doctorNotes = new ArrayList<DoctorNoteJson>();
+    }
 
     public PatientJson(Patient p){
         super(p);
@@ -31,23 +37,28 @@ public class PatientJson extends UserJson {
             this.doctorName = "N/A";
             this.doctorEmail = "N/A";
         }
-        if (p.getPrescriptions() != null) {
-            this.medicationNames =  medicationNames(p);
-        }
+        this.prescriptions = toPrescriptionJsons(p.getPrescriptions());
+        this.doctorNotes = toDoctorNoteJsons(p.getDoctorNotes());
     }
 
-    /**
-     * Take patient as argument and return patient's medication names.
-     * @param p
-     * @return
-     */
-    public static List<String> medicationNames(Patient p) {
-        List<String> medicationNames = new ArrayList<String>();
-        p.getPrescriptions().forEach( (med) -> 
-            medicationNames.add(med.getName())
-        );
-        return medicationNames;
+ 
+    public List<PrescriptionJson> toPrescriptionJsons(List<Prescription> prescriptions) {
+        List<PrescriptionJson> json = new ArrayList<PrescriptionJson>();
+        prescriptions.forEach(n -> {
+            json.add(new PrescriptionJson(n));
+        });
+        return json;
     }
+
+    public List<DoctorNoteJson> toDoctorNoteJsons(List<DoctorNote> notes) {
+        List<DoctorNoteJson> json = new ArrayList<DoctorNoteJson>();
+        notes.forEach(n -> {
+            json.add(new DoctorNoteJson (n));
+        });
+        return json;
+    }
+
+    
 
 
     public String getDoctorName() {
@@ -66,14 +77,6 @@ public class PatientJson extends UserJson {
         this.doctorEmail = doctorEmail;
     }
 
-    public List<String> getMedicationNames() {
-        return this.medicationNames;
-    }
-
-    public void setMedicationNames(List<String> medicationNames) {
-        this.medicationNames = medicationNames;
-    }
-
     public String getDOB() {
         return DOB;
     }
@@ -81,5 +84,22 @@ public class PatientJson extends UserJson {
     public void setDOB(String DOB) {
         this.DOB = DOB;
     }
+
+    public List<PrescriptionJson> getPrescriptions() {
+        return prescriptions;
+    }
+
+    public void setPrescriptions(List<PrescriptionJson> prescriptions) {
+        this.prescriptions = prescriptions;
+    }
+
+    public List<DoctorNoteJson> getDoctorNotes() {
+        return doctorNotes;
+    }
+
+    public void setDoctorNotes(List<DoctorNoteJson> doctorNotes) {
+        this.doctorNotes = doctorNotes;
+    }
+
 
 }

@@ -39,13 +39,13 @@ public class Prescription {
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getName() {
-        return this.medicationName;
+    
+    public String getMedicationName() {
+        return medicationName;
     }
 
-    public void setName(String name) {
-        this.medicationName = name;
+    public void setMedicationName(String medicationName) {
+        this.medicationName = medicationName;
     }
 
     public String getDoctorsDirections() {

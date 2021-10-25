@@ -7,9 +7,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.App.PatientHealth.domain.Doctor;
+import com.App.PatientHealth.domain.DoctorNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
 import com.App.PatientHealth.domain.User;
+import com.App.PatientHealth.requestObjects.DoctorNoteForm;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 import com.App.PatientHealth.requestObjects.PrescriptionForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
@@ -241,7 +243,15 @@ public class DoctorRest {
         if(patientOpt.isPresent()) {
             Patient patient = patientOpt.get();
             patient.getPrescriptions().add(pres);
-            userServices.getPatientPaging().save(patient);
+            try {
+                userServices.getPrescriptionRepo().save(pres);
+                userServices.getPatientPaging().save(patient);
+            }
+            catch (Exception e) {
+                res.setSuccess(false);
+                res.setMessage("Problem saving prescription");
+            }
+            //if success
             res.setSuccess(true);
             res.setMessage("Prescription added successfully");
         }
@@ -254,10 +264,103 @@ public class DoctorRest {
     }
 
 
-    //add doctor's not to patient
-    @PostMapping
+    //add doctor's note to patient
+    @PostMapping("/add-patient-notes")
     public JsonResponse addDoctorsNoteToPatient(@RequestBody DoctorNoteForm form) {
+        JsonResponse res = new JsonResponse();
 
+        DoctorNote note = new DoctorNote(form);
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
+
+        if(patientOpt.isPresent()) {
+            //add note to patient
+            Patient patient = patientOpt.get();
+            patient.getDoctorNotes().add(note);
+            
+            //save changes
+            userServices.getPatientPaging().save(patient);
+
+            //prepare response
+            res.setSuccess(true);
+            res.setMessage("Doctor note added to patient successfully.");
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("Invalid patient id.");
+        }
+        return res;
+    }
+
+    @GetMapping("/get-patient-notes/{pid}")
+    public PatientListResponse getDoctorsNotesFromPatient(@PathVariable String pid) {
+        int pidInt = Integer.parseInt(pid);
+        PatientListResponse res = new PatientListResponse();
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(pidInt);
+    
+        if(patientOpt.isPresent()) {
+            Patient patient = patientOpt.get();
+            res.getPatientJsons().add(new PatientJson(patient));
+            res.setSuccess(true);
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("Problem retrieving patient");
+        }
+
+        return res;
+    }
+
+
+    @PostMapping("/update-patient-doctor-note")
+    public JsonResponse updatePatientDoctorNote(@RequestBody DoctorNoteForm form) {
+        JsonResponse res = new JsonResponse();
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
+    
+        DoctorNote updatedNote = new DoctorNote(form);
+        if(patientOpt.isPresent()) {
+            //remove old version of note
+            Patient patient = patientOpt.get();
+            patient.getDoctorNotes().stream().dropWhile(n -> n.getId() == updatedNote.getId());
+
+            //add updated version of note
+            patient.getDoctorNotes().add(updatedNote);
+
+            //save changes
+            userServices.getPatientPaging().save(patient);
+
+            //save new note
+            res.setSuccess(true);
+            res.setMessage("Note updated successfully.");
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("Problem update note.");
+        }
+        return res;
+    }
+
+    @DeleteMapping("/delete-patient-doctor-note")
+    public JsonResponse deletePatientDoctorNote(@RequestBody DoctorNoteForm form) {
+        JsonResponse res = new JsonResponse();
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
+
+        if(patientOpt.isPresent()) {
+            //remove old version of note
+            Patient patient = patientOpt.get();
+            patient.getDoctorNotes().stream().dropWhile(n -> n.getId() == form.getId());
+            //save changes
+            userServices.getPatientPaging().save(patient);
+
+            //save new note
+            res.setSuccess(true);
+            res.setMessage("Note updated successfully.");
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("Note not updated successfully.");
+        }
+
+        return res;
     }
 
 }

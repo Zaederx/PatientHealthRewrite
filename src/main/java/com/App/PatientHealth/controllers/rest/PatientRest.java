@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.App.PatientHealth.domain.Patient;
+import com.App.PatientHealth.domain.Prescription;
 import com.App.PatientHealth.domain.User;
 import com.App.PatientHealth.requestObjects.PatientRegForm;
+import com.App.PatientHealth.requestObjects.PrescriptionForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.PatientJson;
 import com.App.PatientHealth.responseObject.lists.PatientListResponse;
@@ -118,7 +120,7 @@ public class PatientRest {
     }
 
     //read user by username
-    @GetMapping("get-patient/username/{username}")
+    @GetMapping("/get-patient/username/{username}")
     public JsonResponse findPatientByUsername(@RequestParam String username) {
         //get patient from user services
         Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
@@ -135,5 +137,37 @@ public class PatientRest {
         }
         
         return res;
+   }
+
+
+
+   //add prescription to patient
+   @PostMapping("/add-prescription")
+   public JsonResponse addPrescriptionToPatient(@RequestBody PrescriptionForm form) {
+       JsonResponse res = new JsonResponse();
+
+       Prescription prescription = new Prescription(form);
+       Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
+
+       if(patientOpt.isPresent()) {
+           Patient patient = patientOpt.get();
+           patient.getPrescriptions().add(prescription);
+           
+           try {
+                userServices.getPrescriptionRepo().save(prescription);
+                userServices.getPatientPaging().save(patient);
+           }
+           catch (Exception e) {
+                
+           }
+           res.setSuccess(true);
+           res.setMessage("Prescription added successfully");
+       }
+       else {
+           res.setSuccess(false);
+           res.setMessage("No patient found to add prescription"); 
+       }
+       
+       return res;
    }
 }

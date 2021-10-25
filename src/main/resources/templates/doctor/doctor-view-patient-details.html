@@ -3,7 +3,10 @@
 
 <head>
   <meta charset="utf-8">
+  <meta th:name="_csrf" th:content="${_csrf.token}"/>
+  <script type="module" th:src="@{/js/doctor-view/doctor-view-patient-details.js}" defer></script>
   <!-- CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/app.css}">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
   <!-- jQuery library -->
@@ -53,18 +56,29 @@
    		<div>
 	    	<input id="patient-searchbar" class="form-control" type="text" placeholder="Search Patients...">
 	    </div>
-	    <table id="patient-details-table" class="table table-bordered table-striped">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Patients</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="patient-details-table-body">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-    	
+	    <table id="patient-search-table" class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th colspan="2">Patients</th>
+				</tr>
+			</thead>
+			<tbody id="patient-search-table-body">
+			<!-- Fill via ajax method -->
+			</tbody>
+	    </table>
+				<div id="paging-buttons">
+					<span id="btn-prev" class="btn btn-primary">Prev</span>
+					<span id="p-pageNum" class="pageNum" contenteditable="true"></span>
+					<span id="p-pageTotal" class="pageTotal"></span>
+					<span id="btn-go" class="btn btn-primary">Go to page</span>
+					<span id="btn-next" class="btn btn-primary">Next</span>
+				</div>
+				<br>
+				<div id="btn-view-patient" class="btn btn-primary">View Patient</div>
     	<div class="row">
+			<br>
+			<div id="message"></div>
+			<br>
     	<!-- Prescriptions Message -->
     	<div class="col-sm-4"> 
 				<div id="btn-add-prescription" class="btn btn-primary"> Add Prescription</div>
@@ -75,11 +89,22 @@
 		    				<th colspan="2">Prescriptions</th>
 	    				</tr>
 	    			</thead>
-	    			<tbody id="messages">
+	    			<tbody id="patient-prescription-tbody">
 	    			<!-- Fill via ajax method -->
 	    			</tbody>
 	    		</table>
 	    	</div>
+
+			<div id="prescription-form" class="pop-up-form" style="display: none;">
+				<form>
+					<label for="medication-name">Medication Name</label>
+					<input id="medication-name" type="text" placeholder="Enter Medication Name">
+					<label for="directions"></label>
+					<input id="directions" type="text" placeholder="Enter Directions">
+				</form>
+				<div id="prescription-form-submit" class="btn btn-primary">Submit</div>
+				<div id="prescription-form-close" class="btn btn-danger">Close</div>
+			</div>
 	    	
     	<!-- Notes -->
     	<div class="col-sm-4"> 
@@ -91,7 +116,7 @@
 		    				<th colspan="2">Doctor Medical Notes</th>
 	    				</tr>
 	    			</thead>
-	    			<tbody id="patient-medical-notes">
+	    			<tbody id="patient-medical-notes-tbody">
 	    			<!-- Fill via ajax method -->
 	    			</tbody>
 	    		</table>
@@ -100,7 +125,7 @@
 	    	<!-- Appointment Requests -->
 	    	<div class="col-sm-4"> 
 	    		<!-- Table -->
-				<div id="btn-add-request" class="btn btn-primary"> Add Appointment Request</div>
+				<div id="btn-add-request" class="btn btn-primary">Add Appointment Request</div>
 	    		<table class="table table-bordered table-striped">
 	    			<thead>
 	    				<tr>

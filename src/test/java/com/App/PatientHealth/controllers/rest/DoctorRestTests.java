@@ -18,6 +18,7 @@ import com.App.PatientHealth.domain.User;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.PatientPagingRepository;
 import com.App.PatientHealth.repository.UserPagingRepository;
+import com.App.PatientHealth.requestObjects.DoctorNoteForm;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 import com.App.PatientHealth.requestObjects.PrescriptionForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
@@ -41,6 +42,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @ExtendWith(MockitoExtension.class)
 public class DoctorRestTests {
@@ -342,13 +344,13 @@ public class DoctorRestTests {
         int validPId = Integer.parseInt(request.get("pId"));
 
 
-        Optional<Doctor> doctorOpt = Optional.empty();
+        Optional<Doctor> invalidDoctorOpt = Optional.empty();
         
         Patient p1 = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
         Optional<Patient> patientOpt = Optional.of(p1);
 
         given(userServices.getDoctorPaging()).willReturn(dRepo);
-        given(dRepo.findById(invalidDocId)).willReturn(doctorOpt);
+        given(dRepo.findById(invalidDocId)).willReturn(invalidDoctorOpt);
 
         given(userServices.getPatientPaging()).willReturn(pRepo);
         given(pRepo.findById(validPId)).willReturn(patientOpt);
@@ -447,10 +449,10 @@ public class DoctorRestTests {
         //given
         int invalidPId = 1;
 
-        Optional<Patient> patientOpt = Optional.empty();
+        Optional<Patient> emptyPatientOpt = Optional.empty();
         
         given(userServices.getPatientPaging()).willReturn(pRepo);
-        given(pRepo.findById(invalidPId)).willReturn(patientOpt);
+        given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);
         PrescriptionForm form = new PrescriptionForm("Paracetamol", "Directions", invalidPId);
         
         //when
@@ -461,5 +463,186 @@ public class DoctorRestTests {
         verify(userServices.getPatientPaging(), Mockito.times(1)).findById(invalidPId);
         assertThat(res.getSuccess(),is(false));
         assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void addDoctorsNoteToPatientReturnsSuccessfulGivenFormWithValidPatientId() {
+        //given
+        int validPId = 1;
+        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
+        Optional<Patient> patientOpt = Optional.of(patient);
+
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findById(validPId)).willReturn(patientOpt);
+        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+
+        //when
+        JsonResponse res = restController.addDoctorsNoteToPatient(form);
+
+        //then
+        String empty = "";
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(validPId);
+        verify(userServices.getPatientPaging(), Mockito.times(1)).save(patient);
+        assertThat(res.getSuccess(),is(true));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void addDoctorsNoteToPatientReturnsUnsuccessfulGivenFormWithInvalidPatientId() {
+        //given
+        int invalidPId = 1;
+        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
+        Optional<Patient> emptyPatientOpt = Optional.empty();
+
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);
+        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+
+        //when
+        JsonResponse res = restController.addDoctorsNoteToPatient(form);
+
+        //then
+        String empty = "";
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(invalidPId);
+        verify(userServices.getPatientPaging(), Mockito.times(0)).save(patient);
+        assertThat(res.getSuccess(),is(false));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    //getDoctorsNotesFromPatient
+    @Test
+    void getDoctorsNotesFromPatientReturnSuccessfulGivenValidPatientId() {
+        //given
+        String validPidStr = "1";
+        int validPidInt = Integer.parseInt(validPidStr);
+        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
+        Optional<Patient> patientOpt = Optional.of(patient);
+
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findById(validPidInt)).willReturn(patientOpt);
+
+
+        //when
+        JsonResponse res = restController.getDoctorsNotesFromPatient(validPidStr);
+
+        //then
+        String empty = "";
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(validPidInt);
+        assertThat(res.getSuccess(),is(true));
+        assertThat(res.getMessage(),is(empty));
+    }
+
+
+    //getDoctorsNotesFromPatient
+    @Test
+    void getDoctorsNotesFromPatientReturnUnsuccessfulGivenInvalidPatientId() {
+        //given
+        String validPidStr = "1";
+        int validPidInt = Integer.parseInt(validPidStr);
+
+        Optional<Patient> emptyPatientOpt = Optional.empty();
+
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findById(validPidInt)).willReturn(emptyPatientOpt);
+
+        //when
+        JsonResponse res = restController.getDoctorsNotesFromPatient(validPidStr);
+
+        //then
+        String empty = "";
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(validPidInt);
+        assertThat(res.getSuccess(),is(false));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void updatePatientDoctorNoteReturnsSuccessfulGivenFormWithValidId() {
+        //given
+        int validPId = 1;
+        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
+        Optional<Patient> patientOpt = Optional.of(patient);
+        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findById(validPId)).willReturn(patientOpt);
+        
+        //when
+        JsonResponse res = restController.updatePatientDoctorNote(form);
+
+        //then
+        String empty = "";
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(validPId);
+        verify(userServices.getPatientPaging(), Mockito.times(1)).save(patient);
+        assertThat(res.getSuccess(),is(true));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void updatePatientDoctorNoteReturnsUnsuccessfulGivenFormWithInvalidId() {
+        //given
+        int invalidPId = 1;
+        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
+        Optional<Patient> emptyPatientOpt = Optional.empty();
+        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);
+        
+        //when
+        JsonResponse res = restController.updatePatientDoctorNote(form);
+
+        //then
+        String empty = "";
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(invalidPId);
+        verify(userServices.getPatientPaging(), Mockito.times(0)).save(patient);
+        assertThat(res.getSuccess(),is(false));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    //add doctor's note to patient
+    @Test
+    void deletePatientDoctorNoteReturnsSuccesfulGivenValidForm() {
+        //given
+        int validPId = 1;
+        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
+        Optional<Patient> patientOpt = Optional.of(patient);
+        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findById(validPId)).willReturn(patientOpt);
+        
+        //when
+        JsonResponse res = restController.deletePatientDoctorNote(form);
+
+        //then
+        String empty = "";
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(validPId);
+        verify(userServices.getPatientPaging(), Mockito.times(1)).save(patient);
+        assertThat(res.getSuccess(),is(true));
+        assertThat(res.getMessage(),is(not(empty)));
+
+    }
+
+    @Test
+    void deletePatientDoctorNoteReturnsUnsuccesfulGivenInvalidForm() {
+        //given
+        int invalidPId = 1;
+        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
+        Optional<Patient> emptyPatientOpt = Optional.empty();
+        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);
+        
+        //when
+        JsonResponse res = restController.deletePatientDoctorNote(form);
+
+        //then
+        String empty = "";
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(invalidPId);
+        verify(userServices.getPatientPaging(), Mockito.times(0)).save(patient);
+        assertThat(res.getSuccess(),is(false));
+        assertThat(res.getMessage(),is(not(empty)));
+
     }
 }

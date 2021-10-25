@@ -16,6 +16,7 @@ import com.App.PatientHealth.repository.AdminPagingRepository;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.GmcRepository;
 import com.App.PatientHealth.repository.PatientPagingRepository;
+import com.App.PatientHealth.repository.PrescriptionPagingRepository;
 import com.App.PatientHealth.repository.UserPagingRepository;
 
 @Service
@@ -35,6 +36,9 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
 	@Autowired
 	GmcRepository gRepo;
+
+	@Autowired
+	PrescriptionPagingRepository prescriptionRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -89,5 +93,9 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
 	public GmcRepository getGRepo() {
 		return gRepo;
+	}
+
+	public PrescriptionPagingRepository getPrescriptionRepo() {
+		return prescriptionRepo;
 	}
 }
