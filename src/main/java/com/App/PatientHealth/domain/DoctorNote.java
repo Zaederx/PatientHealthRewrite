@@ -18,6 +18,7 @@ public class DoctorNote {
     @Column
     String noteBody;
 
+    public DoctorNote() {}
     public DoctorNote(String noteHeading, String noteBody) {
         this.noteHeading = noteHeading;
         this.noteBody = noteBody;

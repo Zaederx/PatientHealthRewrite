@@ -18,9 +18,12 @@ public class Doctor extends User {
     List<Patient> patients;
     @Column
     String gmcNum;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "doctor")
+    List<AppointmentRequest> appointmentRequests;
 
     public Doctor(){
         this.patients = new ArrayList<Patient>();
+        this.appointmentRequests = new ArrayList<AppointmentRequest>();
     }
 
 

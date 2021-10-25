@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.App.PatientHealth.repository.AdminPagingRepository;
+import com.App.PatientHealth.repository.AppointmentPagingRepository;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.GmcRepository;
 import com.App.PatientHealth.repository.PatientPagingRepository;
@@ -40,6 +41,9 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	@Autowired
 	PrescriptionPagingRepository prescriptionRepo;
 
+	@Autowired
+	AppointmentPagingRepository appointmentRepo;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("\n***************** LoadByUsername Called**************");
@@ -55,12 +59,12 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		
 		ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		String role = u.getRole();
-		System.out.println("********ROLE******: "+ role);
+		System.out.println("******** ROLE ******: "+ role);
 		System.out.println(role+" created and granted authority.");
 		
 		authorities.add(new SimpleGrantedAuthority("ROLE_"+role));
 		
-		System.out.println("*********Username*********: " +u.getUsername());
+		System.out.println("********* Username *********: " +u.getUsername());
 		
 		/*Authentication Manager will then try to make sure 
 		 * that details submitted match these details that are being returned*/
@@ -97,5 +101,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
 	public PrescriptionPagingRepository getPrescriptionRepo() {
 		return prescriptionRepo;
+	}
+
+	public AppointmentPagingRepository getAppointmentRepo() {
+		return appointmentRepo;
+	}
+
+	public void setAppointmentRepo(AppointmentPagingRepository appointmentRepo) {
+		this.appointmentRepo = appointmentRepo;
 	}
 }

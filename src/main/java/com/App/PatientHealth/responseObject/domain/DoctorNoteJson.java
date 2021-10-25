@@ -17,4 +17,30 @@ public class DoctorNoteJson {
         this.noteHeading = noteHeading;
         this.noteBody = noteBody;
     }
+
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNoteHeading() {
+        return this.noteHeading;
+    }
+
+    public void setNoteHeading(String noteHeading) {
+        this.noteHeading = noteHeading;
+    }
+
+    public String getNoteBody() {
+        return this.noteBody;
+    }
+
+    public void setNoteBody(String noteBody) {
+        this.noteBody = noteBody;
+    }
+    
 }

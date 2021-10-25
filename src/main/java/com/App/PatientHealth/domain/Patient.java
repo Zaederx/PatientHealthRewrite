@@ -25,10 +25,13 @@ public class Patient extends User {
     List<DoctorNote> doctorNotes;
     @ManyToOne(cascade = CascadeType.ALL)
     Doctor doctor;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    List<AppointmentRequest> appointmentRequests;
 
     public Patient() {
         this.prescriptions = new ArrayList<Prescription>();
         this.doctorNotes = new ArrayList<DoctorNote>();
+        this.appointmentRequests = new ArrayList<AppointmentRequest>();
     }
 
     public Patient(PatientRegForm p) {
@@ -53,7 +56,6 @@ public class Patient extends User {
         this.doctorNotes = new ArrayList<DoctorNote>();
     }
 
-
     public List<Prescription> getPrescriptions() {
         return this.prescriptions;
     }
@@ -68,6 +70,14 @@ public class Patient extends User {
 
     public void setDoctorNotes(List<DoctorNote> doctorNotes) {
         this.doctorNotes = doctorNotes;
+    }
+
+    public List<AppointmentRequest> getAppointmentRequests() {
+        return appointmentRequests;
+    }
+
+    public void setAppointmentRequests(List<AppointmentRequest> appointmentRequests) {
+        this.appointmentRequests = appointmentRequests;
     }
 
     public Doctor getDoctor() {

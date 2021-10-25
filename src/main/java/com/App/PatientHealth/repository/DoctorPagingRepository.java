@@ -2,6 +2,7 @@ package com.App.PatientHealth.repository;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import com.App.PatientHealth.domain.Doctor;
 
@@ -20,6 +21,7 @@ public interface DoctorPagingRepository extends PagingAndSortingRepository<Docto
     Page<Doctor> findAllByUsername(String username, Pageable pageable);
     Page<Doctor> findAllByName(String name, Pageable pageable);
     Page<Doctor> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
+    Optional<Doctor> findByUsername(String username);
     
     
 }

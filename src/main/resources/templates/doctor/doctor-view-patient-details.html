@@ -95,11 +95,11 @@
 	    		</table>
 	    	</div>
 
-			<div id="prescription-form" class="pop-up-form" style="display: none;">
-				<form>
+			<div id="prescription-div" class="pop-up-form" style="display: none;">
+				<form id="prescription-form">
 					<label for="medication-name">Medication Name</label>
 					<input id="medication-name" type="text" placeholder="Enter Medication Name">
-					<label for="directions"></label>
+					<label for="directions">Directions</label>
 					<input id="directions" type="text" placeholder="Enter Directions">
 				</form>
 				<div id="prescription-form-submit" class="btn btn-primary">Submit</div>
@@ -109,34 +109,54 @@
     	<!-- Notes -->
     	<div class="col-sm-4"> 
 			<div id="btn-add-note" class="btn btn-primary"> Add Medical Note</div>
-	    		<!-- Table -->
-	    		<table class="table table-bordered table-striped">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Doctor Medical Notes</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="patient-medical-notes-tbody">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
+			<!-- Table -->
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th colspan="2">Doctor Medical Notes</th>
+					</tr>
+				</thead>
+				<tbody id="patient-medical-notes-tbody">
+				<!-- Fill via ajax method -->
+				</tbody>
+			</table>
+	    </div>
+		<div id="note-div" class="pop-up-form" style="display: none;">
+			<form id="note-form">
+				<label for="note-heading">Note Heading</label>
+				<input id="note-heading" type="text" placeholder="Enter Note Title">
+				<label for="note-body">Note Body</label>
+				<input id="note-body" type="text" placeholder="Enter Note Body">
+			</form>
+			<div id="note-form-submit" class="btn btn-primary">Submit</div>
+			<div id="note-form-close" class="btn btn-danger">Close</div>
+		</div>
 	    	
-	    	<!-- Appointment Requests -->
-	    	<div class="col-sm-4"> 
-	    		<!-- Table -->
-				<div id="btn-add-request" class="btn btn-primary">Add Appointment Request</div>
-	    		<table class="table table-bordered table-striped">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Appointment Requests</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="patient-medical-journal">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
+		<!-- Appointment Requests -->
+		<div class="col-sm-4"> 
+			<!-- Table -->
+			<div id="btn-add-request" class="btn btn-primary">Add Appointment Request</div>
+			<table id="appointment-request-table" class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th colspan="2">Appointment Requests</th>
+					</tr>
+				</thead>
+				<tbody id="appointment-request-tbody">
+				<!-- Fill via ajax method -->
+				</tbody>
+			</table>
+		</div>
+		<div id="appointment-request-div" class="pop-up-form" style="display: none;">
+			<form id="appointment-request-form">
+				<label for="appointment-type">Appointment Type</label>
+				<input id="appointment-type" type="text" placeholder="e.g. Checkup">
+				<label for="appointment-info">Info</label>
+				<input id="appointment-info" type="text" placeholder="e.g. Would like to schedule a routine checkup for hearing">
+			</form>
+			<div id="appointment-request-form-submit" class="btn btn-primary">Submit</div>
+			<div id="appointment-request-form-close" class="btn btn-danger">Close</div>
+		</div>
 	    </div>
     	<br><br><br><br><br><br>
 	</div>

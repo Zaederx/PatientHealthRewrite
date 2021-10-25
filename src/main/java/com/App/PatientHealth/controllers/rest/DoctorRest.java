@@ -6,11 +6,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.App.PatientHealth.domain.AppointmentRequest;
 import com.App.PatientHealth.domain.Doctor;
 import com.App.PatientHealth.domain.DoctorNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
 import com.App.PatientHealth.domain.User;
+import com.App.PatientHealth.requestObjects.AppointmentRequestForm;
 import com.App.PatientHealth.requestObjects.DoctorNoteForm;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 import com.App.PatientHealth.requestObjects.PrescriptionForm;
@@ -31,6 +33,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -265,8 +269,8 @@ public class DoctorRest {
 
 
     //add doctor's note to patient
-    @PostMapping("/add-patient-notes")
-    public JsonResponse addDoctorsNoteToPatient(@RequestBody DoctorNoteForm form) {
+    @PostMapping("/add-medical-note")
+    public JsonResponse addMedicalNoteToPatient(@RequestBody DoctorNoteForm form) {
         JsonResponse res = new JsonResponse();
 
         DoctorNote note = new DoctorNote(form);
@@ -360,6 +364,43 @@ public class DoctorRest {
             res.setMessage("Note not updated successfully.");
         }
 
+        return res;
+    }
+
+    @PostMapping("add-patient-appointment-request")
+    public JsonResponse patientAppointmentRequest(@RequestBody AppointmentRequestForm form) {
+        JsonResponse res = new JsonResponse();
+        AppointmentRequest request = new AppointmentRequest(form);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
+        Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findByUsername(username);
+        
+        if (doctorOpt.isPresent()) {
+            Doctor doctor = doctorOpt.get();
+            request.setDoctor(doctor);
+        }
+        if (patientOpt.isPresent()) {
+            Patient patient = patientOpt.get();
+            request.setPatient(patient);
+            patient.getAppointmentRequests().add(request);
+            
+        }
+
+        if (patientOpt.isPresent() && doctorOpt.isPresent()) {
+            //save new request
+            try {
+                userServices.getAppointmentRepo().save(request);
+                // will cascade saving the new appointment request
+                res.setSuccess(true);
+                res.setMessage("Appointment Request submitted successfully.");
+            }
+            catch (Exception e) {
+                res.setSuccess(false);
+                res.setMessage("Error submitting appointment request");
+            }
+        }
+        
+        
         return res;
     }
 

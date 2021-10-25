@@ -477,7 +477,7 @@ public class DoctorRestTests {
         DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
 
         //when
-        JsonResponse res = restController.addDoctorsNoteToPatient(form);
+        JsonResponse res = restController.addMedicalNoteToPatient(form);
 
         //then
         String empty = "";
@@ -499,7 +499,7 @@ public class DoctorRestTests {
         DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
 
         //when
-        JsonResponse res = restController.addDoctorsNoteToPatient(form);
+        JsonResponse res = restController.addMedicalNoteToPatient(form);
 
         //then
         String empty = "";

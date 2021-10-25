@@ -3,6 +3,7 @@ package com.App.PatientHealth.responseObject.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.App.PatientHealth.domain.AppointmentRequest;
 import com.App.PatientHealth.domain.DoctorNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
@@ -21,9 +22,11 @@ public class PatientJson extends UserJson {
     String doctorEmail;
     List<PrescriptionJson> prescriptions;
     List<DoctorNoteJson> doctorNotes;
+    List<AppointmentRequestJson> appointmentRequests;
     public PatientJson(){
         this.prescriptions = new ArrayList<PrescriptionJson>();
         this.doctorNotes = new ArrayList<DoctorNoteJson>();
+        this.appointmentRequests = new ArrayList<AppointmentRequestJson>();
     }
 
     public PatientJson(Patient p){
@@ -39,6 +42,7 @@ public class PatientJson extends UserJson {
         }
         this.prescriptions = toPrescriptionJsons(p.getPrescriptions());
         this.doctorNotes = toDoctorNoteJsons(p.getDoctorNotes());
+        this.appointmentRequests = toAppointmentRequestJsons(p.getAppointmentRequests());
     }
 
  
@@ -54,6 +58,14 @@ public class PatientJson extends UserJson {
         List<DoctorNoteJson> json = new ArrayList<DoctorNoteJson>();
         notes.forEach(n -> {
             json.add(new DoctorNoteJson (n));
+        });
+        return json;
+    }
+
+    public List<AppointmentRequestJson> toAppointmentRequestJsons(List<AppointmentRequest> requests) {
+        List<AppointmentRequestJson> json = new ArrayList<AppointmentRequestJson>();
+        requests.forEach(req -> {
+            json.add(new AppointmentRequestJson (req));
         });
         return json;
     }
@@ -77,10 +89,12 @@ public class PatientJson extends UserJson {
         this.doctorEmail = doctorEmail;
     }
 
+    @JsonProperty("DOB")
     public String getDOB() {
         return DOB;
     }
 
+    @JsonProperty("DOB")
     public void setDOB(String DOB) {
         this.DOB = DOB;
     }
@@ -101,5 +115,11 @@ public class PatientJson extends UserJson {
         this.doctorNotes = doctorNotes;
     }
 
+    public List<AppointmentRequestJson> getAppointmentRequests() {
+        return appointmentRequests;
+    }
 
+    public void setAppointmentRequests(List<AppointmentRequestJson> appointmentRequests) {
+        this.appointmentRequests = appointmentRequests;
+    }
 }

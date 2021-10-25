@@ -4,7 +4,7 @@ import { getSelectedUserId } from "../admin-view/admin-search-users.js";
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string
 
-//SECTION PatientSearchTable
+//SECTION ****** PatientSearchTable ******
 $('#patient-searchbar').on('input', () => {
     var name = $('#patient-searchbar').val() as string;
     var pageNum = $('#p-pageNum').val() as number
@@ -48,8 +48,7 @@ $('#btn-go').on('click', () => {
 
 
 
-
-$('#btn-view-patient').on('click', () => {
+function viewPatientDetails() {
     //get selected patient id
     var id = getSelectedUserId('#patient-search-table-body') as string
 
@@ -63,7 +62,7 @@ $('#btn-view-patient').on('click', () => {
             if(data.success) {
                 loadPatientPrescriptionTable(data)
                 loadPatientDoctorNotesTable(data)
-                loadPatientDoctorNotesTable(data)
+                loadPatientAppointmentRequestTable(data)
             }
             else {
 
@@ -75,24 +74,32 @@ $('#btn-view-patient').on('click', () => {
             $('#message').html(message('Error retrieving patient information','alert-danger'))
         }
     })
-
-    
+}
+$('#btn-view-patient').on('click', () => {
+    viewPatientDetails()
 })
 
-//SECTION Prescription
+//SECTION ****** Prescription ******
+//show prescription form
 $('#btn-add-prescription').on('click', () => {
     //show popup form
-    $('#prescription-form').show()
+    $('#prescription-div').show()
 })
 
+//hide prescription form
+$('#prescription-form-close').on('click', () => {
+    $('#prescription-div').hide()
+})
+
+//submit prescription form
 $('#prescription-form-submit').on('click', () => {
-    //TODO get form data
+    //get form data
     var patientId = getSelectedUserId('#patient-search-table-body') as string
     var medicationName = $('#medication-name').val();
     var doctorsDirections = $('#directions').val();
     var data = {medicationName, doctorsDirections, patientId}
 
-    //TODO submit form
+    //submit form
     $.ajax({
         url: "/rest/patient/add-prescription",
         type: "POST",
@@ -102,11 +109,15 @@ $('#prescription-form-submit').on('click', () => {
         headers: {'X-CSRF-TOKEN':csrfToken},
         success: (data:PatientResponseList) => {
             if(data.success) {
-                $('#prescription-form').hide()
+                $('#prescription-div').hide()
+                $('#prescription-form').trigger('reset')
                 $('#message').html(message('Prescription Added Successfully','alert-info'))
+
+                //refresh with updated details
+                viewPatientDetails()
             }
             else {
-                $('#prescription-form').show()
+                $('#prescription-div').show()
             }
         },
         error: () => {
@@ -117,21 +128,109 @@ $('#prescription-form-submit').on('click', () => {
 })
 
 
-$('#prescription-form-close').on('click', () => {
-    $('#prescription-form').hide()
-})
 
-//SECTION Notes
-$('#btn-add-notes').on('click', () => {
+//SECTION ******  Notes *********
+
+//show add notes form
+$('#btn-add-note').on('click', () => {
     //TODO show popup form
-    $('#prescription-form').show()
+    $('#note-div').show()
+})
+
+//hide add notes form
+$('#note-form-close').on('click', () => {
+    $('#note-div').hide()
 })
 
 
-//SECTION Requests
+//submit add notes form
+$('#note-form-submit').on('click', () => {
+    //get form data
+    var patientId = getSelectedUserId('#patient-search-table-body') as string
+    var noteHeading = $('#note-heading').val();
+    var noteBody = $('#note-body').val();
+    var data = {noteHeading, noteBody, patientId}
+
+    //submit form
+    $.ajax({
+        url: "/rest/doctor/add-medical-note",
+        type: "POST",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType: "json",
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data:PatientResponseList) => {
+            if(data.success) {
+                $('#note-div').hide()
+                $('#note-form').trigger('reset')
+                $('#message').html(message('Prescription Added Successfully','alert-info'))
+                //refresh with updated details
+                viewPatientDetails()
+            }
+            else {
+                $('#prescription-div').show()
+            }
+        },
+        error: () => {
+            $('#message').html(message('Error retrieving patient information','alert-danger'))
+        }
+        
+    })
+})
+
+
+
+//SECTION ****** Requests ******
+
+//show request form
 $('#btn-add-request').on('click', () => {
     //TODO show popup form
+    $('#appointment-request-div').show()
 })
+
+//hide request form
+$('#appointment-request-form-close').on('click', () => {
+    $('#appointment-request-div').hide()
+})
+
+
+//submit Request form
+$('#appointment-request-form-submit').on('click', () => {
+    //get form data
+    var patientId = getSelectedUserId('#patient-search-table-body') as string
+    var appointmentType = $('#appointment-type').val();
+    var appointmentInfo = $('#appointment-info').val();
+    var data = {appointmentType, appointmentInfo, patientId}
+
+    //submit form
+    $.ajax({
+        url: "/rest/doctor/add-patient-appointment-request",
+        type: "POST",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType: "json",
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data:PatientResponseList) => {
+            if(data.success) {
+                $('appointment-request-div').hide()
+                $('appointment-request-form').trigger('reset')
+                $('#message').html(message('Prescription Added Successfully','alert-info'))
+                //refresh with updated details
+                viewPatientDetails()
+            }
+            else {
+                $('#appointment-request-div').show()
+            }
+
+        },
+        error: () => {
+            $('#message').html(message('Error retrieving patient information','alert-danger'))
+        }
+        
+    })
+})
+
+
 
 /**
  * Assumes single patient is returned in data object
@@ -173,15 +272,14 @@ function loadPatientDoctorNotesTable(data:PatientResponseList) {
  * @param data 
  * @returns 
  */
-// function loadPatientAppointmentRequestTable(data:PatientResponseList) {
-//     var patient = data.patientJsons[0]
-//     var rows = ''
-//     //TODO
-//     patient.appointments.forEach( note => {
-//         var row = '<tr data-id="'+note.id+'" data-selected="false" data-userType="patient">'+
-//                         '<td>'+note.noteHeading+'</td>'+ 
-//                     '</tr>';
-//         rows += row
-//     })
-//     return rowss
-// }
+function loadPatientAppointmentRequestTable(data:PatientResponseList) {
+    var patient = data.patientJsons[0]
+    var rows = ''
+    patient.appointmentRequests.forEach( request => {
+        var row = '<tr data-id="'+request.id+'" data-selected="false" data-userType="patient">'+
+                        '<td>'+request.appointmentType+'</td>'+ 
+                    '</tr>';
+        rows += row
+    })
+    $('#appointment-request-tbody').html(rows)
+}
