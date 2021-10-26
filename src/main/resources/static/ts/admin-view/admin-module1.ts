@@ -56,20 +56,20 @@ export function selectRow(tableBody:HTMLTableElement,row:HTMLTableRowElement, cs
 /**
  * Makes rows of a table selectable/clickable.
  * @param tableBody 
- * @param selectRow 
+ * @param select 
  * @param csrfToken 
  */
-export function makeClickableTableRows(tableBody:HTMLTableElement,selectRow:Function, csrfToken?:string) {
+export function makeClickableTableRows(tableBody:HTMLTableElement,select:Function=selectRow, csrfToken?:string) {
     var rows = tableBody?.querySelectorAll('tr');
     rows.forEach( row => {
         row.addEventListener('click', () => {
             //doctor user csrfToken
             if(csrfToken) {
-                selectRow(tableBody,row,csrfToken)
+                select(tableBody,row,csrfToken)
             }
             //if not doctor using csrfToken
             else {
-                selectRow(tableBody,row)
+                select(tableBody,row)
             }
             
         })

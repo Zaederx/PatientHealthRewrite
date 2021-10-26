@@ -1,8 +1,9 @@
-import { makeClickableTableRows, searchForPatient } from "../admin-view/admin-module1.js"
+import { makeClickableTableRows, searchForPatient, selectRow } from "../admin-view/admin-module1.js"
 import { message } from "../admin-view/admin-module2.js";
-import { getSelectedUserId } from "../admin-view/admin-search-users.js";
+import { getSelectedItemId } from "../admin-view/admin-search-users.js";
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string
+var currentPatientDetails:Patient
 
 //SECTION ****** PatientSearchTable ******
 $('#patient-searchbar').on('input', () => {
@@ -50,7 +51,7 @@ $('#btn-go').on('click', () => {
 
 function viewPatientDetails() {
     //get selected patient id
-    var id = getSelectedUserId('#patient-search-table-body') as string
+    var id = getSelectedItemId('#patient-search-table-body') as string
 
     //fetch patient information & load tables
     $.ajax({
@@ -60,6 +61,9 @@ function viewPatientDetails() {
         headers: {'X-CSRF-TOKEN':csrfToken},
         success: (data:PatientResponseList) => {
             if(data.success) {
+                //save patient infomation in variable
+                currentPatientDetails = data.patientJsons[0]
+                //load tables with information
                 loadPatientPrescriptionTable(data)
                 loadPatientDoctorNotesTable(data)
                 loadPatientAppointmentRequestTable(data)
@@ -94,9 +98,9 @@ $('#prescription-form-close').on('click', () => {
 //submit prescription form
 $('#prescription-form-submit').on('click', () => {
     //get form data
-    var patientId = getSelectedUserId('#patient-search-table-body') as string
-    var medicationName = $('#medication-name').val();
-    var doctorsDirections = $('#directions').val();
+    var patientId = getSelectedItemId('#patient-search-table-body') as string
+    var medicationName = $('#medication-name').html();
+    var doctorsDirections = $('#directions').html();//from contenteditable div
     var data = {medicationName, doctorsDirections, patientId}
 
     //submit form
@@ -146,9 +150,9 @@ $('#note-form-close').on('click', () => {
 //submit add notes form
 $('#note-form-submit').on('click', () => {
     //get form data
-    var patientId = getSelectedUserId('#patient-search-table-body') as string
-    var noteHeading = $('#note-heading').val();
-    var noteBody = $('#note-body').val();
+    var patientId = getSelectedItemId('#patient-search-table-body') as string
+    var noteHeading = $('#note-heading').html();
+    var noteBody = $('#note-body').html();
     var data = {noteHeading, noteBody, patientId}
 
     //submit form
@@ -197,9 +201,9 @@ $('#appointment-request-form-close').on('click', () => {
 //submit Request form
 $('#appointment-request-form-submit').on('click', () => {
     //get form data
-    var patientId = getSelectedUserId('#patient-search-table-body') as string
-    var appointmentType = $('#appointment-type').val();
-    var appointmentInfo = $('#appointment-info').val();
+    var patientId = getSelectedItemId('#patient-search-table-body') as string
+    var appointmentType = $('#appointment-type').html();
+    var appointmentInfo = $('#appointment-info').html();
     var data = {appointmentType, appointmentInfo, patientId}
 
     //submit form
@@ -212,8 +216,8 @@ $('#appointment-request-form-submit').on('click', () => {
         headers: {'X-CSRF-TOKEN':csrfToken},
         success: (data:PatientResponseList) => {
             if(data.success) {
-                $('appointment-request-div').hide()
-                $('appointment-request-form').trigger('reset')
+                $('#appointment-request-div').hide()
+                $('#appointment-request-form').trigger('reset')
                 $('#message').html(message('Prescription Added Successfully','alert-info'))
                 //refresh with updated details
                 viewPatientDetails()
@@ -247,6 +251,8 @@ function loadPatientPrescriptionTable(data:PatientResponseList) {
         rows += row
     })
     $('#patient-prescription-tbody').html(rows)
+    var tableBody = document.querySelector('#patient-prescription-tbody') as HTMLTableElement
+    makeClickableTableRows(tableBody)
 }
 
 /**
@@ -265,6 +271,8 @@ function loadPatientDoctorNotesTable(data:PatientResponseList) {
         rows += row
     })
     $('#patient-medical-notes-tbody').html(rows)
+    var tableBody = document.querySelector('#patient-medical-notes-tbody') as HTMLTableElement
+    makeClickableTableRows(tableBody)
 }
 
 /**
@@ -282,4 +290,60 @@ function loadPatientAppointmentRequestTable(data:PatientResponseList) {
         rows += row
     })
     $('#appointment-request-tbody').html(rows)
+    var tableBody = document.querySelector('#appointment-request-tbody') as HTMLTableElement
+    makeClickableTableRows(tableBody)
+}
+
+
+
+
+//SECTION ****** Viewing Futher Infomation Detials In Popup ******
+
+function displayInfoPopup(html:string) {
+    $('#info-popup').show()
+    $('#info-popup').html(html)
+}
+
+$('#btn-view-prescription').on('click', () => viewPrescription())
+$('#btn-view-medical-note').on('click', () => viewMedicalNote())
+$('#btn-view-appointment-request').on('click', ()=> viewAppointmentRequest())
+$('#btn-info-popup-close').on('click', () =>{
+    $('#btn-info-popup').hide()
+})
+
+function viewPrescription() {
+    //get selected prescription id
+    var id = Number(getSelectedItemId('#patient-prescription-tbody'))
+    //find it in list of current patient prescriptions
+    var prescription = currentPatientDetails.prescriptions.filter((p)=>{return p.id == id})[0]
+    //display
+    var html = '<div>'+prescription.medicationName +'</div>'+
+    '<div>'+prescription.doctorsDirections+'</div>'
+
+    displayInfoPopup(html)
+}
+
+function viewMedicalNote() {
+    //get selected prescription id
+    var id = Number(getSelectedItemId('#patient-medical-notes-tbody'))
+    //find it in list of current patient prescriptions
+    var note = currentPatientDetails.doctorNotes.filter((n)=>{return n.id == id})[0]
+    //display
+    var html = '<div>'+note.noteHeading +'</div>'+
+    '<div>'+note.noteBody+'</div>'
+
+    displayInfoPopup(html)
+}
+
+function viewAppointmentRequest() {
+    //get selected prescription id
+    var id = Number(getSelectedItemId('#appointment-request-tbody'))
+    //find it in list of current patient prescriptions
+    var request = currentPatientDetails.appointmentRequests.filter((r)=>{return r.id == id})[0]
+    //display
+    var html = '<div>'+request.appointmentType +'</div>'+
+    '<div>'+request.appointmentInfo+'</div>'+
+    '<div> Doctor Name:'+request.doctorName+'</div>'
+
+    displayInfoPopup(html)
 }

@@ -71,7 +71,7 @@ $btn-blue: rgb(41,120,237);
     margin-right: 10px;
 }
 
-.pop-up-form {
+.popup-form {
     margin: auto;
     padding: 20px;
     z-index: 1;
@@ -79,4 +79,24 @@ $btn-blue: rgb(41,120,237);
     height: 300px;
     background-color:$light-blue;
     position: absolute;
+    top: 50%;
+    left: 15%;
+}
+
+.popup {
+    position: absolute !important;
+    left: 50%;
+    z-index: 1;
+}
+
+.editable {
+    padding: 5px;
+    background-color: white;
+}
+
+.editable:empty:before {
+    content: attr(data-placeholder);
+    color: rgb(109, 109, 109);
+    white-space: pre-wrap;
+    word-wrap: normal;
 }

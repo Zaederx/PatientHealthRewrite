@@ -2,7 +2,7 @@ import { message, Table } from "./admin-module2.js"
 import { searchForUser } from "./admin-module3.js"
 import { validateEmail, validatePassword, validateUsername } from "./admin-module4.js"
 import { handlePasswordSuccess, handleSuccess } from "./admin-register-users.js"
-import { getSelectedUserId } from "./admin-search-users.js"
+import { getSelectedItemId } from "./admin-search-users.js"
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string
 var searchBy:'name'|'username' = 'name'
@@ -86,7 +86,7 @@ $(deleteBtnId).on('click', () => {
     //if confirmed ok for deletion
     if (ok) {
         //get selected id
-        var id = getSelectedUserId(table.getTableId())
+        var id = getSelectedItemId(table.getTableId())
         //submit user to be deleted
         $.ajax({
             url: "/rest/user/delete/"+id,

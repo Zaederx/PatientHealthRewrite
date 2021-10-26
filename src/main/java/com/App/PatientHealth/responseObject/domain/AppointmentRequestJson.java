@@ -16,19 +16,29 @@ import com.App.PatientHealth.domain.AppointmentRequest;
  * 
  */
 public class AppointmentRequestJson {
-
+    Integer id;
     String appointmentType;
     String appointmentInfo;
 
     public AppointmentRequestJson() {}
 
     public AppointmentRequestJson(AppointmentRequest request) {
+        this.id = request.getId();
         this.appointmentType = request.getAppointmentType();
         this.appointmentInfo = request.getAppointmentInfo();
     }
-    public AppointmentRequestJson(String appointmentType, String appointmentInfo) {
+    public AppointmentRequestJson(Integer id, String appointmentType, String appointmentInfo) {
+        this.id = id;
         this.appointmentType = appointmentType;
         this.appointmentInfo = appointmentInfo;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getAppointmentType() {

@@ -44,7 +44,7 @@ function getUserSearchType() {
  * Returns the id of the user in that row.
  * @returns 
  */
- export function getSelectedUserId(tableBodyId: string): string {
+ export function getSelectedItemId(tableBodyId: string): string {
     //get table
     var tableBody = document.querySelector(tableBodyId) as HTMLTableElement;
     //get selected row
@@ -64,7 +64,7 @@ function getUserSearchType() {
  */
 function fetchUserDetails() {
     //get selected User
-    var id = getSelectedUserId('#user-select-table')
+    var id = getSelectedItemId('#user-select-table')
     console.log('user id:',id)
     //identify usertype
     var usertype = getSelectedUserType();
