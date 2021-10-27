@@ -402,13 +402,19 @@ function viewPrescription() {
     //find it in list of current patient prescriptions
     var prescription = currentPatientDetails.prescriptions.filter((p)=>{return p.id == id})[0]
     //display
-    var html = '<label>Medication Name:</label>'+
+    var html = 
+    '<span id="'+popupPrescriptionsId.substring(1)+'-close" class="btn-x">X</span>'+
+    '<label>Medication Name:</label>'+
     '<div class="field">'+prescription.medicationName +'</div>'+
     '<label>Doctors Directions:</label>'+
-    '<div class="field">'+prescription.doctorsDirections+'</div>'+
-    '<span id="btn-info-popup-prescriptions-close" >Close</span>'
+    '<div class="field">'+prescription.doctorsDirections+'</div>'
+    
 
     displayInfoPopup(popupPrescriptionsId,html)
+    //enable close button
+    $(popupPrescriptionsId+'-close').on('click', () => {
+        $(popupPrescriptionsId).hide()
+    })
 }
 
 function viewMedicalNote() {
@@ -417,13 +423,20 @@ function viewMedicalNote() {
     //find it in list of current patient prescriptions
     var note = currentPatientDetails.doctorNotes.filter((n)=>{return n.id == id})[0]
     //display
-    var html = '<label>Note Heading:</label>'+
+    var html = 
+    '<span id="'+popupNotesId.substring(1)+'-close">X</span>'+
+    '<label>Note Heading:</label>'+
     '<div class="field">'+note.noteHeading +'</div>'+
     '<label>Note Body:</label>'+
-    '<div class="field">'+note.noteBody+'</div>'+
-    '<span id="btn-info-popup-medical-notes-close" >X</span>'
+    '<div class="field">'+note.noteBody+'</div>'
+    
 
     displayInfoPopup(popupNotesId,html)
+
+    //enable close button - must be done after elements are added to the dom
+    $(popupNotesId+'-close').on('click', () => {
+        $(popupNotesId).hide()
+    })
 }
 
 function viewAppointmentRequest() {
@@ -432,12 +445,19 @@ function viewAppointmentRequest() {
     //find it in list of current patient prescriptions
     var request = currentPatientDetails.appointmentRequests.filter((r)=>{return r.id == id})[0]
     //display
-    var html = '<label>Appointment Type:</label>'+
+    var html = 
+    '<div id="'+popupRequestsId.substring(1)+'-close" class="btn-x">X</div>'+
+    '<label>Appointment Type:</label>'+
     '<div class="field">'+request.appointmentType +'</div>'+
     '<label>Appointment Info:</label>'+
     '<div class="field">'+request.appointmentInfo+'</div>'+
     '<label>Doctor Name:</label>'+
-    '<div class="field">'+request.doctorName+'</div>'+
-    '<div id="btn-info-popup-appointment-requests-close">X</div>'
+    '<div class="field">'+request.doctorName+'</div>'
+    
     displayInfoPopup(popupRequestsId,html)
+
+    //enable close button
+    $(popupRequestsId+'-close').on('click', () => {
+        $(popupRequestsId).hide()
+    })
 }
