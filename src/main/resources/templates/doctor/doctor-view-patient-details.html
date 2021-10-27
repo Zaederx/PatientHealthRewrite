@@ -78,47 +78,70 @@
 				<br>
 				<br>
     	<div class="row">
-			<div id="message" style="display: none;"></div>
+			
+			<div id="message" class="popup" style="display: none;"></div>
 			<div id="info-popup" class="alert alert-info popup" style="display: none;">
 				<div id="btn-info-popup-close" ></div>
 			</div>
-			<!-- Prescriptions Message -->
-			<div class="col-sm-4"> 
-					<div id="btn-add-prescription" class="btn btn-primary"> Add Prescription</div>
-					<!-- Table -->
-					<table class="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th colspan="2">Prescriptions</th>
-							</tr>
-						</thead>
-						<tbody id="patient-prescription-tbody">
-							<tr>
-								<td>N/A</td>
-							</tr>
-						<!-- Fill via ajax method -->
-						</tbody>
-					</table>
-					<div id="btn-view-prescription" class="btn btn-primary">View Prescription</div>
 
-					<!-- Prescription Pop up form -->
-					<div id="prescription-div" class="popup-form" style="display: none;">
-						<form id="prescription-form">
-							<label for="medication-name">Medication Name</label>
-							<div id="medication-name" contenteditable="true"  class="editable" data-placeholder="Enter Medication Name"></div>
-							<label for="directions">Directions</label>
-							<div id="directions" contenteditable="true"  class="editable" data-placeholder="Enter Directions"></div>
-						</form>
-						<div id="prescription-form-submit" class="btn btn-primary">Submit</div>
-						<div id="prescription-form-close" class="btn btn-danger">Close</div>
-					</div>
+			<!-- Prescriptions  -->
+			<div class="col-sm-4"> 
+				<!-- For displaying error messages -->
+				<div id="message-prescriptions" class="popup" style="display: none;">
+					<span id="message-prescriptions-close" class="btn-x">X</span>
+				</div>
+
+				<!-- For displaying prescription information -->
+				<div id="info-popup-prescriptions" class="alert alert-info popup" style="display: none;">
+					
+				</div>
+
+				<div id="btn-add-prescription" class="btn btn-primary"> Add Prescription</div>
+				<!-- Table -->
+				<table class="table table-bordered table-striped info-table">
+					<thead>
+						<tr>
+							<th colspan="2">Prescriptions</th>
+						</tr>
+					</thead>
+					<tbody id="patient-prescription-tbody">
+						<tr>
+							<td>N/A</td>
+						</tr>
+					<!-- Fill via ajax method -->
+					</tbody>
+				</table>
+				<div id="btn-view-prescription" class="btn btn-primary">View Prescription</div>
+
+				<!-- Prescription Pop up form -->
+				<div id="prescription-div" class="popup-form" style="display: none;">
+					<form id="prescription-form">
+						<label for="medication-name">Medication Name</label>
+						<span id="medication-name" contenteditable="true"  class="editable" data-placeholder="Enter Medication Name"></span>
+						<label for="directions">Directions</label>
+						<span id="directions" contenteditable="true"  class="editable" data-placeholder="Enter Directions"></span>
+					</form>
+					<div id="prescription-form-submit" class="btn btn-primary">Submit</div>
+					<div id="prescription-form-close" class="btn btn-danger">Close</div>
+				</div>
 			</div>
 		
 			<!-- Notes -->
-			<div class="col-sm-4"> 
+			<div class="col-sm-4">
+				<!-- For displaying error messages -->
+				<div id="message-medical-notes" class="popup" style="display: none;">
+					<div id="message-medical-notes-close">X</div>
+				</div>
+
+				<!-- For displaying medical note information -->
+				<div id="info-popup-medical-notes" class="alert alert-info popup" style="display: none;">
+					
+				</div>
+
+
 				<div id="btn-add-note" class="btn btn-primary"> Add Medical Note</div>
 				<!-- Table -->
-				<table class="table table-bordered table-striped">
+				<table class="table table-bordered table-striped info-table">
 					<thead>
 						<tr>
 							<th colspan="2">Doctor Medical Notes</th>
@@ -137,9 +160,9 @@
 				<div id="note-div" class="popup-form" style="display: none;">
 					<form id="note-form">
 						<label for="note-heading">Note Heading</label>
-						<div id="note-heading" contenteditable="true"  class="editable" data-placeholder="Enter Note Title"></div>
+						<span id="note-heading" contenteditable="true"  class="editable" data-placeholder="Enter Note Title"></span>
 						<label for="note-body">Note Body</label>
-						<div id="note-body" contenteditable="true"  class="editable" data-placeholder="Enter Note Body"></div>
+						<span id="note-body" contenteditable="true"  class="editable" data-placeholder="Enter Note Body"></span>
 					</form>
 					<div id="note-form-submit" class="btn btn-primary">Submit</div>
 					<div id="note-form-close" class="btn btn-danger">Close</div>
@@ -148,9 +171,18 @@
 				
 			<!-- Appointment Requests -->
 			<div class="col-sm-4"> 
+				<!-- For displaying error messages -->
+				<div id="message-appointment-requests" class="popup" style="display: none;">
+					<span id="message-appointment-requests-close">X</span>
+				</div>
+
+				<!-- For displaying appointment request information -->
+				<div id="info-popup-appointment-requests" class="alert alert-info popup" style="display: none;">
+					<div id="btn-info-popup-appointment-requests-close" >X</div>
+				</div>
 				<!-- Table -->
 				<div id="btn-add-request" class="btn btn-primary">Add Appointment Request</div>
-				<table id="appointment-request-table" class="table table-bordered table-striped">
+				<table id="appointment-request-table" class="table table-bordered table-striped info-table">
 					<thead>
 						<tr>
 							<th colspan="2">Appointment Requests</th>
@@ -169,9 +201,9 @@
 				<div id="appointment-request-div" class="popup-form" style="display: none;">
 					<form id="appointment-request-form">
 						<label for="appointment-type">Appointment Type</label>
-						<div id="appointment-type" contenteditable="true"  class="editable" data-placeholder="e.g. Checkup"></div>
+						<span id="appointment-type" contenteditable="true"  class="editable" data-placeholder="e.g. Checkup"></span>
 						<label for="appointment-info">Info</label>
-						<div id="appointment-info" contenteditable="true"  class="editable" data-placeholder="e.g. Would like to schedule a routine checkup for hearing"></div>
+						<span id="appointment-info" contenteditable="true"  class="editable" data-placeholder="e.g. Would like to schedule a routine checkup for hearing"></span>
 					</form>
 					<div id="appointment-request-form-submit" class="btn btn-primary">Submit</div>
 					<div id="appointment-request-form-close" class="btn btn-danger">Close</div>

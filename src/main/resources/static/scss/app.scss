@@ -79,24 +79,48 @@ $btn-blue: rgb(41,120,237);
     height: 300px;
     background-color:$light-blue;
     position: absolute;
-    top: 50%;
+    top: 15%;
     left: 15%;
 }
 
 .popup {
     position: absolute !important;
-    left: 50%;
+    left: 30%;
     z-index: 1;
+}
+
+.field {
+    padding: 5px;
+    background-color: white;
 }
 
 .editable {
     padding: 5px;
     background-color: white;
+    white-space: pre-wrap;
+    word-wrap: normal;
+    display: block;
 }
 
 .editable:empty:before {
     content: attr(data-placeholder);
     color: rgb(109, 109, 109);
-    white-space: pre-wrap;
-    word-wrap: normal;
 }
+
+.btn-x {
+    background-color: $tomato;
+    color: white;
+}
+
+.info-table tbody {
+    display: block;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.info-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+

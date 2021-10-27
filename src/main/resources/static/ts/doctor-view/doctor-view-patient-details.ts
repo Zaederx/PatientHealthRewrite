@@ -5,6 +5,18 @@ import { getSelectedItemId } from "../admin-view/admin-search-users.js";
 var csrfToken = $("meta[name='_csrf']").attr("content") as string
 var currentPatientDetails:Patient
 
+//Ids for div to display alert messages
+const messageDivId = '#message'
+const messagePrescriptionsDivId = '#message-prescriptions'
+const messageNotesDivId = '#message-medical-notes'
+const messageRequestsDivId = '#message-appointment-requests'
+
+//Ids for Information Popups
+const popupPrescriptionsId = '#info-popup-prescriptions'
+const popupNotesId = '#info-popup-medical-notes'
+const popupRequestsId = '#info-popup-appointment-requests'
+
+
 //SECTION ****** PatientSearchTable ******
 $('#patient-searchbar').on('input', () => {
     var name = $('#patient-searchbar').val() as string;
@@ -95,6 +107,12 @@ $('#prescription-form-close').on('click', () => {
     $('#prescription-div').hide()
 })
 
+
+//hide error message
+$(messagePrescriptionsDivId+'-close').on('click', () => {
+    $(messagePrescriptionsDivId).hide()
+})
+
 //submit prescription form
 $('#prescription-form-submit').on('click', () => {
     //get form data
@@ -103,8 +121,23 @@ $('#prescription-form-submit').on('click', () => {
     var doctorsDirections = $('#directions').html();//from contenteditable div
     var data = {medicationName, doctorsDirections, patientId}
 
-    //submit form
-    $.ajax({
+    if (medicationName.length != 0 && doctorsDirections.length != 0 && patientId) {
+        submitPrescriptionForm(data)
+        $('#medication-name').html('');
+        $('#directions').html('');
+        $(messagePrescriptionsDivId).hide()
+    }
+    else {
+        $(messagePrescriptionsDivId).show()
+        var html = $(messagePrescriptionsDivId).html()
+        $(messagePrescriptionsDivId).html(message('Please do not leave fields empty','alert-warning')+html)
+    }
+
+})
+
+function submitPrescriptionForm(data:any) {
+     //submit form
+     $.ajax({
         url: "/rest/patient/add-prescription",
         type: "POST",
         data: JSON.stringify(data),
@@ -115,22 +148,23 @@ $('#prescription-form-submit').on('click', () => {
             if(data.success) {
                 $('#prescription-div').hide()
                 $('#prescription-form').trigger('reset')
-                $('#message').html(message('Prescription Added Successfully','alert-info'))
+                $(messageDivId).html(message('Prescription Added Successfully','alert-info'))
 
                 //refresh with updated details
                 viewPatientDetails()
+                $('#message').hide()
             }
             else {
                 $('#prescription-div').show()
             }
         },
         error: () => {
-            $('#message').html(message('Error retrieving patient information','alert-danger'))
+            $(messageDivId).show()
+            $(messageDivId).html(message('Error retrieving patient information','alert-danger'))
         }
         
     })
-})
-
+}
 
 
 //SECTION ******  Notes *********
@@ -146,6 +180,10 @@ $('#note-form-close').on('click', () => {
     $('#note-div').hide()
 })
 
+//hide error message
+$(messageNotesDivId+'-close').on('click', () => {
+    $(messageNotesDivId).hide()
+})
 
 //submit add notes form
 $('#note-form-submit').on('click', () => {
@@ -155,6 +193,23 @@ $('#note-form-submit').on('click', () => {
     var noteBody = $('#note-body').html();
     var data = {noteHeading, noteBody, patientId}
 
+    if (noteHeading.length != 0 && noteBody.length != 0 && patientId) {
+        submitMedicalNoteForm(data)
+        //reset form content
+        $('#note-heading').html('');
+        $('#note-body').html('');
+        $(messageNotesDivId).hide()
+    }
+    else {
+        $(messageNotesDivId).show()
+        var html = $(messageNotesDivId).html()
+        $(messageNotesDivId).html(message('Please do not leave fields empty','alert-warning')+html)
+    }
+
+    
+})
+
+function submitMedicalNoteForm(data:any) {
     //submit form
     $.ajax({
         url: "/rest/doctor/add-medical-note",
@@ -180,7 +235,7 @@ $('#note-form-submit').on('click', () => {
         }
         
     })
-})
+}
 
 
 
@@ -197,6 +252,10 @@ $('#appointment-request-form-close').on('click', () => {
     $('#appointment-request-div').hide()
 })
 
+//hide error message
+$(messageRequestsDivId+'-close').on('click', () => {
+    $(messageRequestsDivId).hide()
+})
 
 //submit Request form
 $('#appointment-request-form-submit').on('click', () => {
@@ -205,34 +264,48 @@ $('#appointment-request-form-submit').on('click', () => {
     var appointmentType = $('#appointment-type').html();
     var appointmentInfo = $('#appointment-info').html();
     var data = {appointmentType, appointmentInfo, patientId}
-
+    if (appointmentType.length != 0 && appointmentInfo.length != 0 && patientId) {
+        submitAppointmentRequestForm(data)
+        //reset form input divs
+        $('#appointment-type').html('');
+        $('#appointment-info').html('');
+        $(messageRequestsDivId).hide()
+    }
+    else {
+        $(messageRequestsDivId).show()
+        var html = $(messageRequestsDivId).html()
+        $(messageRequestsDivId).html(message('Please do not leave fields empty','alert-warning')+html)
+    }
+   
+})
+function submitAppointmentRequestForm(data:any) {
     //submit form
     $.ajax({
-        url: "/rest/doctor/add-patient-appointment-request",
-        type: "POST",
-        data: JSON.stringify(data),
-        contentType: "application/json",
-        dataType: "json",
-        headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data:PatientResponseList) => {
-            if(data.success) {
-                $('#appointment-request-div').hide()
-                $('#appointment-request-form').trigger('reset')
-                $('#message').html(message('Prescription Added Successfully','alert-info'))
-                //refresh with updated details
-                viewPatientDetails()
-            }
-            else {
-                $('#appointment-request-div').show()
-            }
+       url: "/rest/doctor/add-patient-appointment-request",
+       type: "POST",
+       data: JSON.stringify(data),
+       contentType: "application/json",
+       dataType: "json",
+       headers: {'X-CSRF-TOKEN':csrfToken},
+       success: (data:PatientResponseList) => {
+           if(data.success) {
+               $('#appointment-request-div').hide()
+               $('#appointment-request-form').trigger('reset')
+               $('#message').html(message('Prescription Added Successfully','alert-info'))
+               //refresh with updated details
+               viewPatientDetails()
+           }
+           else {
+               $('#appointment-request-div').show()
+           }
 
-        },
-        error: () => {
-            $('#message').html(message('Error retrieving patient information','alert-danger'))
-        }
-        
-    })
-})
+       },
+       error: () => {
+           $('#message').html(message('Error retrieving patient information','alert-danger'))
+       }
+       
+   })
+}
 
 
 
@@ -299,9 +372,9 @@ function loadPatientAppointmentRequestTable(data:PatientResponseList) {
 
 //SECTION ****** Viewing Futher Infomation Detials In Popup ******
 
-function displayInfoPopup(html:string) {
-    $('#info-popup').show()
-    $('#info-popup').html(html)
+function displayInfoPopup(popupId:string,html:string) {
+    $(popupId).show()
+    $(popupId).html(html)
 }
 
 $('#btn-view-prescription').on('click', () => viewPrescription())
@@ -317,10 +390,13 @@ function viewPrescription() {
     //find it in list of current patient prescriptions
     var prescription = currentPatientDetails.prescriptions.filter((p)=>{return p.id == id})[0]
     //display
-    var html = '<div>'+prescription.medicationName +'</div>'+
-    '<div>'+prescription.doctorsDirections+'</div>'
+    var html = '<label>Medication Name:</label>'+
+    '<div class="field">'+prescription.medicationName +'</div>'+
+    '<label>Doctors Directions:</label>'+
+    '<div class="field">'+prescription.doctorsDirections+'</div>'+
+    '<span id="btn-info-popup-prescriptions-close" >Close</span>'
 
-    displayInfoPopup(html)
+    displayInfoPopup(popupPrescriptionsId,html)
 }
 
 function viewMedicalNote() {
@@ -329,10 +405,13 @@ function viewMedicalNote() {
     //find it in list of current patient prescriptions
     var note = currentPatientDetails.doctorNotes.filter((n)=>{return n.id == id})[0]
     //display
-    var html = '<div>'+note.noteHeading +'</div>'+
-    '<div>'+note.noteBody+'</div>'
+    var html = '<label>Note Heading:</label>'+
+    '<div class="field">'+note.noteHeading +'</div>'+
+    '<label>Note Body:</label>'+
+    '<div class="field">'+note.noteBody+'</div>'+
+    '<span id="btn-info-popup-medical-notes-close" >X</span>'
 
-    displayInfoPopup(html)
+    displayInfoPopup(popupNotesId,html)
 }
 
 function viewAppointmentRequest() {
@@ -341,9 +420,12 @@ function viewAppointmentRequest() {
     //find it in list of current patient prescriptions
     var request = currentPatientDetails.appointmentRequests.filter((r)=>{return r.id == id})[0]
     //display
-    var html = '<div>'+request.appointmentType +'</div>'+
-    '<div>'+request.appointmentInfo+'</div>'+
-    '<div> Doctor Name:'+request.doctorName+'</div>'
-
-    displayInfoPopup(html)
+    var html = '<label>Appointment Type:</label>'+
+    '<div class="field">'+request.appointmentType +'</div>'+
+    '<label>Appointment Info:</label>'+
+    '<div class="field">'+request.appointmentInfo+'</div>'+
+    '<label>Doctor Name:</label>'+
+    '<div class="field">'+request.doctorName+'</div>'+
+    '<div id="btn-info-popup-appointment-requests-close">X</div>'
+    displayInfoPopup(popupRequestsId,html)
 }
