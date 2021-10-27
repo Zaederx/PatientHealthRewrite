@@ -110,6 +110,10 @@ $btn-blue: rgb(41,120,237);
 .btn-x {
     background-color: $tomato;
     color: white;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    float: right;
 }
 
 .info-table tbody {
@@ -123,4 +127,3 @@ $btn-blue: rgb(41,120,237);
     width: 100%;
     table-layout: fixed;
 }
-

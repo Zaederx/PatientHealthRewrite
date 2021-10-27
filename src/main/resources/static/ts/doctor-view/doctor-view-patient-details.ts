@@ -16,6 +16,15 @@ const popupPrescriptionsId = '#info-popup-prescriptions'
 const popupNotesId = '#info-popup-medical-notes'
 const popupRequestsId = '#info-popup-appointment-requests'
 
+function popupMessage(message:string,type:string,closeBtnId:string):string {
+    //note - substring used to remove the hash before the id
+    var popupHTML = 
+    '<div class="alert '+type+'">'+
+        '<div id="'+closeBtnId.substring(1)+'" class="btn-x">X</div>'+
+        '<p>'+message+'</p>'+
+    '</div>'
+    return popupHTML
+}
 
 //SECTION ****** PatientSearchTable ******
 $('#patient-searchbar').on('input', () => {
@@ -108,10 +117,7 @@ $('#prescription-form-close').on('click', () => {
 })
 
 
-//hide error message
-$(messagePrescriptionsDivId+'-close').on('click', () => {
-    $(messagePrescriptionsDivId).hide()
-})
+
 
 //submit prescription form
 $('#prescription-form-submit').on('click', () => {
@@ -129,8 +135,13 @@ $('#prescription-form-submit').on('click', () => {
     }
     else {
         $(messagePrescriptionsDivId).show()
-        var html = $(messagePrescriptionsDivId).html()
-        $(messagePrescriptionsDivId).html(message('Please do not leave fields empty','alert-warning')+html)
+
+        $(messagePrescriptionsDivId).html(popupMessage('Please do not leave fields empty','alert-warning', messagePrescriptionsDivId+'-close'))
+
+        //hide error message
+        $(messagePrescriptionsDivId+'-close').on('click', () => {
+        $(messagePrescriptionsDivId).hide()
+})
     }
 
 })
@@ -180,10 +191,7 @@ $('#note-form-close').on('click', () => {
     $('#note-div').hide()
 })
 
-//hide error message
-$(messageNotesDivId+'-close').on('click', () => {
-    $(messageNotesDivId).hide()
-})
+
 
 //submit add notes form
 $('#note-form-submit').on('click', () => {
@@ -202,9 +210,13 @@ $('#note-form-submit').on('click', () => {
     }
     else {
         $(messageNotesDivId).show()
-        var html = $(messageNotesDivId).html()
-        $(messageNotesDivId).html(message('Please do not leave fields empty','alert-warning')+html)
+
+        $(messageNotesDivId).html(popupMessage('Please do not leave fields empty','alert-warning', messageNotesDivId+'-close'))
     }
+    //hide error message
+    $(messageNotesDivId+'-close').on('click', () => {
+    $(messageNotesDivId).hide()
+})
 
     
 })
@@ -252,10 +264,7 @@ $('#appointment-request-form-close').on('click', () => {
     $('#appointment-request-div').hide()
 })
 
-//hide error message
-$(messageRequestsDivId+'-close').on('click', () => {
-    $(messageRequestsDivId).hide()
-})
+
 
 //submit Request form
 $('#appointment-request-form-submit').on('click', () => {
@@ -273,9 +282,12 @@ $('#appointment-request-form-submit').on('click', () => {
     }
     else {
         $(messageRequestsDivId).show()
-        var html = $(messageRequestsDivId).html()
-        $(messageRequestsDivId).html(message('Please do not leave fields empty','alert-warning')+html)
+        $(messageRequestsDivId).html(popupMessage('Please do not leave fields empty','alert-warning',messageRequestsDivId+'-close'))
     }
+    //hide error message
+    $(messageRequestsDivId+'-close').on('click', () => {
+    $(messageRequestsDivId).hide()
+})
    
 })
 function submitAppointmentRequestForm(data:any) {
