@@ -20,6 +20,8 @@ public class Prescription {
     String medicationName;
     @Column
     String doctorsDirections;
+    @ManyToOne
+    Patient patient;
 
     public Prescription(){}
     public Prescription(String medicationName, String doctorsDirections) {
@@ -62,5 +64,16 @@ public class Prescription {
         this.doctorsDirections = doctorsDirections;
     }
 
+    public Patient getPatient() {
+        return patient;
+    }
 
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public void updateFromForm(PrescriptionForm form) {
+        this.setMedicationName(form.getMedicationName());
+        this.setDoctorsDirections(form.getDoctorsDirections());
+    }
 }

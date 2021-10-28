@@ -150,7 +150,7 @@ $('#prescription-form-submit').on('click', () => {
 function submitPrescriptionForm(data:any) {
      //submit form
      $.ajax({
-        url: "/rest/patient/add-prescription",
+        url: "/rest/doctor/add-prescription",
         type: "POST",
         data: JSON.stringify(data),
         contentType: "application/json",
@@ -561,7 +561,7 @@ function viewMedicalNote(optId?:number) {
 function editMedicalNote(id:number) {
     //find it in list of current patient prescriptions
     var note = currentPatientDetails.doctorNotes.filter((n)=>{return n.id == id})[0]
-    
+
     //display
     var html = 
     '<span id="'+popupNotesId.substring(1)+'-close">X</span>'+

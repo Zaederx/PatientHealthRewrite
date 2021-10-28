@@ -246,10 +246,11 @@ public class DoctorRest {
 
         if(patientOpt.isPresent()) {
             Patient patient = patientOpt.get();
+            pres.setPatient(patient);
             patient.getPrescriptions().add(pres);
             try {
                 userServices.getPrescriptionRepo().save(pres);
-                userServices.getPatientPaging().save(patient);
+                // userServices.getPatientPaging().save(patient);
                 //if success
                 res.setSuccess(true);
                 res.setMessage("Prescription added successfully");
@@ -410,18 +411,23 @@ public class DoctorRest {
         JsonResponse res = new JsonResponse();
         
         //create edited prescription from form data
-        Prescription editedPrescription = new Prescription(form);
+        Optional<Prescription> presOpt = userServices.getPrescriptionRepo().findById(form.getPrescriptionId());
 
-        //save changes
-        try {
-            userServices.getPrescriptionRepo().save(editedPrescription);
-            //if success
-            res.setSuccess(true);
-            res.setMessage("Prescription edited successfully");
-        }
-        catch (Exception e) {
-            res.setSuccess(false);
-            res.setMessage("Problem saving edited prescription");
+        if (presOpt.isPresent()) {
+            Prescription pres = presOpt.get();
+            //update prescription
+            pres.updateFromForm(form);
+             //save changes
+            try {
+                userServices.getPrescriptionRepo().save(pres);
+                //if success
+                res.setSuccess(true);
+                res.setMessage("Prescription edited successfully");
+            }
+            catch (Exception e) {
+                res.setSuccess(false);
+                res.setMessage("Problem saving edited prescription");
+            }
         }
         
         return res;

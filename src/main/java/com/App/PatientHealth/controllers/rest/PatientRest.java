@@ -141,33 +141,33 @@ public class PatientRest {
 
 
 
-   //add prescription to patient
-   @PostMapping("/add-prescription")
-   public JsonResponse addPrescriptionToPatient(@RequestBody PrescriptionForm form) {
-       JsonResponse res = new JsonResponse();
+//    //add prescription to patient
+//    @PostMapping("/add-prescription")
+//    public JsonResponse addPrescriptionToPatient(@RequestBody PrescriptionForm form) {
+//        JsonResponse res = new JsonResponse();
 
-       Prescription prescription = new Prescription(form);
-       Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
+//        Prescription prescription = new Prescription(form);
+//        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
 
-       if(patientOpt.isPresent()) {
-           Patient patient = patientOpt.get();
-           patient.getPrescriptions().add(prescription);
+//        if(patientOpt.isPresent()) {
+//            Patient patient = patientOpt.get();
+//            patient.getPrescriptions().add(prescription);
            
-           try {
-                userServices.getPrescriptionRepo().save(prescription);
-                userServices.getPatientPaging().save(patient);
-           }
-           catch (Exception e) {
+//            try {
+//                 userServices.getPrescriptionRepo().save(prescription);
+//                 userServices.getPatientPaging().save(patient);
+//            }
+//            catch (Exception e) {
                 
-           }
-           res.setSuccess(true);
-           res.setMessage("Prescription added successfully");
-       }
-       else {
-           res.setSuccess(false);
-           res.setMessage("No patient found to add prescription"); 
-       }
+//            }
+//            res.setSuccess(true);
+//            res.setMessage("Prescription added successfully");
+//        }
+//        else {
+//            res.setSuccess(false);
+//            res.setMessage("No patient found to add prescription"); 
+//        }
        
-       return res;
-   }
+//        return res;
+//    }
 }
