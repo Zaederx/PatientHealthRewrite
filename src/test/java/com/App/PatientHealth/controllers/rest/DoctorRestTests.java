@@ -18,7 +18,7 @@ import com.App.PatientHealth.domain.User;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.PatientPagingRepository;
 import com.App.PatientHealth.repository.UserPagingRepository;
-import com.App.PatientHealth.requestObjects.DoctorNoteForm;
+import com.App.PatientHealth.requestObjects.MedicalNoteForm;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 import com.App.PatientHealth.requestObjects.PrescriptionForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
@@ -474,7 +474,7 @@ public class DoctorRestTests {
 
         given(userServices.getPatientPaging()).willReturn(pRepo);
         given(pRepo.findById(validPId)).willReturn(patientOpt);
-        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
 
         //when
         JsonResponse res = restController.addMedicalNoteToPatient(form);
@@ -496,7 +496,7 @@ public class DoctorRestTests {
 
         given(userServices.getPatientPaging()).willReturn(pRepo);
         given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);
-        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
 
         //when
         JsonResponse res = restController.addMedicalNoteToPatient(form);
@@ -561,7 +561,7 @@ public class DoctorRestTests {
         int validPId = 1;
         Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
         Optional<Patient> patientOpt = Optional.of(patient);
-        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
 
         given(userServices.getPatientPaging()).willReturn(pRepo);
         given(pRepo.findById(validPId)).willReturn(patientOpt);
@@ -583,7 +583,7 @@ public class DoctorRestTests {
         int invalidPId = 1;
         Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
         Optional<Patient> emptyPatientOpt = Optional.empty();
-        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
 
         given(userServices.getPatientPaging()).willReturn(pRepo);
         given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);
@@ -606,7 +606,7 @@ public class DoctorRestTests {
         int validPId = 1;
         Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
         Optional<Patient> patientOpt = Optional.of(patient);
-        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
 
         given(userServices.getPatientPaging()).willReturn(pRepo);
         given(pRepo.findById(validPId)).willReturn(patientOpt);
@@ -629,7 +629,7 @@ public class DoctorRestTests {
         int invalidPId = 1;
         Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
         Optional<Patient> emptyPatientOpt = Optional.empty();
-        DoctorNoteForm form = new DoctorNoteForm(1, "heading", "body");
+        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
 
         given(userServices.getPatientPaging()).willReturn(pRepo);
         given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);

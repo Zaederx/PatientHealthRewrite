@@ -6,6 +6,12 @@ public class PrescriptionForm {
     int patientId;
     Integer prescriptionId;
 
+    public PrescriptionForm() {}
+    public PrescriptionForm(String medicationName, String doctorsDirections, int patientId) {
+        this.medicationName = medicationName;
+        this.doctorsDirections = doctorsDirections;
+        this.patientId = patientId;
+    }
     public PrescriptionForm(String medicationName, String doctorsDirections, int patientId, Integer prescriptionId) {
         this.medicationName = medicationName;
         this.doctorsDirections = doctorsDirections;

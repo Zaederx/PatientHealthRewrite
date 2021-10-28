@@ -533,7 +533,7 @@ function viewMedicalNote(optId?:number) {
 
     //display
     var html = 
-    '<span id="'+popupNotesId.substring(1)+'-close">X</span>'+
+    '<span id="'+popupNotesId.substring(1)+'-close" class="btn-x">X</span>'+
     '<label>Note Heading:</label>'+
     '<div class="field">'+note.noteHeading +'</div>'+
     '<label>Note Body:</label>'+
@@ -549,11 +549,11 @@ function viewMedicalNote(optId?:number) {
         $(popupNotesId).hide()
     })
     //enable edit button
-    $(popupPrescriptionsId+'-edit').on('click', () => {
+    $(popupNotesId+'-edit').on('click', () => {
         editMedicalNote(id)
     })
     //enable delete button
-    $(popupPrescriptionsId+'-delete').on('click', () => {
+    $(popupNotesId+'-delete').on('click', () => {
         deleteMedicalNote(id)
     })
 }
@@ -564,11 +564,11 @@ function editMedicalNote(id:number) {
 
     //display
     var html = 
-    '<span id="'+popupNotesId.substring(1)+'-close">X</span>'+
+    '<span id="'+popupNotesId.substring(1)+'-close" class="btn-x">X</span>'+
     '<label>Note Heading:</label>'+
-    '<div contenteditable="true" class="editable">'+note.noteHeading +'</div>'+
+    '<div id="'+popupNotesId.substring(1)+'-heading" contenteditable="true" class="editable">'+note.noteHeading +'</div>'+
     '<label>Note Body:</label>'+
-    '<div contenteditable="true" class="editable">'+note.noteBody+'</div>'+
+    '<div id="'+popupNotesId.substring(1)+'-body" contenteditable="true" class="editable">'+note.noteBody+'</div>'+
     '<div id="'+popupNotesId.substring(1)+'-submit" class="btn btn-warning">Submit</div>'+
     '<div id="'+popupNotesId.substring(1)+'-back" class="btn btn-danger">=Back</div>'
 
@@ -580,16 +580,93 @@ function editMedicalNote(id:number) {
     })
     //enable submit button
     $(popupNotesId+'-submit').on('click', () => {
-        //TODO  submitMedicalNoteEdit(id)
+        submitMedicalNoteEdit(id)
     })
     //enable delete button
     $(popupNotesId+'-back').on('click', () => {
         viewMedicalNote(id)
     })
 }
+function submitMedicalNoteEdit(medicalNoteId:number) {
+    var noteHeading = $(popupNotesId+'-heading').html() as string
+    var noteBody = $(popupNotesId+'-body').html() as string
+    var patientId = currentPatientId
+    var id = medicalNoteId
+    var data = {noteHeading, noteBody, patientId, id}
 
-function deleteMedicalNote(id:number) {
-    //TODO
+    //field and message id bases
+    var popupId = popupNotesId
+    var messageId = messageNotesDivId
+    //ajax
+    $.ajax({
+        url: "/rest/doctor/edit-medical-note",
+       type: "POST",
+       data: JSON.stringify(data),
+       contentType: "application/json",
+       dataType: "json",
+       headers: {'X-CSRF-TOKEN':csrfToken},
+       success: (data:PatientResponseList) => {
+        
+           if(data.success) {
+               //hide display popup
+               $(popupId).hide()
+
+               //clear fields
+               $(popupId+'-heading').html('')
+               $(popupId+'-body').html('')
+
+               //display success message
+               
+               $(messageId).html(popupMessage(data.message,'alert-info', messageId+'-close'))
+
+               //refresh with updated details
+               viewPatientDetails()
+           }
+           else {
+               //display warning message
+               $(messageId).html(popupMessage(data.message,'alert-warning', messageId+'-close'))
+           }
+       },
+       error: () => {
+           $(messageId).html(message('Error retrieving patient information','alert-danger'))
+       }
+    })
+}
+
+function deleteMedicalNote(medicalNoteId:number) {
+    var confirmation = confirm('Are you sure you want to delete this medical note?');
+    if (confirmation) {
+        //field and message id bases
+        var popupId = popupNotesId
+        var messageId = messageNotesDivId
+        var closeBtnId = messageId+'-close'
+        //send request to delete prescription
+        $.ajax({
+            url: "/rest/doctor/delete-medical-note/"+medicalNoteId,
+            type: "DELETE",
+            contentType: "application/json",
+            dataType: "json",
+            headers: {'X-CSRF-TOKEN':csrfToken},
+            success: (data:PatientResponseList) => {
+                if(data.success) {
+                    //hide infomation popup
+                    $(popupId).hide()
+                   
+                    //display success message
+                    $(messageId).html(popupMessage(data.message,'alert-info', closeBtnId))
+                    //refresh with updated details
+                    viewPatientDetails()
+                }
+                else {
+                    //error message
+                    $(messageId).html(popupMessage(data.message,'alert-warning', closeBtnId))
+                }
+            },
+            error: () => {
+                $(messageId).html(popupMessage('Error retrieving patient information','alert-danger',messageId+'-close'))
+            }
+            })
+    }
 }
 
 function viewAppointmentRequest(optId?:number) {
@@ -604,8 +681,6 @@ function viewAppointmentRequest(optId?:number) {
     '<div class="field">'+request.appointmentType +'</div>'+
     '<label>Appointment Info:</label>'+
     '<div class="field">'+request.appointmentInfo+'</div>'+
-    '<label>Doctor Name:</label>'+
-    '<div class="field">'+request.doctorName+'</div>'+
     '<div id="'+popupRequestsId.substring(1)+'-edit"  class="btn btn-warning" onclick="editAppointmentRequest('+id+')">Edit</div>'+
     '<div id="'+popupRequestsId.substring(1)+'-delete" class="btn btn-danger" onclick="deleteAppointmentRequest('+id+')">Delete</div>'
     //display Info Popup
@@ -614,6 +689,14 @@ function viewAppointmentRequest(optId?:number) {
     //enable close button
     $(popupRequestsId+'-close').on('click', () => {
         $(popupRequestsId).hide()
+    })
+    //enable edit button
+    $(popupRequestsId+'-edit').on('click', () => {
+        editAppointmentRequest(id)
+    })
+    //enable delete button
+    $(popupRequestsId+'-delete').on('click', () => {
+        deleteAppointmentRequest(id)
     })
 }
 
@@ -624,11 +707,9 @@ function editAppointmentRequest(id:number) {
     var html = 
     '<div id="'+popupRequestsId.substring(1)+'-close" class="btn-x">X</div>'+
     '<label>Appointment Type:</label>'+
-    '<div contenteditable="true" class="editable">'+request.appointmentType +'</div>'+
+    '<div id="'+popupRequestsId.substring(1)+'-type"contenteditable="true" class="editable">'+request.appointmentType +'</div>'+
     '<label>Appointment Info:</label>'+
-    '<div contenteditable="true" class="editable">'+request.appointmentInfo+'</div>'+
-    '<label>Doctor Name:</label>'+
-    '<div contenteditable="true" class="editable">'+request.doctorName+'</div>'+
+    '<div id="'+popupRequestsId.substring(1)+'-info" contenteditable="true" class="editable">'+request.appointmentInfo+'</div>'+
     '<div id="'+popupRequestsId.substring(1)+'-submit"  class="btn btn-warning">Submit</div>'+
     '<div id="'+popupRequestsId.substring(1)+'-back" class="btn btn-danger">Back</div>'
     //display Info Popup
@@ -638,8 +719,94 @@ function editAppointmentRequest(id:number) {
     $(popupRequestsId+'-close').on('click', () => {
         $(popupRequestsId).hide()
     })
+    //enable submit button
+    $(popupRequestsId+'-submit').on('click', () => {
+        submitAppointmentRequestEdit(id)
+    })
+    //enable delete button
+    $(popupRequestsId+'-back').on('click', () => {
+        viewAppointmentRequest(id)
+    })
 }
 
-function deleteAppointmentRequest() {
-    //TODO
+function submitAppointmentRequestEdit(requestId:number) {
+    var appointmentType = $(popupRequestsId+'-type').html() as string
+    var appointmentInfo = $(popupRequestsId+'-info').html() as string
+    var patientId = currentPatientId
+    var data = {appointmentType, appointmentInfo, patientId, requestId}
+
+    //field and message id bases
+    var popupId = popupRequestsId
+    var messageId = messageRequestsDivId
+
+    //ajax
+    $.ajax({
+        url: "/rest/doctor/edit-appointment-request",
+        type: "POST",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType: "json",
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data:PatientResponseList) => {
+            
+            if(data.success) {
+                //hide display popup
+                $(popupId).hide()
+
+                //clear fields
+                $(popupId+'-heading').html('')
+                $(popupId+'-body').html('')
+
+                //display success message
+                
+                $(messageId).html(popupMessage(data.message,'alert-info', messageId+'-close'))
+
+                //refresh with updated details
+                viewPatientDetails()
+            }
+            else {
+                //display warning message
+                $(messageId).html(popupMessage(data.message,'alert-warning', messageId+'-close'))
+            }
+        },
+        error: () => {
+            $(messageId).html(message('Error retrieving patient information','alert-danger'))
+        }
+        })
+}
+
+function deleteAppointmentRequest(requestId:number) {
+    var confirmation = confirm('Are you sure you want to delete this medical note?');
+    if (confirmation) {
+        //field and message id bases
+        var popupId = popupRequestsId
+        var messageId = messageRequestsDivId
+        var closeBtnId = messageId+'-close'
+        //send request to delete prescription
+        $.ajax({
+            url: "/rest/doctor/delete-appointment-request/"+requestId,
+            type: "DELETE",
+            contentType: "application/json",
+            dataType: "json",
+            headers: {'X-CSRF-TOKEN':csrfToken},
+            success: (data:PatientResponseList) => {
+                if(data.success) {
+                    //hide infomation popup
+                    $(popupId).hide()
+                   
+                    //display success message
+                    $(messageId).html(popupMessage(data.message,'alert-info', closeBtnId))
+                    //refresh with updated details
+                    viewPatientDetails()
+                }
+                else {
+                    //error message
+                    $(messageId).html(popupMessage(data.message,'alert-warning', closeBtnId))
+                }
+            },
+            error: () => {
+                $(messageId).html(popupMessage('Error retrieving patient information','alert-danger',messageId+'-close'))
+            }
+            })
+    }
 }

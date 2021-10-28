@@ -1,12 +1,12 @@
 package com.App.PatientHealth.requestObjects;
 
-public class DoctorNoteForm {
+public class MedicalNoteForm {
     Integer id;
     int patientId;
     String noteHeading;
     String noteBody;
 
-    public DoctorNoteForm() {
+    public MedicalNoteForm() {
     }
 
     /**
@@ -15,7 +15,7 @@ public class DoctorNoteForm {
      * @param noteHeading
      * @param noteBody
      */
-    public DoctorNoteForm(int patientId, String noteHeading, String noteBody) {
+    public MedicalNoteForm(int patientId, String noteHeading, String noteBody) {
         this.patientId = patientId;
         this.noteHeading = noteHeading;
         this.noteBody = noteBody;

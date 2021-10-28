@@ -5,11 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-import com.App.PatientHealth.requestObjects.DoctorNoteForm;
+import com.App.PatientHealth.requestObjects.MedicalNoteForm;
 
 @Entity
-public class DoctorNote {
+public class MedicalNote {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
@@ -17,14 +18,16 @@ public class DoctorNote {
     String noteHeading;
     @Column
     String noteBody;
+    @ManyToOne
+    Patient patient;
 
-    public DoctorNote() {}
-    public DoctorNote(String noteHeading, String noteBody) {
+    public MedicalNote() {}
+    public MedicalNote(String noteHeading, String noteBody) {
         this.noteHeading = noteHeading;
         this.noteBody = noteBody;
     }
 
-    public DoctorNote(DoctorNoteForm form) {
+    public MedicalNote(MedicalNoteForm form) {
         //just in case you want to update existing form
         //you need to add the note id before saving to repository
         if(form.getId() != null) {
@@ -57,6 +60,18 @@ public class DoctorNote {
 
     public void setNoteBody(String noteBody) {
         this.noteBody = noteBody;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+    public void updateFromForm(MedicalNoteForm form) {
+        this.noteHeading = form.getNoteHeading();
+        this.noteBody = form.getNoteBody();
     }
 
 }

@@ -16,6 +16,7 @@ import com.App.PatientHealth.repository.AdminPagingRepository;
 import com.App.PatientHealth.repository.AppointmentPagingRepository;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.GmcRepository;
+import com.App.PatientHealth.repository.MedicalNotePagingRepository;
 import com.App.PatientHealth.repository.PatientPagingRepository;
 import com.App.PatientHealth.repository.PrescriptionPagingRepository;
 import com.App.PatientHealth.repository.UserPagingRepository;
@@ -43,6 +44,9 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
 	@Autowired
 	AppointmentPagingRepository appointmentRepo;
+
+	@Autowired
+	MedicalNotePagingRepository medicalNoteRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -107,7 +111,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		return appointmentRepo;
 	}
 
-	public void setAppointmentRepo(AppointmentPagingRepository appointmentRepo) {
-		this.appointmentRepo = appointmentRepo;
+	public MedicalNotePagingRepository getMedicalNoteRepo() {
+		return medicalNoteRepo;
 	}
 }

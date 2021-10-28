@@ -22,7 +22,7 @@ public class AppointmentRequest {
     protected int id;
     @ManyToOne
     Patient patient;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     Doctor doctor;
     @Column
     String appointmentType;
@@ -78,6 +78,10 @@ public class AppointmentRequest {
 
     public void setAppointmentInfo(String appointmentInfo) {
         this.appointmentInfo = appointmentInfo;
+    }
+    public void updateFromForm(AppointmentRequestForm form) {
+        this.appointmentType = form.getAppointmentType();
+        this.appointmentInfo = form.getAppointmentInfo();
     }
 
 

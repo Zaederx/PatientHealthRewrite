@@ -21,8 +21,8 @@ public class Patient extends User {
     String DOB;
     @OneToMany(cascade = CascadeType.ALL, mappedBy="patient")
     List<Prescription> prescriptions;
-    @OneToMany(cascade = CascadeType.ALL)
-    List<DoctorNote> doctorNotes;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    List<MedicalNote> doctorNotes;
     @ManyToOne(cascade = CascadeType.ALL)
     Doctor doctor;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
@@ -30,7 +30,7 @@ public class Patient extends User {
 
     public Patient() {
         this.prescriptions = new ArrayList<Prescription>();
-        this.doctorNotes = new ArrayList<DoctorNote>();
+        this.doctorNotes = new ArrayList<MedicalNote>();
         this.appointmentRequests = new ArrayList<AppointmentRequest>();
     }
 
@@ -38,14 +38,14 @@ public class Patient extends User {
         super(p.getName(),p.getUsername(),
         p.getPassword(), p.getEmail(), "PATIENT");
         this.prescriptions = new ArrayList<Prescription>();
-        this.doctorNotes = new ArrayList<DoctorNote>();
+        this.doctorNotes = new ArrayList<MedicalNote>();
     }
 
     public Patient(String name, String username, String password, String email, String DOB) {
         super(name,username,password,email,"PATIENT");
         this.DOB = DOB;
         this.prescriptions = new ArrayList<Prescription>();
-        this.doctorNotes = new ArrayList<DoctorNote>();
+        this.doctorNotes = new ArrayList<MedicalNote>();
     }
 
     public Patient(String fname, String lname, String username, String email,List<Prescription> medication, String DOB, Doctor doctor) {
@@ -53,7 +53,7 @@ public class Patient extends User {
         this.DOB = DOB;
         this.doctor = doctor;
         this.prescriptions = new ArrayList<Prescription>();
-        this.doctorNotes = new ArrayList<DoctorNote>();
+        this.doctorNotes = new ArrayList<MedicalNote>();
     }
 
     public List<Prescription> getPrescriptions() {
@@ -64,11 +64,11 @@ public class Patient extends User {
         this.prescriptions = medication;
     }
 
-    public List<DoctorNote> getDoctorNotes() {
+    public List<MedicalNote> getDoctorNotes() {
         return doctorNotes;
     }
 
-    public void setDoctorNotes(List<DoctorNote> doctorNotes) {
+    public void setDoctorNotes(List<MedicalNote> doctorNotes) {
         this.doctorNotes = doctorNotes;
     }
 

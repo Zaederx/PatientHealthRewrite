@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.App.PatientHealth.domain.AppointmentRequest;
-import com.App.PatientHealth.domain.DoctorNote;
+import com.App.PatientHealth.domain.MedicalNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,11 +21,11 @@ public class PatientJson extends UserJson {
     String doctorName;
     String doctorEmail;
     List<PrescriptionJson> prescriptions;
-    List<DoctorNoteJson> doctorNotes;
+    List<MedicalNoteJson> doctorNotes;
     List<AppointmentRequestJson> appointmentRequests;
     public PatientJson(){
         this.prescriptions = new ArrayList<PrescriptionJson>();
-        this.doctorNotes = new ArrayList<DoctorNoteJson>();
+        this.doctorNotes = new ArrayList<MedicalNoteJson>();
         this.appointmentRequests = new ArrayList<AppointmentRequestJson>();
     }
 
@@ -54,10 +54,10 @@ public class PatientJson extends UserJson {
         return json;
     }
 
-    public List<DoctorNoteJson> toDoctorNoteJsons(List<DoctorNote> notes) {
-        List<DoctorNoteJson> json = new ArrayList<DoctorNoteJson>();
+    public List<MedicalNoteJson> toDoctorNoteJsons(List<MedicalNote> notes) {
+        List<MedicalNoteJson> json = new ArrayList<MedicalNoteJson>();
         notes.forEach(n -> {
-            json.add(new DoctorNoteJson (n));
+            json.add(new MedicalNoteJson (n));
         });
         return json;
     }
@@ -107,11 +107,11 @@ public class PatientJson extends UserJson {
         this.prescriptions = prescriptions;
     }
 
-    public List<DoctorNoteJson> getDoctorNotes() {
+    public List<MedicalNoteJson> getDoctorNotes() {
         return doctorNotes;
     }
 
-    public void setDoctorNotes(List<DoctorNoteJson> doctorNotes) {
+    public void setDoctorNotes(List<MedicalNoteJson> doctorNotes) {
         this.doctorNotes = doctorNotes;
     }
 

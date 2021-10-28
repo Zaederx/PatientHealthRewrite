@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 
 import com.App.PatientHealth.domain.AppointmentRequest;
 import com.App.PatientHealth.domain.Doctor;
-import com.App.PatientHealth.domain.DoctorNote;
+import com.App.PatientHealth.domain.MedicalNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
 import com.App.PatientHealth.domain.User;
 import com.App.PatientHealth.requestObjects.AppointmentRequestForm;
-import com.App.PatientHealth.requestObjects.DoctorNoteForm;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
+import com.App.PatientHealth.requestObjects.MedicalNoteForm;
 import com.App.PatientHealth.requestObjects.PrescriptionForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.DoctorJson;
@@ -55,6 +55,8 @@ public class DoctorRest {
 
     Logger logger = LoggerFactory.getLogger(DoctorRest.class);
 
+
+    //SECTION ******** Doctor *********
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public JsonResponse createDoctor(@RequestBody DoctorRegForm form) {
         //create response object
@@ -236,6 +238,8 @@ public class DoctorRest {
     }
 
 
+
+    //SECTION ******** Patient Prescriptions CRUD *********
     //add prescription to patient
     @PostMapping("/add-prescription")
     public JsonResponse addPrescriptionToPatient(@RequestBody PrescriptionForm form) {
@@ -265,143 +269,6 @@ public class DoctorRest {
             res.setSuccess(false);
             res.setMessage("No patient found to add prescription"); 
         }
-        
-        return res;
-    }
-
-
-    //add doctor's note to patient
-    @PostMapping("/add-medical-note")
-    public JsonResponse addMedicalNoteToPatient(@RequestBody DoctorNoteForm form) {
-        JsonResponse res = new JsonResponse();
-
-        DoctorNote note = new DoctorNote(form);
-        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
-
-        if(patientOpt.isPresent()) {
-            //add note to patient
-            Patient patient = patientOpt.get();
-            patient.getDoctorNotes().add(note);
-            
-            //save changes
-            userServices.getPatientPaging().save(patient);
-
-            //prepare response
-            res.setSuccess(true);
-            res.setMessage("Doctor note added to patient successfully.");
-        }
-        else {
-            res.setSuccess(false);
-            res.setMessage("Invalid patient id.");
-        }
-        return res;
-    }
-
-    @GetMapping("/get-patient-notes/{pid}")
-    public PatientListResponse getDoctorsNotesFromPatient(@PathVariable String pid) {
-        int pidInt = Integer.parseInt(pid);
-        PatientListResponse res = new PatientListResponse();
-        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(pidInt);
-    
-        if(patientOpt.isPresent()) {
-            Patient patient = patientOpt.get();
-            res.getPatientJsons().add(new PatientJson(patient));
-            res.setSuccess(true);
-        }
-        else {
-            res.setSuccess(false);
-            res.setMessage("Problem retrieving patient");
-        }
-
-        return res;
-    }
-
-
-    @PostMapping("/update-patient-doctor-note")
-    public JsonResponse updatePatientDoctorNote(@RequestBody DoctorNoteForm form) {
-        JsonResponse res = new JsonResponse();
-        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
-    
-        DoctorNote updatedNote = new DoctorNote(form);
-        if(patientOpt.isPresent()) {
-            //remove old version of note
-            Patient patient = patientOpt.get();
-            patient.getDoctorNotes().stream().dropWhile(n -> n.getId() == updatedNote.getId());
-
-            //add updated version of note
-            patient.getDoctorNotes().add(updatedNote);
-
-            //save changes
-            userServices.getPatientPaging().save(patient);
-
-            //save new note
-            res.setSuccess(true);
-            res.setMessage("Note updated successfully.");
-        }
-        else {
-            res.setSuccess(false);
-            res.setMessage("Problem update note.");
-        }
-        return res;
-    }
-
-    @DeleteMapping("/delete-patient-doctor-note")
-    public JsonResponse deletePatientDoctorNote(@RequestBody DoctorNoteForm form) {
-        JsonResponse res = new JsonResponse();
-        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
-
-        if(patientOpt.isPresent()) {
-            //remove old version of note
-            Patient patient = patientOpt.get();
-            patient.getDoctorNotes().stream().dropWhile(n -> n.getId() == form.getId());
-            //save changes
-            userServices.getPatientPaging().save(patient);
-
-            //save new note
-            res.setSuccess(true);
-            res.setMessage("Note updated successfully.");
-        }
-        else {
-            res.setSuccess(false);
-            res.setMessage("Note not updated successfully.");
-        }
-
-        return res;
-    }
-
-    @PostMapping("add-patient-appointment-request")
-    public JsonResponse patientAppointmentRequest(@RequestBody AppointmentRequestForm form) {
-        JsonResponse res = new JsonResponse();
-        AppointmentRequest request = new AppointmentRequest(form);
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
-        Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findByUsername(username);
-        
-        if (doctorOpt.isPresent()) {
-            Doctor doctor = doctorOpt.get();
-            request.setDoctor(doctor);
-        }
-        if (patientOpt.isPresent()) {
-            Patient patient = patientOpt.get();
-            request.setPatient(patient);
-            patient.getAppointmentRequests().add(request);
-            
-        }
-
-        if (patientOpt.isPresent() && doctorOpt.isPresent()) {
-            //save new request
-            try {
-                userServices.getAppointmentRepo().save(request);
-                // will cascade saving the new appointment request
-                res.setSuccess(true);
-                res.setMessage("Appointment Request submitted successfully.");
-            }
-            catch (Exception e) {
-                res.setSuccess(false);
-                res.setMessage("Error submitting appointment request");
-            }
-        }
-        
         
         return res;
     }
@@ -461,6 +328,228 @@ public class DoctorRest {
         }
         return res;
     }
+
+
+
+
+    
+
+    //SECTION ******** Patient Medical Notes CRUD *********
+
+    //add doctor's note to patient
+    @PostMapping("/add-medical-note")
+    public JsonResponse addMedicalNoteToPatient(@RequestBody MedicalNoteForm form) {
+        JsonResponse res = new JsonResponse();
+        
+        MedicalNote note = new MedicalNote(form);
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
+
+        if(patientOpt.isPresent()) {
+            //add note to patient
+            Patient patient = patientOpt.get();
+            note.setPatient(patient);
+            
+            //save changes
+            userServices.getMedicalNoteRepo().save(note);
+
+            //prepare response
+            res.setSuccess(true);
+            res.setMessage("Doctor note added to patient successfully.");
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("Invalid patient id.");
+        }
+        return res;
+    }
+
+    @GetMapping("/get-patient-notes/{pid}")
+    public PatientListResponse getDoctorsNotesFromPatient(@PathVariable String pid) {
+        int pidInt = Integer.parseInt(pid);
+        PatientListResponse res = new PatientListResponse();
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(pidInt);
+    
+        if(patientOpt.isPresent()) {
+            Patient patient = patientOpt.get();
+            res.getPatientJsons().add(new PatientJson(patient));
+            res.setSuccess(true);
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("Problem retrieving patient");
+        }
+
+        return res;
+    }
+
+
+    @PostMapping("/edit-medical-note")
+    public JsonResponse updatePatientDoctorNote(@RequestBody MedicalNoteForm form) {
+        JsonResponse res = new JsonResponse();
+
+        Optional<MedicalNote> noteOpt = userServices.getMedicalNoteRepo().findById(form.getId());
+
+        if (noteOpt.isPresent()) {
+            MedicalNote note  = noteOpt.get();
+            note.updateFromForm(form);
+
+            try {
+                //save changes
+                userServices.getMedicalNoteRepo().save(note);
+                //prep response
+                res.setSuccess(true);
+                res.setMessage("Medical note updated successfully.");
+            }
+            catch (Exception e) {
+                res.setSuccess(false);
+                res.setMessage("Problem updating medical note");
+            }
+            
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No matching note was found in database");
+        }
+       
+        return res;
+    }
+
+    @DeleteMapping("/delete-medical-note/{noteId}")
+    public JsonResponse deletePatientDoctorNote(@PathVariable String noteId) {
+        JsonResponse res = new JsonResponse();
+        int id = Integer.parseInt(noteId);
+        Optional<MedicalNote> noteOpt = userServices.getMedicalNoteRepo().findById(id);
+
+        if(noteOpt.isPresent()) {
+            MedicalNote note = noteOpt.get();
+            try {
+                //delete note
+                userServices.getMedicalNoteRepo().delete(note);
+                //prepare response object
+                res.setSuccess(true);
+                res.setMessage("Note deleted successfully.");
+            }
+            catch (Exception e) {
+                res.setSuccess(false);
+                res.setMessage("Problem deleting note");
+            }
+
+            
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("Note was not deleted successfully");
+        }
+
+        return res;
+    }
+
+
+
+    //SECTION ******** Patient Appointment Requests CRUD *********
+
+    @PostMapping("add-patient-appointment-request")
+    public JsonResponse patientAppointmentRequest(@RequestBody AppointmentRequestForm form) {
+        JsonResponse res = new JsonResponse();
+        AppointmentRequest request = new AppointmentRequest(form);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
+        Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findByUsername(username);
+        
+        if (doctorOpt.isPresent()) {
+            Doctor doctor = doctorOpt.get();
+            request.setDoctor(doctor);
+        }
+        if (patientOpt.isPresent()) {
+            Patient patient = patientOpt.get();
+            request.setPatient(patient);
+            patient.getAppointmentRequests().add(request);
+            
+        }
+
+        if (patientOpt.isPresent() && doctorOpt.isPresent()) {
+            //save new request
+            try {
+                userServices.getAppointmentRepo().save(request);
+                // will cascade saving the new appointment request
+                res.setSuccess(true);
+                res.setMessage("Appointment Request submitted successfully.");
+            }
+            catch (Exception e) {
+                res.setSuccess(false);
+                res.setMessage("Error submitting appointment request");
+            }
+        }
+        
+        
+        return res;
+    }
+
+    @PostMapping("/edit-appointment-request")
+    public JsonResponse editAppointmentRequest(@RequestBody AppointmentRequestForm form) {
+        JsonResponse res = new JsonResponse();
+
+        //get optional appointment request by id
+        Optional<AppointmentRequest> requestOpt = userServices.getAppointmentRepo().findById(form.getRequestId());
+
+        //if present - update appointment request with form changes
+        if (requestOpt.isPresent()) {
+            AppointmentRequest request = requestOpt.get();
+            request.updateFromForm(form);
+
+            try {
+                //save changes
+                userServices.getAppointmentRepo().save(request);
+            
+                //prepare response object
+                res.setSuccess(true);
+            }
+            catch (Exception e){
+                res.setSuccess(false);
+                res.setMessage("Problem updating appointment");
+                //TODO ADD LOGGING MESSAGE
+            }
+            
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No matching appointment request found");
+        }
+
+        //return response
+        return res;
+    }
+
+
+    @DeleteMapping("/delete-appointment-request/{requestId}")
+    public JsonResponse deleteAppointmentRequest(@PathVariable String requestId) {
+        JsonResponse res = new JsonResponse();
+        int id = Integer.parseInt(requestId);
+
+        //get optional appointment request note by id
+        Optional<AppointmentRequest> requestOpt = userServices.getAppointmentRepo().findById(id);
+
+        //if present - delete
+        if (requestOpt.isPresent()) {
+            AppointmentRequest request = requestOpt.get(); 
+            try {
+                userServices.getAppointmentRepo().delete(request);
+                res.setSuccess(true);
+            }
+            catch (Exception e){
+                res.setSuccess(false);
+                res.setMessage("Problem deleting appointment request");
+            }
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No matching appointment request found in database");
+        }
+        //return resposne
+
+        return res;
+    }
+    
 
 
 }
