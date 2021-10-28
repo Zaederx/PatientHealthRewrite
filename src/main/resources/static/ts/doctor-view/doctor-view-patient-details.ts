@@ -15,7 +15,7 @@ const messageRequestsDivId = '#message-appointment-requests'
 const popupPrescriptionsId = '#info-popup-prescriptions'
 const popupNotesId = '#info-popup-medical-notes'
 const popupRequestsId = '#info-popup-appointment-requests'
-
+var currentPatientId:number = 0
 function popupMessage(message:string,type:string,closeBtnId:string):string {
     //note - substring used to remove the hash before the id
     var popupHTML = 
@@ -73,7 +73,8 @@ $('#btn-go').on('click', () => {
 function viewPatientDetails() {
     //get selected patient id
     var id = getSelectedItemId('#patient-search-table-body') as string
-
+    //set current patient id variable - needed for pop up tables
+    currentPatientId = Number(id)
     //fetch patient information & load tables
     $.ajax({
         url: "/rest/patient/"+id,
@@ -396,18 +397,20 @@ $('#btn-info-popup-close').on('click', () =>{
     $('#btn-info-popup').hide()
 })
 
-function viewPrescription() {
+function viewPrescription(optId?:number) {
     //get selected prescription id
-    var id = Number(getSelectedItemId('#patient-prescription-tbody'))
+    var prescriptionId = optId ? optId : Number(getSelectedItemId('#patient-prescription-tbody'))
     //find it in list of current patient prescriptions
-    var prescription = currentPatientDetails.prescriptions.filter((p)=>{return p.id == id})[0]
+    var prescription = currentPatientDetails.prescriptions.filter((p)=>{return p.id == prescriptionId})[0]
     //display
     var html = 
     '<span id="'+popupPrescriptionsId.substring(1)+'-close" class="btn-x">X</span>'+
     '<label>Medication Name:</label>'+
     '<div class="field">'+prescription.medicationName +'</div>'+
     '<label>Doctors Directions:</label>'+
-    '<div class="field">'+prescription.doctorsDirections+'</div>'
+    '<div class="field">'+prescription.doctorsDirections+'</div>'+
+    '<div id="'+popupPrescriptionsId.substring(1)+'-edit"  class="btn btn-warning">Edit</div>'+
+    '<div id="'+popupPrescriptionsId.substring(1)+'-delete" class="btn btn-danger">Delete</div>'
     
 
     displayInfoPopup(popupPrescriptionsId,html)
@@ -415,20 +418,128 @@ function viewPrescription() {
     $(popupPrescriptionsId+'-close').on('click', () => {
         $(popupPrescriptionsId).hide()
     })
+    //enable edit button
+    $(popupPrescriptionsId+'-edit').on('click', () => {
+        editPrescription(prescriptionId)
+    })
+    //enable delete button
+    $(popupPrescriptionsId+'-delete').on('click', () => {
+        deletePrescription(prescriptionId)
+    })
 }
 
-function viewMedicalNote() {
+function editPrescription(id:number) {
+    //find it in list of current patient prescriptions
+    var prescription = currentPatientDetails.prescriptions.filter((p)=>{return p.id == id})[0]
+    //display
+    var html = 
+    '<span id="'+popupPrescriptionsId.substring(1)+'-close" class="btn-x">X</span>'+
+    '<label>Medication Name:</label>'+
+    '<span id="'+popupPrescriptionsId.substring(1)+'-medication-name"'+' contenteditable="true" class="editable">'+prescription.medicationName +'</span>'+
+    '<label>Doctors Directions:</label>'+
+    '<span id="'+popupPrescriptionsId.substring(1)+'-doctors-directions"'+'contenteditable="true" class="editable">'+prescription.doctorsDirections+'</span>'+
+    '<div id="'+popupPrescriptionsId.substring(1)+'-submit"  class="btn btn-warning">Submit</div>'+
+    '<div id="'+popupPrescriptionsId.substring(1)+'-back" class="btn btn-danger">Back</div>'
+    
+
+    displayInfoPopup(popupPrescriptionsId,html)
+    //enable close button
+    $(popupPrescriptionsId+'-close').on('click', () => {
+        $(popupPrescriptionsId).hide()
+    })
+     //enable submit button
+    $(popupPrescriptionsId+'-submit').on('click', () => {
+        submitPrescriptionEdit(id)
+    })
+    //enable back button
+    $(popupPrescriptionsId+'-back').on('click', () => {
+        viewPrescription(id)
+    })
+}
+function submitPrescriptionEdit(id:number) {
+    var medicationName = $(popupPrescriptionsId+'-medication-name').html() as string
+    var doctorsDirections = $(popupPrescriptionsId+'-doctors-directions').html() as string
+    var prescriptionId =  id
+    var patientId = currentPatientId
+    var data = {medicationName, doctorsDirections, patientId, prescriptionId}
+    $.ajax({
+        url: "/rest/doctor/edit-patient-prescription",
+       type: "POST",
+       data: JSON.stringify(data),
+       contentType: "application/json",
+       dataType: "json",
+       headers: {'X-CSRF-TOKEN':csrfToken},
+       success: (data:PatientResponseList) => {
+           if(data.success) {
+               $(popupPrescriptionsId).hide()
+               //clear fields
+               $(popupPrescriptionsId+'medication-name').html('')
+               $(popupPrescriptionsId+'doctor-directions').html('')
+
+               //success message
+               $(messagePrescriptionsDivId).html(popupMessage(data.message,'alert-info', messagePrescriptionsDivId+'-close'))
+               //refresh with updated details
+               viewPatientDetails()
+           }
+           else {
+               //success message
+               $(messagePrescriptionsDivId).html(popupMessage(data.message,'alert-warning', messagePrescriptionsDivId+'-close'))
+           }
+       },
+       error: () => {
+           $('#message').html(message('Error retrieving patient information','alert-danger'))
+       }
+    })
+}
+function deletePrescription(prescriptionId:number) {
+    var confirmation = confirm('Are you sure you want to delete this prescription?');
+    if (confirmation) {
+        //send request to delete prescription
+        $.ajax({
+            url: "/rest/doctor/delete-prescription/"+prescriptionId,
+            type: "DELETE",
+            contentType: "application/json",
+            dataType: "json",
+            headers: {'X-CSRF-TOKEN':csrfToken},
+            success: (data:PatientResponseList) => {
+                if(data.success) {
+                    //hide infomation popup
+                    $(popupPrescriptionsId).hide()
+                   
+                    //display success message
+                    $(messagePrescriptionsDivId).html(popupMessage(data.message,'alert-info', messagePrescriptionsDivId+'-close'))
+                    //refresh with updated details
+                    viewPatientDetails()
+                }
+                else {
+                    //error message
+                    $(messagePrescriptionsDivId).html(popupMessage(data.message,'alert-warning', messagePrescriptionsDivId+'-close'))
+                }
+            },
+            error: () => {
+                $(messagePrescriptionsDivId).html(popupMessage('Error retrieving patient information','alert-danger',messagePrescriptionsDivId+'-close'))
+            }
+            })
+    }
+    
+}
+
+function viewMedicalNote(optId?:number) {
     //get selected prescription id
-    var id = Number(getSelectedItemId('#patient-medical-notes-tbody'))
+    var id:number = optId ? optId : Number(getSelectedItemId('#patient-medical-notes-tbody'))
+    
     //find it in list of current patient prescriptions
     var note = currentPatientDetails.doctorNotes.filter((n)=>{return n.id == id})[0]
+
     //display
     var html = 
     '<span id="'+popupNotesId.substring(1)+'-close">X</span>'+
     '<label>Note Heading:</label>'+
     '<div class="field">'+note.noteHeading +'</div>'+
     '<label>Note Body:</label>'+
-    '<div class="field">'+note.noteBody+'</div>'
+    '<div class="field">'+note.noteBody+'</div>'+
+    '<div id="'+popupNotesId.substring(1)+'-edit"  class="btn btn-warning" >Edit</div>'+
+    '<div id="'+popupNotesId.substring(1)+'-delete" class="btn btn-danger" >Delete</div>'
     
 
     displayInfoPopup(popupNotesId,html)
@@ -437,11 +548,53 @@ function viewMedicalNote() {
     $(popupNotesId+'-close').on('click', () => {
         $(popupNotesId).hide()
     })
+    //enable edit button
+    $(popupPrescriptionsId+'-edit').on('click', () => {
+        editMedicalNote(id)
+    })
+    //enable delete button
+    $(popupPrescriptionsId+'-delete').on('click', () => {
+        deleteMedicalNote(id)
+    })
 }
 
-function viewAppointmentRequest() {
+function editMedicalNote(id:number) {
+    //find it in list of current patient prescriptions
+    var note = currentPatientDetails.doctorNotes.filter((n)=>{return n.id == id})[0]
+    
+    //display
+    var html = 
+    '<span id="'+popupNotesId.substring(1)+'-close">X</span>'+
+    '<label>Note Heading:</label>'+
+    '<div contenteditable="true" class="editable">'+note.noteHeading +'</div>'+
+    '<label>Note Body:</label>'+
+    '<div contenteditable="true" class="editable">'+note.noteBody+'</div>'+
+    '<div id="'+popupNotesId.substring(1)+'-submit" class="btn btn-warning">Submit</div>'+
+    '<div id="'+popupNotesId.substring(1)+'-back" class="btn btn-danger">=Back</div>'
+
+    displayInfoPopup(popupNotesId,html)
+
+    //enable close button - must be done after elements are added to the dom
+    $(popupNotesId+'-close').on('click', () => {
+        $(popupNotesId).hide()
+    })
+    //enable submit button
+    $(popupNotesId+'-submit').on('click', () => {
+        //TODO  submitMedicalNoteEdit(id)
+    })
+    //enable delete button
+    $(popupNotesId+'-back').on('click', () => {
+        viewMedicalNote(id)
+    })
+}
+
+function deleteMedicalNote(id:number) {
+    //TODO
+}
+
+function viewAppointmentRequest(optId?:number) {
     //get selected prescription id
-    var id = Number(getSelectedItemId('#appointment-request-tbody'))
+    var id = optId ? optId : Number(getSelectedItemId('#appointment-request-tbody'))
     //find it in list of current patient prescriptions
     var request = currentPatientDetails.appointmentRequests.filter((r)=>{return r.id == id})[0]
     //display
@@ -452,12 +605,41 @@ function viewAppointmentRequest() {
     '<label>Appointment Info:</label>'+
     '<div class="field">'+request.appointmentInfo+'</div>'+
     '<label>Doctor Name:</label>'+
-    '<div class="field">'+request.doctorName+'</div>'
-    
+    '<div class="field">'+request.doctorName+'</div>'+
+    '<div id="'+popupRequestsId.substring(1)+'-edit"  class="btn btn-warning" onclick="editAppointmentRequest('+id+')">Edit</div>'+
+    '<div id="'+popupRequestsId.substring(1)+'-delete" class="btn btn-danger" onclick="deleteAppointmentRequest('+id+')">Delete</div>'
+    //display Info Popup
     displayInfoPopup(popupRequestsId,html)
 
     //enable close button
     $(popupRequestsId+'-close').on('click', () => {
         $(popupRequestsId).hide()
     })
+}
+
+function editAppointmentRequest(id:number) {
+    //find it in list of current patient prescriptions
+    var request = currentPatientDetails.appointmentRequests.filter((r)=>{return r.id == id})[0]
+    //display
+    var html = 
+    '<div id="'+popupRequestsId.substring(1)+'-close" class="btn-x">X</div>'+
+    '<label>Appointment Type:</label>'+
+    '<div contenteditable="true" class="editable">'+request.appointmentType +'</div>'+
+    '<label>Appointment Info:</label>'+
+    '<div contenteditable="true" class="editable">'+request.appointmentInfo+'</div>'+
+    '<label>Doctor Name:</label>'+
+    '<div contenteditable="true" class="editable">'+request.doctorName+'</div>'+
+    '<div id="'+popupRequestsId.substring(1)+'-submit"  class="btn btn-warning">Submit</div>'+
+    '<div id="'+popupRequestsId.substring(1)+'-back" class="btn btn-danger">Back</div>'
+    //display Info Popup
+    displayInfoPopup(popupRequestsId,html)
+
+    //enable close button
+    $(popupRequestsId+'-close').on('click', () => {
+        $(popupRequestsId).hide()
+    })
+}
+
+function deleteAppointmentRequest() {
+    //TODO
 }

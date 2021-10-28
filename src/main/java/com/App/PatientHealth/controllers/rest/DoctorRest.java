@@ -250,14 +250,15 @@ public class DoctorRest {
             try {
                 userServices.getPrescriptionRepo().save(pres);
                 userServices.getPatientPaging().save(patient);
+                //if success
+                res.setSuccess(true);
+                res.setMessage("Prescription added successfully");
             }
             catch (Exception e) {
                 res.setSuccess(false);
                 res.setMessage("Problem saving prescription");
             }
-            //if success
-            res.setSuccess(true);
-            res.setMessage("Prescription added successfully");
+            
         }
         else {
             res.setSuccess(false);
@@ -403,5 +404,57 @@ public class DoctorRest {
         
         return res;
     }
+
+    @PostMapping("/edit-patient-prescription")
+    public JsonResponse editPrescription(@RequestBody PrescriptionForm form) {
+        JsonResponse res = new JsonResponse();
+        
+        //create edited prescription from form data
+        Prescription editedPrescription = new Prescription(form);
+
+        //save changes
+        try {
+            userServices.getPrescriptionRepo().save(editedPrescription);
+            //if success
+            res.setSuccess(true);
+            res.setMessage("Prescription edited successfully");
+        }
+        catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage("Problem saving edited prescription");
+        }
+        
+        return res;
+    }
+
+
+    @DeleteMapping("/delete-prescription/{prescriptionId}")
+    public JsonResponse deletePrescription(@PathVariable String prescriptionId) {
+        JsonResponse res = new JsonResponse();
+        int id = Integer.parseInt(prescriptionId);
+
+        try {
+            //find prescription by id
+            Optional<Prescription> preOpt = userServices.getPrescriptionRepo().findById(id);
+            //delete prescription if present
+            if(preOpt.isPresent()) {
+                Prescription prescription = preOpt.get();
+                userServices.getPrescriptionRepo().delete(prescription);
+                res.setSuccess(true);
+                res.setMessage("Prescription successfully deleted");
+            }
+            else {
+                res.setSuccess(false);
+                res.setMessage("Prescription does not exist in databse");
+            }
+            
+        }
+        catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage("Problem deleting prescription");
+        }
+        return res;
+    }
+
 
 }

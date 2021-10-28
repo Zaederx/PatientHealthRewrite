@@ -4,11 +4,13 @@ public class PrescriptionForm {
     String medicationName;
     String doctorsDirections;
     int patientId;
+    Integer prescriptionId;
 
-    public PrescriptionForm(String medicationName, String doctorsDirections, int patientId) {
+    public PrescriptionForm(String medicationName, String doctorsDirections, int patientId, Integer prescriptionId) {
         this.medicationName = medicationName;
         this.doctorsDirections = doctorsDirections;
         this.patientId = patientId;
+        this.prescriptionId = prescriptionId;
     }
 
 
@@ -35,5 +37,15 @@ public class PrescriptionForm {
     public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
+
+
+    public Integer getPrescriptionId() {
+        return this.prescriptionId;
+    }
+
+    public void setPrescriptionId(Integer prescriptionId) {
+        this.prescriptionId = prescriptionId;
+    }
+    
 
 }

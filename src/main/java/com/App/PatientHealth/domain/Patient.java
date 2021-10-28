@@ -19,7 +19,7 @@ public class Patient extends User {
     
     @Column
     String DOB;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     List<Prescription> prescriptions;
     @OneToMany(cascade = CascadeType.ALL)
     List<DoctorNote> doctorNotes;

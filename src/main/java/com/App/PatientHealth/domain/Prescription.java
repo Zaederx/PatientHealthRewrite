@@ -1,10 +1,12 @@
 package com.App.PatientHealth.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.App.PatientHealth.requestObjects.PrescriptionForm;
@@ -28,6 +30,10 @@ public class Prescription {
     public Prescription(PrescriptionForm form) {
         this.medicationName = form.getMedicationName();
         this.doctorsDirections = form.getDoctorsDirections();
+        //for editing existing prescriptions
+        if (form.getPrescriptionId() != null) {
+            this.id = form.getPrescriptionId();
+        }
 
     }
 
@@ -55,5 +61,6 @@ public class Prescription {
     public void setDoctorsDirections(String doctorsDirections) {
         this.doctorsDirections = doctorsDirections;
     }
+
 
 }
