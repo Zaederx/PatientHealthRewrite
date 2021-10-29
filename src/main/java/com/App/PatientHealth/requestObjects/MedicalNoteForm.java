@@ -21,6 +21,13 @@ public class MedicalNoteForm {
         this.noteBody = noteBody;
     }
 
+    public MedicalNoteForm(int id, int patientId, String noteHeading, String noteBody) {
+        this.id = id;
+        this.patientId = patientId;
+        this.noteHeading = noteHeading;
+        this.noteBody = noteBody;
+    }
+
     public Integer getId() {
         return this.id;
     }

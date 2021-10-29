@@ -12,13 +12,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.App.PatientHealth.domain.AppointmentRequest;
 import com.App.PatientHealth.domain.Doctor;
+import com.App.PatientHealth.domain.MedicalNote;
 import com.App.PatientHealth.domain.Patient;
+import com.App.PatientHealth.domain.Prescription;
 import com.App.PatientHealth.domain.User;
+import com.App.PatientHealth.repository.AppointmentPagingRepository;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
+import com.App.PatientHealth.repository.MedicalNotePagingRepository;
 import com.App.PatientHealth.repository.PatientPagingRepository;
+import com.App.PatientHealth.repository.PrescriptionPagingRepository;
 import com.App.PatientHealth.repository.UserPagingRepository;
 import com.App.PatientHealth.requestObjects.MedicalNoteForm;
+import com.App.PatientHealth.requestObjects.AppointmentRequestForm;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 import com.App.PatientHealth.requestObjects.PrescriptionForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
@@ -42,7 +49,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 @ExtendWith(MockitoExtension.class)
 public class DoctorRestTests {
@@ -58,6 +68,21 @@ public class DoctorRestTests {
 
     @Mock
     UserPagingRepository uRepo;
+
+    @Mock
+    PrescriptionPagingRepository prescriptionRepo;
+
+    @Mock
+    MedicalNotePagingRepository medRepo;
+
+    @Mock
+    AppointmentPagingRepository appointmentRepo;
+
+    @Mock
+    SecurityContext security;
+
+    @Mock
+    Authentication authentication;
 
     @InjectMocks
     DoctorRest restController;
@@ -421,6 +446,7 @@ public class DoctorRestTests {
         assertThat(res.getMessage(),is(not(empty)));
     }
 
+    //SECTION ******** Patient Prescriptions CRUD Tests *********
     //add prescription to patient
     @Test
     void addPrescriptionToPatientReturnsSuccessfulGivenValidPatientId() {
@@ -465,8 +491,104 @@ public class DoctorRestTests {
         assertThat(res.getMessage(),is(not(empty)));
     }
 
+
     @Test
-    void addDoctorsNoteToPatientReturnsSuccessfulGivenFormWithValidPatientId() {
+    void editPrescriptionReturnsSuccessfulGivenValidForm() {
+         //given
+         int validPrescriptionId = 1;
+         int patientId = 2;
+         Prescription prescription = new Prescription();
+         Optional<Prescription> prescriptionOpt = Optional.of(prescription);
+         
+         given(userServices.getPrescriptionRepo()).willReturn(prescriptionRepo);
+         given(prescriptionRepo.findById(validPrescriptionId)).willReturn(prescriptionOpt);
+         PrescriptionForm form = new PrescriptionForm("Paracetamol", "Directions", patientId,validPrescriptionId);
+         
+         //when
+         JsonResponse res = restController.editPrescription(form);
+ 
+         //then
+         String empty = "";
+         verify(userServices.getPrescriptionRepo(), Mockito.times(1)).findById(validPrescriptionId);
+         verify(userServices.getPrescriptionRepo(), Mockito.times(1)).save(prescription);
+         assertThat(res.getSuccess(),is(true));
+         assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void editPrescriptionReturnsUnsuccessfulGivenInvalidForm() {
+         //given
+         int invalidPrescriptionId = 1;
+         int patientId = 2;
+         Prescription prescription = new Prescription();
+         Optional<Prescription> prescriptionOptEmpty = Optional.empty();
+         
+         given(userServices.getPrescriptionRepo()).willReturn(prescriptionRepo);
+         given(prescriptionRepo.findById(invalidPrescriptionId)).willReturn(prescriptionOptEmpty);
+         PrescriptionForm form = new PrescriptionForm("Paracetamol", "Directions", patientId,invalidPrescriptionId);
+         
+         //when
+         JsonResponse res = restController.editPrescription(form);
+ 
+         //then
+         String empty = "";
+         verify(userServices.getPrescriptionRepo(), Mockito.times(1)).findById(invalidPrescriptionId);
+         verify(userServices.getPrescriptionRepo(), Mockito.times(0)).save(prescription);
+         assertThat(res.getSuccess(),is(false));
+         assertThat(res.getMessage(),is(not(empty)));
+    }
+
+
+    @Test
+    void deletePrescriptionReturnsSuccessfulGiven() {
+        //given
+        int validPrescriptionId = 1;
+        Prescription prescription = new Prescription();
+        Optional<Prescription> prescriptionOpt = Optional.of(prescription);
+        
+        given(userServices.getPrescriptionRepo()).willReturn(prescriptionRepo);
+        given(prescriptionRepo.findById(validPrescriptionId)).willReturn(prescriptionOpt);
+        String prescriptionId = Integer.toString(validPrescriptionId);
+        
+        //when
+        JsonResponse res = restController.deletePrescription(prescriptionId);
+
+        //then
+        String empty = "";
+        verify(userServices.getPrescriptionRepo(), Mockito.times(1)).findById(validPrescriptionId);
+        verify(userServices.getPrescriptionRepo(), Mockito.times(1)).delete(prescription);
+        assertThat(res.getSuccess(),is(true));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void deletePrescriptionReturnsUnsuccessfulGivenInvalidId() {
+        //given
+        int invalidPrescriptionId = 1;
+        Prescription prescription = new Prescription();
+        Optional<Prescription> prescriptionOptEmpty = Optional.empty();
+        
+        given(userServices.getPrescriptionRepo()).willReturn(prescriptionRepo);
+        given(prescriptionRepo.findById(invalidPrescriptionId)).willReturn(prescriptionOptEmpty);
+        String prescriptionId = Integer.toString(invalidPrescriptionId);
+        
+        //when
+        JsonResponse res = restController.deletePrescription(prescriptionId);
+
+        //then
+        String empty = "";
+        verify(userServices.getPrescriptionRepo(), Mockito.times(1)).findById(invalidPrescriptionId);
+        verify(userServices.getPrescriptionRepo(), Mockito.times(0)).delete(prescription);
+        assertThat(res.getSuccess(),is(false));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+
+    //SECTION ******** Patient Medical Notes CRUD *********
+
+
+    @Test
+    void addMedicalNoteToPatientReturnsSuccessfulGivenFormWithValidPatientId() {
         //given
         int validPId = 1;
         Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
@@ -488,7 +610,7 @@ public class DoctorRestTests {
     }
 
     @Test
-    void addDoctorsNoteToPatientReturnsUnsuccessfulGivenFormWithInvalidPatientId() {
+    void addMedicalNoteToPatientReturnsUnsuccessfulGivenFormWithInvalidPatientId() {
         //given
         int invalidPId = 1;
         Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
@@ -511,7 +633,7 @@ public class DoctorRestTests {
 
     //getDoctorsNotesFromPatient
     @Test
-    void getDoctorsNotesFromPatientReturnSuccessfulGivenValidPatientId() {
+    void getMedicalNotesFromPatientReturnSuccessfulGivenValidPatientId() {
         //given
         String validPidStr = "1";
         int validPidInt = Integer.parseInt(validPidStr);
@@ -523,7 +645,7 @@ public class DoctorRestTests {
 
 
         //when
-        JsonResponse res = restController.getDoctorsNotesFromPatient(validPidStr);
+        JsonResponse res = restController.getMedicalNotesFromPatient(validPidStr);
 
         //then
         String empty = "";
@@ -535,7 +657,7 @@ public class DoctorRestTests {
 
     //getDoctorsNotesFromPatient
     @Test
-    void getDoctorsNotesFromPatientReturnUnsuccessfulGivenInvalidPatientId() {
+    void getMedicalNotesFromPatientReturnUnsuccessfulGivenInvalidPatientId() {
         //given
         String validPidStr = "1";
         int validPidInt = Integer.parseInt(validPidStr);
@@ -546,7 +668,7 @@ public class DoctorRestTests {
         given(pRepo.findById(validPidInt)).willReturn(emptyPatientOpt);
 
         //when
-        JsonResponse res = restController.getDoctorsNotesFromPatient(validPidStr);
+        JsonResponse res = restController.getMedicalNotesFromPatient(validPidStr);
 
         //then
         String empty = "";
@@ -556,93 +678,288 @@ public class DoctorRestTests {
     }
 
     @Test
-    void updatePatientDoctorNoteReturnsSuccessfulGivenFormWithValidId() {
+    void editMedicalNoteReturnsSuccessfulGivenFormWithValidId() {
         //given
-        int validPId = 1;
-        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
-        Optional<Patient> patientOpt = Optional.of(patient);
-        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
+        int validId = 1;
+        
+        MedicalNoteForm form = new MedicalNoteForm();
+        form.setId(validId);
+        
+        MedicalNote note = new MedicalNote(form);
+        Optional<MedicalNote> noteOpt = Optional.of(note);
 
-        given(userServices.getPatientPaging()).willReturn(pRepo);
-        given(pRepo.findById(validPId)).willReturn(patientOpt);
+        given(userServices.getMedicalNoteRepo()).willReturn(medRepo);
+        given(medRepo.findById(validId)).willReturn(noteOpt);
         
         //when
-        JsonResponse res = restController.updatePatientDoctorNote(form);
+        JsonResponse res = restController.editMedicalNote(form);
 
         //then
         String empty = "";
-        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(validPId);
-        verify(userServices.getPatientPaging(), Mockito.times(1)).save(patient);
+        verify(userServices.getMedicalNoteRepo(), Mockito.times(1)).findById(validId);
+        verify(userServices.getMedicalNoteRepo(), Mockito.times(1)).save(note);
         assertThat(res.getSuccess(),is(true));
         assertThat(res.getMessage(),is(not(empty)));
     }
 
     @Test
-    void updatePatientDoctorNoteReturnsUnsuccessfulGivenFormWithInvalidId() {
+    void editMedicalNoteReturnsUnsuccessfulGivenFormWithInvalidId() {
         //given
-        int invalidPId = 1;
-        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
-        Optional<Patient> emptyPatientOpt = Optional.empty();
-        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
+        int invalidId = 1;
+        
+        MedicalNoteForm form = new MedicalNoteForm();
+        form.setId(invalidId);
 
-        given(userServices.getPatientPaging()).willReturn(pRepo);
-        given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);
+        MedicalNote note = new MedicalNote(form);
+        Optional<MedicalNote> noteOptEmpty = Optional.empty();
+
+        given(userServices.getMedicalNoteRepo()).willReturn(medRepo);
+        given(medRepo.findById(invalidId)).willReturn(noteOptEmpty);
         
         //when
-        JsonResponse res = restController.updatePatientDoctorNote(form);
+        JsonResponse res = restController.editMedicalNote(form);
 
         //then
         String empty = "";
-        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(invalidPId);
-        verify(userServices.getPatientPaging(), Mockito.times(0)).save(patient);
+        verify(userServices.getMedicalNoteRepo(), Mockito.times(1)).findById(invalidId);
+        verify(userServices.getMedicalNoteRepo(), Mockito.times(0)).save(note);
         assertThat(res.getSuccess(),is(false));
         assertThat(res.getMessage(),is(not(empty)));
     }
 
-    //add doctor's note to patient
+    
     @Test
-    void deletePatientDoctorNoteReturnsSuccesfulGivenValidForm() {
+    void deleteMedicalNoteReturnsSuccesfulGivenValidForm() {
         //given
-        int validPId = 1;
-        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
-        Optional<Patient> patientOpt = Optional.of(patient);
-        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
+        int validNoteId = 1;
+        String validIdStr = Integer.toString(validNoteId);
+        MedicalNoteForm form = new MedicalNoteForm();
+        form.setId(validNoteId);
+        
+        MedicalNote note = new MedicalNote(form);
+        Optional<MedicalNote> noteOpt = Optional.of(note);
 
-        given(userServices.getPatientPaging()).willReturn(pRepo);
-        given(pRepo.findById(validPId)).willReturn(patientOpt);
+        given(userServices.getMedicalNoteRepo()).willReturn(medRepo);
+        given(medRepo.findById(validNoteId)).willReturn(noteOpt);
         
         //when
-        JsonResponse res = restController.deletePatientDoctorNote(form);
+        JsonResponse res = restController.deleteMedicalNote(validIdStr);
+
+        //then
+        String empty = "";
+        verify(userServices.getMedicalNoteRepo(), Mockito.times(1)).findById(validNoteId);
+        verify(userServices.getMedicalNoteRepo(), Mockito.times(1)).delete(note);
+        assertThat(res.getSuccess(),is(true));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void deleteMedicalNoteReturnsUnsuccesfulGivenInvalidForm() {
+        //given
+        int validNoteId = 1;
+        String validIdStr = Integer.toString(validNoteId);
+        MedicalNoteForm form = new MedicalNoteForm();
+        form.setId(validNoteId);
+        
+        MedicalNote note = new MedicalNote(form);
+        Optional<MedicalNote> noteOptEmpty = Optional.empty();
+
+        given(userServices.getMedicalNoteRepo()).willReturn(medRepo);
+        given(medRepo.findById(validNoteId)).willReturn(noteOptEmpty);
+        
+        //when
+        JsonResponse res = restController.deleteMedicalNote(validIdStr);
+
+        //then
+        String empty = "";
+        verify(userServices.getMedicalNoteRepo(), Mockito.times(1)).findById(validNoteId);
+        verify(userServices.getMedicalNoteRepo(), Mockito.times(0)).delete(note);
+        assertThat(res.getSuccess(),is(false));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    //SECTION ******** Patient Appointment Requests CRUD *********
+
+    @Test
+    void addAppointmentRequestReturnsSuccessfulGivenValidForm() {
+        //given
+        int validPId = 2;
+        String doctorUsername = "username";
+
+        //set up patient for mock
+        Patient patient = new Patient();
+        Optional<Patient> patientOpt = Optional.of(patient);
+
+        //set up doctor for mock
+        Doctor doctor = new Doctor();
+        Optional<Doctor> doctorOpt = Optional.of(doctor);
+
+        //set up appointment requests for mock
+        AppointmentRequestForm form = new AppointmentRequestForm();
+        form.setPatientId(validPId);
+
+        SecurityContextHolder.setContext(security);
+        given(security.getAuthentication()).willReturn(authentication);
+        given(authentication.getName()).willReturn(doctorUsername);
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(userServices.getDoctorPaging()).willReturn(dRepo);
+        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
+        given(pRepo.findById(validPId)).willReturn(patientOpt);
+        given(dRepo.findByUsername(doctorUsername)).willReturn(doctorOpt);
+       
+        
+        //when
+        JsonResponse res = restController.addAppointmentRequest(form);
 
         //then
         String empty = "";
         verify(userServices.getPatientPaging(), Mockito.times(1)).findById(validPId);
-        verify(userServices.getPatientPaging(), Mockito.times(1)).save(patient);
+        verify(userServices.getDoctorPaging(), Mockito.times(1)).findByUsername(doctorUsername);
+        verify(userServices.getAppointmentRepo(), Mockito.times(1)).save(any(AppointmentRequest.class));
         assertThat(res.getSuccess(),is(true));
         assertThat(res.getMessage(),is(not(empty)));
-
     }
 
     @Test
-    void deletePatientDoctorNoteReturnsUnsuccesfulGivenInvalidForm() {
-        //given
-        int invalidPId = 1;
-        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
-        Optional<Patient> emptyPatientOpt = Optional.empty();
-        MedicalNoteForm form = new MedicalNoteForm(1, "heading", "body");
-
-        given(userServices.getPatientPaging()).willReturn(pRepo);
-        given(pRepo.findById(invalidPId)).willReturn(emptyPatientOpt);
+    void addAppointmentRequestReturnsUnsuccessfulGivenInvalidForm() {
+         //given
+         int invalidPId = 2;
+         String doctorUsername = "username";
+ 
+         //set up patient for mock
+         Optional<Patient> patientOptEmpty = Optional.empty();
+ 
+         //set up doctor for mock
+         Doctor doctor = new Doctor();
+         Optional<Doctor> doctorOpt = Optional.of(doctor);
+ 
+         //set up appointment requests for mock
+         AppointmentRequestForm form = new AppointmentRequestForm();
+         form.setPatientId(invalidPId);
+ 
+         SecurityContextHolder.setContext(security);
+         given(security.getAuthentication()).willReturn(authentication);
+         given(authentication.getName()).willReturn(doctorUsername);
+         given(userServices.getPatientPaging()).willReturn(pRepo);
+         given(userServices.getDoctorPaging()).willReturn(dRepo);
+         given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
+         given(pRepo.findById(invalidPId)).willReturn(patientOptEmpty);
+         given(dRepo.findByUsername(doctorUsername)).willReturn(doctorOpt);
         
+         
+         //when
+         JsonResponse res = restController.addAppointmentRequest(form);
+ 
+         //then
+         String empty = "";
+         verify(userServices.getPatientPaging(), Mockito.times(1)).findById(invalidPId);
+         verify(userServices.getDoctorPaging(), Mockito.times(1)).findByUsername(doctorUsername);
+         verify(userServices.getAppointmentRepo(), Mockito.times(0)).save(any(AppointmentRequest.class));
+         assertThat(res.getSuccess(),is(false));
+         assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void editAppointmentRequestReturnsSuccessfulGivenValidForm() {
+        //given
+        int validRequestId = 2;
+
+        //set up appointment requests for mock
+        AppointmentRequestForm form = new AppointmentRequestForm();
+        form.setRequestId(validRequestId);
+
+        AppointmentRequest request = new AppointmentRequest(form);
+        Optional<AppointmentRequest> requestOpt = Optional.of(request);
+
+        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
+        given(appointmentRepo.findById(validRequestId)).willReturn(requestOpt);
+
+
         //when
-        JsonResponse res = restController.deletePatientDoctorNote(form);
+        JsonResponse res = restController.editAppointmentRequest(form);
 
         //then
         String empty = "";
-        verify(userServices.getPatientPaging(), Mockito.times(1)).findById(invalidPId);
-        verify(userServices.getPatientPaging(), Mockito.times(0)).save(patient);
+        verify(userServices.getAppointmentRepo(), Mockito.times(1)).save(any(AppointmentRequest.class));
+        assertThat(res.getSuccess(),is(true));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void editAppointmentRequestReturnsUnsuccessfulGivenInvalidForm() {
+        //given
+        int invalidRequestId = 2;
+
+        //set up appointment requests for mock
+        AppointmentRequestForm form = new AppointmentRequestForm();
+        form.setRequestId(invalidRequestId);
+
+        Optional<AppointmentRequest> requestOptEmpty = Optional.empty();
+
+        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
+        given(appointmentRepo.findById(invalidRequestId)).willReturn(requestOptEmpty);
+
+        //when
+        JsonResponse res = restController.editAppointmentRequest(form);
+
+        //then
+        String empty = "";
+        verify(userServices.getAppointmentRepo(), Mockito.times(0)).save(any(AppointmentRequest.class));
         assertThat(res.getSuccess(),is(false));
         assertThat(res.getMessage(),is(not(empty)));
-
     }
+
+    @Test
+    void deleteAppointmentRequestReturnsSuccessfulGivenValidForm() {
+        //given
+        int validRequestId = 2;
+        String requestIdStr = Integer.toString(validRequestId);
+
+        //set up appointment requests for mock
+        AppointmentRequestForm form = new AppointmentRequestForm();
+        form.setRequestId(validRequestId);
+
+        AppointmentRequest request = new AppointmentRequest(form);
+        Optional<AppointmentRequest> requestOpt = Optional.of(request);
+
+        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
+        given(appointmentRepo.findById(validRequestId)).willReturn(requestOpt);
+
+
+        //when
+        JsonResponse res = restController.deleteAppointmentRequest(requestIdStr);
+
+        //then
+        String empty = "";
+        verify(userServices.getAppointmentRepo(), Mockito.times(1)).delete(any(AppointmentRequest.class));
+        assertThat(res.getSuccess(),is(true));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
+    @Test
+    void deleteAppointmentRequestReturnUnsuccessfulGivenInvalidForm() {
+        //given
+        int invalidRequestId = 2;
+        String requestIdStr = Integer.toString(invalidRequestId);
+
+        //set up appointment requests for mock
+        AppointmentRequestForm form = new AppointmentRequestForm();
+        form.setRequestId(invalidRequestId);
+
+        Optional<AppointmentRequest> requestOptEmpty = Optional.empty();
+
+        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
+        given(appointmentRepo.findById(invalidRequestId)).willReturn(requestOptEmpty);
+
+
+        //when
+        JsonResponse res = restController.deleteAppointmentRequest(requestIdStr);
+
+        //then
+        String empty = "";
+        verify(userServices.getAppointmentRepo(), Mockito.times(0)).delete(any(AppointmentRequest.class));
+        assertThat(res.getSuccess(),is(false));
+        assertThat(res.getMessage(),is(not(empty)));
+    }
+
 }

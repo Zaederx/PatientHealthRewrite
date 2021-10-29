@@ -296,6 +296,10 @@ public class DoctorRest {
                 res.setMessage("Problem saving edited prescription");
             }
         }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No matching prescription found in database");
+        }
         
         return res;
     }
@@ -364,7 +368,7 @@ public class DoctorRest {
     }
 
     @GetMapping("/get-patient-notes/{pid}")
-    public PatientListResponse getDoctorsNotesFromPatient(@PathVariable String pid) {
+    public PatientListResponse getMedicalNotesFromPatient(@PathVariable String pid) {
         int pidInt = Integer.parseInt(pid);
         PatientListResponse res = new PatientListResponse();
         Optional<Patient> patientOpt = userServices.getPatientPaging().findById(pidInt);
@@ -384,7 +388,7 @@ public class DoctorRest {
 
 
     @PostMapping("/edit-medical-note")
-    public JsonResponse updatePatientDoctorNote(@RequestBody MedicalNoteForm form) {
+    public JsonResponse editMedicalNote(@RequestBody MedicalNoteForm form) {
         JsonResponse res = new JsonResponse();
 
         Optional<MedicalNote> noteOpt = userServices.getMedicalNoteRepo().findById(form.getId());
@@ -415,7 +419,7 @@ public class DoctorRest {
     }
 
     @DeleteMapping("/delete-medical-note/{noteId}")
-    public JsonResponse deletePatientDoctorNote(@PathVariable String noteId) {
+    public JsonResponse deleteMedicalNote(@PathVariable String noteId) {
         JsonResponse res = new JsonResponse();
         int id = Integer.parseInt(noteId);
         Optional<MedicalNote> noteOpt = userServices.getMedicalNoteRepo().findById(id);
@@ -449,7 +453,7 @@ public class DoctorRest {
     //SECTION ******** Patient Appointment Requests CRUD *********
 
     @PostMapping("add-patient-appointment-request")
-    public JsonResponse patientAppointmentRequest(@RequestBody AppointmentRequestForm form) {
+    public JsonResponse addAppointmentRequest(@RequestBody AppointmentRequestForm form) {
         JsonResponse res = new JsonResponse();
         AppointmentRequest request = new AppointmentRequest(form);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -480,6 +484,10 @@ public class DoctorRest {
                 res.setMessage("Error submitting appointment request");
             }
         }
+        else {
+            res.setSuccess(false);
+            res.setMessage("Problem submitting appointment request");
+        }
         
         
         return res;
@@ -503,6 +511,7 @@ public class DoctorRest {
             
                 //prepare response object
                 res.setSuccess(true);
+                res.setMessage("Appointment Request edited successfully");
             }
             catch (Exception e){
                 res.setSuccess(false);
@@ -535,6 +544,7 @@ public class DoctorRest {
             try {
                 userServices.getAppointmentRepo().delete(request);
                 res.setSuccess(true);
+                res.setMessage("Successfully deleted Appointement Request");
             }
             catch (Exception e){
                 res.setSuccess(false);
