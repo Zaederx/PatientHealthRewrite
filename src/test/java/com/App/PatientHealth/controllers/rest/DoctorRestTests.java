@@ -18,7 +18,7 @@ import com.App.PatientHealth.domain.MedicalNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
 import com.App.PatientHealth.domain.User;
-import com.App.PatientHealth.repository.AppointmentPagingRepository;
+import com.App.PatientHealth.repository.AppointmentRequestPagingRepository;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.MedicalNotePagingRepository;
 import com.App.PatientHealth.repository.PatientPagingRepository;
@@ -76,7 +76,7 @@ public class DoctorRestTests {
     MedicalNotePagingRepository medRepo;
 
     @Mock
-    AppointmentPagingRepository appointmentRepo;
+    AppointmentRequestPagingRepository requestRepo;
 
     @Mock
     SecurityContext security;
@@ -803,7 +803,7 @@ public class DoctorRestTests {
         given(authentication.getName()).willReturn(doctorUsername);
         given(userServices.getPatientPaging()).willReturn(pRepo);
         given(userServices.getDoctorPaging()).willReturn(dRepo);
-        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
+        given(userServices.getAppointmentRequestRepo()).willReturn(requestRepo);
         given(pRepo.findById(validPId)).willReturn(patientOpt);
         given(dRepo.findByUsername(doctorUsername)).willReturn(doctorOpt);
        
@@ -815,7 +815,7 @@ public class DoctorRestTests {
         String empty = "";
         verify(userServices.getPatientPaging(), Mockito.times(1)).findById(validPId);
         verify(userServices.getDoctorPaging(), Mockito.times(1)).findByUsername(doctorUsername);
-        verify(userServices.getAppointmentRepo(), Mockito.times(1)).save(any(AppointmentRequest.class));
+        verify(userServices.getAppointmentRequestRepo(), Mockito.times(1)).save(any(AppointmentRequest.class));
         assertThat(res.getSuccess(),is(true));
         assertThat(res.getMessage(),is(not(empty)));
     }
@@ -842,7 +842,7 @@ public class DoctorRestTests {
          given(authentication.getName()).willReturn(doctorUsername);
          given(userServices.getPatientPaging()).willReturn(pRepo);
          given(userServices.getDoctorPaging()).willReturn(dRepo);
-         given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
+         given(userServices.getAppointmentRequestRepo()).willReturn(requestRepo);
          given(pRepo.findById(invalidPId)).willReturn(patientOptEmpty);
          given(dRepo.findByUsername(doctorUsername)).willReturn(doctorOpt);
         
@@ -854,7 +854,7 @@ public class DoctorRestTests {
          String empty = "";
          verify(userServices.getPatientPaging(), Mockito.times(1)).findById(invalidPId);
          verify(userServices.getDoctorPaging(), Mockito.times(1)).findByUsername(doctorUsername);
-         verify(userServices.getAppointmentRepo(), Mockito.times(0)).save(any(AppointmentRequest.class));
+         verify(userServices.getAppointmentRequestRepo(), Mockito.times(0)).save(any(AppointmentRequest.class));
          assertThat(res.getSuccess(),is(false));
          assertThat(res.getMessage(),is(not(empty)));
     }
@@ -871,8 +871,8 @@ public class DoctorRestTests {
         AppointmentRequest request = new AppointmentRequest(form);
         Optional<AppointmentRequest> requestOpt = Optional.of(request);
 
-        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
-        given(appointmentRepo.findById(validRequestId)).willReturn(requestOpt);
+        given(userServices.getAppointmentRequestRepo()).willReturn(requestRepo);
+        given(requestRepo.findById(validRequestId)).willReturn(requestOpt);
 
 
         //when
@@ -880,7 +880,7 @@ public class DoctorRestTests {
 
         //then
         String empty = "";
-        verify(userServices.getAppointmentRepo(), Mockito.times(1)).save(any(AppointmentRequest.class));
+        verify(userServices.getAppointmentRequestRepo(), Mockito.times(1)).save(any(AppointmentRequest.class));
         assertThat(res.getSuccess(),is(true));
         assertThat(res.getMessage(),is(not(empty)));
     }
@@ -896,15 +896,15 @@ public class DoctorRestTests {
 
         Optional<AppointmentRequest> requestOptEmpty = Optional.empty();
 
-        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
-        given(appointmentRepo.findById(invalidRequestId)).willReturn(requestOptEmpty);
+        given(userServices.getAppointmentRequestRepo()).willReturn(requestRepo);
+        given(requestRepo.findById(invalidRequestId)).willReturn(requestOptEmpty);
 
         //when
         JsonResponse res = restController.editAppointmentRequest(form);
 
         //then
         String empty = "";
-        verify(userServices.getAppointmentRepo(), Mockito.times(0)).save(any(AppointmentRequest.class));
+        verify(userServices.getAppointmentRequestRepo(), Mockito.times(0)).save(any(AppointmentRequest.class));
         assertThat(res.getSuccess(),is(false));
         assertThat(res.getMessage(),is(not(empty)));
     }
@@ -922,8 +922,8 @@ public class DoctorRestTests {
         AppointmentRequest request = new AppointmentRequest(form);
         Optional<AppointmentRequest> requestOpt = Optional.of(request);
 
-        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
-        given(appointmentRepo.findById(validRequestId)).willReturn(requestOpt);
+        given(userServices.getAppointmentRequestRepo()).willReturn(requestRepo);
+        given(requestRepo.findById(validRequestId)).willReturn(requestOpt);
 
 
         //when
@@ -931,7 +931,7 @@ public class DoctorRestTests {
 
         //then
         String empty = "";
-        verify(userServices.getAppointmentRepo(), Mockito.times(1)).delete(any(AppointmentRequest.class));
+        verify(userServices.getAppointmentRequestRepo(), Mockito.times(1)).delete(any(AppointmentRequest.class));
         assertThat(res.getSuccess(),is(true));
         assertThat(res.getMessage(),is(not(empty)));
     }
@@ -948,8 +948,8 @@ public class DoctorRestTests {
 
         Optional<AppointmentRequest> requestOptEmpty = Optional.empty();
 
-        given(userServices.getAppointmentRepo()).willReturn(appointmentRepo);
-        given(appointmentRepo.findById(invalidRequestId)).willReturn(requestOptEmpty);
+        given(userServices.getAppointmentRequestRepo()).willReturn(requestRepo);
+        given(requestRepo.findById(invalidRequestId)).willReturn(requestOptEmpty);
 
 
         //when
@@ -957,7 +957,7 @@ public class DoctorRestTests {
 
         //then
         String empty = "";
-        verify(userServices.getAppointmentRepo(), Mockito.times(0)).delete(any(AppointmentRequest.class));
+        verify(userServices.getAppointmentRequestRepo(), Mockito.times(0)).delete(any(AppointmentRequest.class));
         assertThat(res.getSuccess(),is(false));
         assertThat(res.getMessage(),is(not(empty)));
     }

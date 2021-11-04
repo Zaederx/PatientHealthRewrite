@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 
  */
-@RequestMapping("rest/doctor")
+@RequestMapping("/rest/doctor")
 @RestController
 public class DoctorRest {
     @Autowired
@@ -474,7 +474,7 @@ public class DoctorRest {
         if (patientOpt.isPresent() && doctorOpt.isPresent()) {
             //save new request
             try {
-                userServices.getAppointmentRepo().save(request);
+                userServices.getAppointmentRequestRepo().save(request);
                 // will cascade saving the new appointment request
                 res.setSuccess(true);
                 res.setMessage("Appointment Request submitted successfully.");
@@ -498,7 +498,7 @@ public class DoctorRest {
         JsonResponse res = new JsonResponse();
 
         //get optional appointment request by id
-        Optional<AppointmentRequest> requestOpt = userServices.getAppointmentRepo().findById(form.getRequestId());
+        Optional<AppointmentRequest> requestOpt = userServices.getAppointmentRequestRepo().findById(form.getRequestId());
 
         //if present - update appointment request with form changes
         if (requestOpt.isPresent()) {
@@ -507,7 +507,7 @@ public class DoctorRest {
 
             try {
                 //save changes
-                userServices.getAppointmentRepo().save(request);
+                userServices.getAppointmentRequestRepo().save(request);
             
                 //prepare response object
                 res.setSuccess(true);
@@ -536,13 +536,13 @@ public class DoctorRest {
         int id = Integer.parseInt(requestId);
 
         //get optional appointment request note by id
-        Optional<AppointmentRequest> requestOpt = userServices.getAppointmentRepo().findById(id);
+        Optional<AppointmentRequest> requestOpt = userServices.getAppointmentRequestRepo().findById(id);
 
         //if present - delete
         if (requestOpt.isPresent()) {
             AppointmentRequest request = requestOpt.get(); 
             try {
-                userServices.getAppointmentRepo().delete(request);
+                userServices.getAppointmentRequestRepo().delete(request);
                 res.setSuccess(true);
                 res.setMessage("Successfully deleted Appointement Request");
             }
