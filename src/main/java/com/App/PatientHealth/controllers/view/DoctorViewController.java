@@ -18,5 +18,9 @@ public class DoctorViewController {
         return "doctor/doctor-view-patient-details";
     }
 
+    @GetMapping("/calendar")
+    public String calendar() {
+        return "doctor/doctor-calendar";
+    }
 
 }
