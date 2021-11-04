@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.App.PatientHealth.repository.AdminPagingRepository;
 import com.App.PatientHealth.repository.AppointmentPagingRepository;
+import com.App.PatientHealth.repository.AppointmentRequestPagingRepository;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.GmcRepository;
 import com.App.PatientHealth.repository.MedicalNotePagingRepository;
@@ -43,10 +44,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	PrescriptionPagingRepository prescriptionRepo;
 
 	@Autowired
-	AppointmentPagingRepository appointmentRepo;
+	MedicalNotePagingRepository medicalNoteRepo;
 
 	@Autowired
-	MedicalNotePagingRepository medicalNoteRepo;
+	AppointmentRequestPagingRepository requestRepo;
+
+	@Autowired
+	AppointmentPagingRepository appointmentRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -107,11 +111,15 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		return prescriptionRepo;
 	}
 
-	public AppointmentPagingRepository getAppointmentRepo() {
-		return appointmentRepo;
-	}
-
 	public MedicalNotePagingRepository getMedicalNoteRepo() {
 		return medicalNoteRepo;
+	}
+
+	public AppointmentRequestPagingRepository getAppointmentRequestRepo() {
+		return requestRepo;
+	}
+
+	public AppointmentPagingRepository getAppointmentRepo() {
+		return appointmentRepo;
 	}
 }
