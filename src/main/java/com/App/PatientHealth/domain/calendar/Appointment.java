@@ -12,8 +12,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import com.App.PatientHealth.domain.AppointmentRequest;
+import com.App.PatientHealth.domain.Doctor;
+import com.App.PatientHealth.domain.Patient;
+import com.App.PatientHealth.requestObjects.AppointmentForm;
 
 @Entity
 public class Appointment {
@@ -32,7 +36,24 @@ public class Appointment {
     @Column
     Integer weekNumber;
 
+    @ManyToOne
+    Doctor doctor;
+    @ManyToOne
+    Patient patient;
+
     public Appointment(){}
+
+    public Appointment(AppointmentForm form) {
+        if(form.getId() != null) {
+            this.id = form.getId();
+        }
+        this.appointmentType = form.getAppointmentType();
+        this.appointmentInfo = form.getAppointmentInfo();
+        this.dateTime = form.getDateTime();
+        this.durationInMinutes = form.getDurationInMinutes();
+        this.weekNumber = form.getWeekNumber();
+        //remember to always assign doctor and patient in controller methods - requires userServices
+    }
 
     public Appointment(AppointmentRequest r, int year, Month month, int dayOfMonth, int hour, int minute, int durationInMinutes) {
         //set appointment details
@@ -47,7 +68,6 @@ public class Appointment {
         WeekFields weekFields = WeekFields.of(Locale.getDefault()); 
         this.weekNumber = this.dateTime.get(weekFields.weekOfWeekBasedYear());
     }
-
 
     public String getAppointmentType() {
         return this.appointmentType;
@@ -79,6 +99,47 @@ public class Appointment {
 
     public void setWeekNumber(int weekNumber) {
         this.weekNumber = weekNumber;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getDurationInMinutes() {
+        return this.durationInMinutes;
+    }
+
+    public void setDurationInMinutes(Integer durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+    }
+
+    public Doctor getDoctor() {
+        return this.doctor;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public Patient getPatient() {
+        return this.patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public void update(AppointmentForm form) {
+        this.id = form.getId();
+        this.appointmentType = form.getAppointmentType();
+        this.appointmentInfo = form.getAppointmentInfo();
+        this.dateTime = form.getDateTime();
+        this.durationInMinutes = form.getDurationInMinutes();
+        this.weekNumber = form.getWeekNumber();
     }
 
 }

@@ -12,6 +12,8 @@ import com.App.PatientHealth.domain.MedicalNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
 import com.App.PatientHealth.domain.User;
+import com.App.PatientHealth.domain.calendar.Appointment;
+import com.App.PatientHealth.requestObjects.AppointmentForm;
 import com.App.PatientHealth.requestObjects.AppointmentRequestForm;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 import com.App.PatientHealth.requestObjects.MedicalNoteForm;
@@ -437,8 +439,6 @@ public class DoctorRest {
                 res.setSuccess(false);
                 res.setMessage("Problem deleting note");
             }
-
-            
         }
         else {
             res.setSuccess(false);
@@ -452,7 +452,7 @@ public class DoctorRest {
 
     //SECTION ******** Patient Appointment Requests CRUD *********
 
-    @PostMapping("add-patient-appointment-request")
+    @PostMapping("/add-patient-appointment-request")
     public JsonResponse addAppointmentRequest(@RequestBody AppointmentRequestForm form) {
         JsonResponse res = new JsonResponse();
         AppointmentRequest request = new AppointmentRequest(form);
@@ -468,7 +468,6 @@ public class DoctorRest {
             Patient patient = patientOpt.get();
             request.setPatient(patient);
             patient.getAppointmentRequests().add(request);
-            
         }
 
         if (patientOpt.isPresent() && doctorOpt.isPresent()) {
@@ -488,8 +487,6 @@ public class DoctorRest {
             res.setSuccess(false);
             res.setMessage("Problem submitting appointment request");
         }
-        
-        
         return res;
     }
 
@@ -544,7 +541,7 @@ public class DoctorRest {
             try {
                 userServices.getAppointmentRequestRepo().delete(request);
                 res.setSuccess(true);
-                res.setMessage("Successfully deleted Appointement Request");
+                res.setMessage("Successfully deleted Appointment Request");
             }
             catch (Exception e){
                 res.setSuccess(false);
@@ -561,5 +558,5 @@ public class DoctorRest {
     }
     
 
-
+    
 }

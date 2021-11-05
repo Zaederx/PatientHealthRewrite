@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.App.PatientHealth.domain.calendar.Appointment;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 
 import java.util.ArrayList;
@@ -20,10 +21,13 @@ public class Doctor extends User {
     String gmcNum;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "doctor")
     List<AppointmentRequest> appointmentRequests;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "doctor")
+    List<Appointment> appointments;
 
     public Doctor(){
         this.patients = new ArrayList<Patient>();
         this.appointmentRequests = new ArrayList<AppointmentRequest>();
+        this.appointments = new ArrayList<Appointment>();
     }
 
 
@@ -70,5 +74,20 @@ public class Doctor extends User {
         this.gmcNum = gmcNum;
     }
 
+    public List<AppointmentRequest> getAppointmentRequests() {
+        return appointmentRequests;
+    }
+
+    public void setAppointmentRequests(List<AppointmentRequest> appointmentRequests) {
+        this.appointmentRequests = appointmentRequests;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
 
 }

@@ -42,4 +42,13 @@ public class AdminViewController {
     public String deleteUsers() {
         return "admin/admin-delete-users";
     }
+
+    /**
+     * For the view to manage appointments
+     * 
+     */
+    @GetMapping("/calendar")
+    public String viewCalendar() {
+        return "admin/admin-calendar";
+    }
 }

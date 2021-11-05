@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.App.PatientHealth.domain.calendar.Appointment;
 import com.App.PatientHealth.requestObjects.PatientRegForm;
 
 import javax.persistence.ManyToOne;
@@ -27,11 +28,15 @@ public class Patient extends User {
     Doctor doctor;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     List<AppointmentRequest> appointmentRequests;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    List<Appointment> appointments;
+
 
     public Patient() {
         this.prescriptions = new ArrayList<Prescription>();
         this.doctorNotes = new ArrayList<MedicalNote>();
         this.appointmentRequests = new ArrayList<AppointmentRequest>();
+        this.appointments = new ArrayList<Appointment>();
     }
 
     public Patient(PatientRegForm p) {
@@ -94,5 +99,14 @@ public class Patient extends User {
 
     public void setDOB(String DOB) {
         this.DOB = DOB;
+    }
+
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }
