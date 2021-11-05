@@ -16,7 +16,16 @@ const popupPrescriptionsId = '#info-popup-prescriptions'
 const popupNotesId = '#info-popup-medical-notes'
 const popupRequestsId = '#info-popup-appointment-requests'
 var currentPatientId:number = 0
-function popupMessage(message:string,type:string,closeBtnId:string):string {
+
+/**
+ * 
+ * @param message 
+ * @param type 
+ * @param closeBtnId the id you want the close btn 
+ * to have - can be used to then reference for event handling
+ * @returns 
+ */
+export function popupMessage(message:string,type:string,closeBtnId:string):string {
     //note - substring used to remove the hash before the id
     var popupHTML = 
     '<div class="alert '+type+'">'+

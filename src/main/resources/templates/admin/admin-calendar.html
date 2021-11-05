@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta th:name="_csrf" th:content="${_csrf.token}"/>
+  <!-- Site JavaScript -->
+  <script type="module" th:src="@{/js/calendar/calendar.js}" defer></script>
+  <!-- Site CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/app.css}">
+  <!-- BootStrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+  <!-- BootStrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <!--FontAwesome-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Admin Manage Calendar</title>
+</head>
+
+<body>
+  <div class="jumbotron text-center">
+    <h1>Admin Manage Calendar</h1>
+    <div th:replace="admin/admin-nav"></div>
+  </div>
+  <div class="container text-center">  
+    <img class="img-fluid" th:src="@{/img/felipe-furtado-2zDXqgTzEFE-unsplash.jpg}" alt="administration background image">
+    
+    <!-- Patient Search Table -->
+    <div th:replace="search-tables/patient-search-table"></div>
+    <div id="btn-select-patient"></div>
+    <!-- Doctor Search Table -->
+    <div th:replace="search-tables/doctor-search-table"></div>
+    <div id="btn-select-doctor"></div>
+
+    <!-- Calendar -->
+    <div th:replace="calendar"></div>
+  </div>
+</body>
+<script>
+
+</script>
+</html>

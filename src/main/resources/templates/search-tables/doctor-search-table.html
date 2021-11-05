@@ -1,0 +1,29 @@
+<!-- Doctor Search Table -->
+<input id="doctor-searchbar" class="form-control" type="text" placeholder="Search Doctors...">
+<!--  </div> -->
+<div class="table-flow">
+ <table id="doctor-details-table" class="table table-bordered table-striped">
+             <thead>
+                 <tr>
+                     <th colspan="4">Doctors</th>
+                 </tr>
+                 <tr>
+                     <th colspan="1">Name</th>
+                     <th colspan="1">Username</th>
+                     <th colspan="1">Specialty</th>
+                     <th colspan="1">Email</th>
+                 </tr>
+             </thead>
+             <tbody class="highlight-table-body-row" id="doctor-search-tbody">
+             <!-- Fill via ajax method -->
+             <td colspan="4">ENTER DOCTOR'S NAME INTO SEARCH BAR</td>
+             </tbody>
+             
+ </table>
+ <div id="doctor-table-buttons">
+     <span id="btn-prev" class="btn btn-primary">Prev</span>
+     <span id="pageNum" class="pageNum" contenteditable="true"></span>
+     <span id="pageTotal" class="pageTotal"></span>
+     <span id="btn-go" class="btn btn-primary">Go to page</span>
+     <span id="btn-next" class="btn btn-primary">Next</span>
+ </div>

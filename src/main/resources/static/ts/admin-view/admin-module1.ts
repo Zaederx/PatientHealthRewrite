@@ -136,8 +136,8 @@ export function searchForDoctor(name:string, pageNum:number,csrfToken:string) {
     })
 }
 
-export // SECTION - Patient's Searchbar
-function searchForPatient(name:string, pageNum:number, csrfToken:string) {
+// SECTION - Patient's Searchbar
+export function searchForPatient(name:string, pageNum:number, csrfToken:string) {
     $('#p-pageNum').html(String(pageNum));
     console.log("p-pageNum set to :",pageNum)
     $.ajax({

@@ -1,5 +1,6 @@
 <script th:src="@{/js/calendar/calendar.js}"></script>
 <div id="calendar" class="grid">
+    <div id="btn-create-appointment">Create New Appointment</div>
     <div id="times-container" class="times-container">
         <div id="times" class="times">
             <div>08:00</div>
@@ -28,6 +29,7 @@
             <div class="day-title">Saturday</div>     
             <div class="day-title">Sunday</div>  
         </div>
+
         <div id="appointments" class="appointments-underlay">
             <div id="monday-underlay">
                 <div></div>
@@ -138,111 +140,37 @@
 
         <div id="appointments" class="appointments-container">
             <div id="monday-appointments" class="appointments">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                
             </div>
             <div id="tuesday-appointments" class="appointments">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                
             </div>
             <div id="wednesday-appointments" class="appointments">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                
             </div>
             <div id="thursday-appointments" class="appointments">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                
             </div>
             <div id="friday-appointments" class="appointments">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                
             </div>
             <div id="saturday-appointments" class="appointments">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                
             </div>
             <div id="sunday-appointments" class="appointments">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                
             </div>
         </div>
+       
+
+        <div id="appointment-popup">
+            <input id="appointment-date" type="date">
+            <input id="appointment-time" type="time">
+
+            <div id="btn-appointment-submit">Submit</div>
+        </div>
+
+        
            
     </div>
     

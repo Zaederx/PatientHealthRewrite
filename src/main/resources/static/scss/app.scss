@@ -4,6 +4,7 @@ $yellow:#fdfc8a;
 $tomato:#f05c35;
 $btn-blue: rgb(41,120,237);
 
+
 .highlight {
     background-color:$light-blue;
 }
@@ -17,8 +18,8 @@ $btn-blue: rgb(41,120,237);
 }
 
 /* Done this way (double statement) to override bootstrap while hovering
-    * on tables with this class
-    */
+ * on tables with this class
+ */
 .highlight-table-body-row.highlight-table-body-row tr:hover {
     background-color:$light-blue;
 }
@@ -27,7 +28,7 @@ $btn-blue: rgb(41,120,237);
     background-color: $light-red;
 }
 
-.hr-divider{
+.hr-divider {
     border: 1px solid #9ca9a9;
     border-radius: 5px;
 }
@@ -37,21 +38,24 @@ $btn-blue: rgb(41,120,237);
     margin-left:30px;
     margin-bottom:5px;
 }
-.btn-wdith{
+
+.btn-width{
     width:20%;
 }
+
 .btn-space {
     margin-right:30px;
     margin-bottom:5px;
 }
+
 .btn-space-left {
     margin-left: 30px;
     margin-bottom:5px;
 }
 
 /* Note: using Table Flow as alternative to Bootstrap table-responsive, 
-    * which doesn't work well in some situations
-    * Apply table-flow to div outside desired table*/
+ * which doesn't work well in some situations
+ * Apply table-flow to div outside desired table*/
 .table-flow { 
     overflow-x:auto;
 }
@@ -62,6 +66,7 @@ $btn-blue: rgb(41,120,237);
     margin-left: 10px;
     margin-right: 0px;
 }
+
 .pageTotal {
     border: solid $btn-blue;
     background-color: $btn-blue;
@@ -77,7 +82,7 @@ $btn-blue: rgb(41,120,237);
     z-index: 1;
     width: 300px;
     height: 300px;
-    background-color:$light-blue;
+    background-color: $light-blue;
     position: absolute;
     top: 15%;
     left: 15%;
@@ -127,3 +132,87 @@ $btn-blue: rgb(41,120,237);
     width: 100%;
     table-layout: fixed;
 }
+
+.appointment {
+    position: absolute;
+    top: attr(data-position);
+}
+
+
+// grid sizing for calendar rows
+$row1-size: 10%;
+$row2-size: 90%;
+$div-height: 50px;
+
+.grid {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    height: 800px;
+}
+
+.times-container {
+    display: grid;
+    grid-template-rows: $row1-size $row2-size;
+}
+
+.times-container div {
+    height: $div-height;
+    text-align: center;
+    justify-content: center;
+}
+
+.times-container div:nth-child(even) {
+    background-color: $light-blue;
+}
+
+.times {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.days {
+    grid-column: 2;
+    display: grid;
+    grid-template-rows: $row1-size $row2-size;
+}
+
+.titles-container {
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+}
+
+.appointments-container {
+    z-index: 1;
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+}
+
+.appointments-underlay {
+    z-index: 0;
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+}
+
+.day-title {
+
+}
+
+.appointments div:nth-child(even) {
+    background-color: $light-blue;
+}
+
+.appointments div {
+    height: $div-height;
+    margin: 0px;
+}
+
+// .appointments {
+//     display: grid;
+//     //12 rows for each hour the surgery is open
+//     grid-template-rows: auto auto auto auto auto auto auto auto auto auto auto auto;
+// }
