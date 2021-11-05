@@ -190,6 +190,10 @@ $div-height: 50px;
     grid-template-columns: auto auto auto auto auto auto auto;
 }
 
+.appointments-container > * {
+    opacity: 0.5;
+}
+
 .appointments-underlay {
     z-index: 0;
     grid-column: 1;
@@ -202,7 +206,11 @@ $div-height: 50px;
 
 }
 
-.appointments div:nth-child(even) {
+.underlay div {
+    height: $div-height;
+}
+
+.underlay div:nth-child(even) {
     background-color: $light-blue;
 }
 
