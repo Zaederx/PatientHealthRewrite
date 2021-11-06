@@ -134,11 +134,15 @@ $cool-grey: rgb(53,58,63);
     table-layout: fixed;
 }
 
-.appointment {
-    position: absolute;
-    top: attr(data-position);
-}
+// .appointment[data-position] {
+//     position: relative;
+//     top: attr(data-position px);
+// }
 
+.single-appointment {
+    position: relative;
+    background-color: $light-red;
+}
 
 // grid sizing for calendar rows
 $row1-size: 10%;
@@ -215,10 +219,6 @@ $div-height: 50px;
     background-color: $light-blue;
 }
 
-.appointments div {
-    height: $div-height;
-    margin: 0px;
-}
 
 // .appointments {
 //     display: grid;

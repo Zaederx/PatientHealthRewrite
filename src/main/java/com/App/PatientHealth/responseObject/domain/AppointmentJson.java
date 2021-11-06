@@ -9,6 +9,9 @@ public class AppointmentJson {
     String day;
     String hour;
     String min;
+    String durationInMinutes;
+
+    public AppointmentJson() {}
 
     public AppointmentJson(Appointment a) {
         appointmentType = a.getAppointmentType();
@@ -16,6 +19,7 @@ public class AppointmentJson {
         day = a.getDateTime().getDayOfWeek().name();
         hour = Integer.toString(a.getDateTime().getHour());
         min = Integer.toString(a.getDateTime().getMinute());
+        this.durationInMinutes = Integer.toString(a.getDurationInMinutes());
     }
 
 
@@ -57,6 +61,15 @@ public class AppointmentJson {
 
     public void setMin(String min) {
         this.min = min;
+    }
+
+
+    public String getDurationInMinutes() {
+        return this.durationInMinutes;
+    }
+
+    public void setDurationInMinutes(String durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
     }
 
 

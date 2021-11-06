@@ -56,7 +56,7 @@ public class Appointment {
         //set dateTime
         String dateTimeStr = form.getDatTimeStr();
         this.dateTime = strToLocalDateTime(dateTimeStr);
-        //remember to always assign doctor and patient in controller methods - requires userServices
+        //IMPORTANT remember to always assign doctor and patient in controller methods - requires userServices
     }
 
     public Appointment(AppointmentRequest r, int year, Month month, int dayOfMonth, int hour, int minute, int durationInMinutes) {

@@ -133,12 +133,13 @@ function getCurrentWeekAppointments() {
 }
 
 
-
+const divHeight = 50 //px
 function appointmentToHtml(a:Appointment):string {
     var hour = Number(a.hour)
     var minute = Number(a.min)
     var position = appointmentPosition(divHeight, hour, minute)
-    var html = '<div class="appointment" data-position="' +position+'">'+a.appointmentType+'</div>'
+    var height = appointmentDurationLength(divHeight, a.durationInMinutes)
+    var html = '<div class="single-appointment" data-position="' +position+'" style="top:'+position+'px; height:'+height+'"px>'+a.appointmentType+'</div>'
 
     return html
 }
@@ -157,11 +158,16 @@ function appointmentPosition(divHeight:number, hour:number, minute:number):numbe
     var minSlot = (divHeight/surgeryHours/sixtyMins)
     var positionHour = hourSlot * hour
     var positionMinute =  minSlot * minute
-    var position = (positionHour + positionMinute)
+    var position = (positionHour + positionMinute) + 13//10 pixels off
     return position
 }
 
-const divHeight = 1000 //px
+function appointmentDurationLength(divHeight:number, durationInMinutes:number) {
+    var sixtyMins = 60
+    var length = (divHeight/sixtyMins) * durationInMinutes
+    return length
+}
+
 function handleCalendarSuccess(data:WeekResponse) {
 
     if (data.success) {
