@@ -6,6 +6,8 @@
   <meta th:name="_csrf" th:content="${_csrf.token}"/>
   <!-- Site JavaScript -->
   <script type="module" th:src="@{/js/calendar/calendar.js}" defer></script>
+  <script type="module" th:src="@{/js/search-table/patient-search-table.js}" defer></script>
+  <script type="module" th:src="@{/js/search-table/doctor-search-table.js}" defer></script>
   <!-- Site CSS -->
   <link rel="stylesheet" type="text/css" th:href="@{/css/app.css}">
   <!-- BootStrap CSS -->
@@ -35,11 +37,12 @@
     
     <!-- Patient Search Table -->
     <div th:replace="search-tables/patient-search-table"></div>
-    <div id="btn-select-patient"></div>
+    <div id="btn-select-patient" class="btn btn-primary">Select Patient</div>
+    <br>
     <!-- Doctor Search Table -->
     <div th:replace="search-tables/doctor-search-table"></div>
-    <div id="btn-select-doctor"></div>
-
+    <div id="btn-select-doctor" class="btn btn-primary">Select Doctor</div>
+    <br>
     <!-- Calendar -->
     <div th:replace="calendar"></div>
   </div>

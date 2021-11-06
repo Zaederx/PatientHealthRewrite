@@ -16,6 +16,13 @@ public class WeekResponse extends JsonResponse {
         this.week = new WeekJson(week);
     }
 
+
+    public WeekJson getWeek() {
+        return this.week;
+    }
+
+
+
 }
 
 

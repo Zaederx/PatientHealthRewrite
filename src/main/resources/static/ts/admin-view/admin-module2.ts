@@ -83,7 +83,7 @@ export function message(message:string,type:string):string {
  * @returns 
  */
 export function doctorsToRows(data:DoctorResponseList) {
-    var tables:TableData = new TableData()
+    var table:Table = new Table()
 
     var table1 = ''
     data.doctorJsons.forEach( d => {
@@ -93,8 +93,8 @@ export function doctorsToRows(data:DoctorResponseList) {
                     '</tr>';
         
     })
-    tables.table1.tbody = table1;
-    return tables;
+    table.tbody = table1;
+    return table;
  }
 
  /**
@@ -178,8 +178,8 @@ export function searchForDoctor(name:string, pageNum:number, csrfToken:string) {
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
         success: (data:DoctorResponseList) => {
-            var tables:TableData = doctorsToRows(data)
-            var t1 = tables.table1
+            var t1:Table= doctorsToRows(data)
+
             //display doctname name and username
             $(t1.getTbodyId()).html(t1.tbody)
             var tableBody = document.querySelector(t1.getTbodyId()) as HTMLTableElement
@@ -201,21 +201,20 @@ export function searchForDoctor(name:string, pageNum:number, csrfToken:string) {
  * @returns rows:TableData
  */
 export function patientsToRows(data:PatientResponseList) {
-    var tables:TableData = new TableData();
-    var table1 = ''
-
+    var table:Table = new Table()
+    var t = ''
     data.patientJsons.forEach( p => {
-        table1 += '<tr data-id="'+p.id+'" data-selected="false" data-userType="patient">'+
+        t += '<tr data-id="'+p.id+'" data-selected="false" data-userType="patient">'+
                         '<td>'+p.name+'</td>' + 
                         '<td>'+p.username+'</td>'
                     '</tr>';
     })
             
-    tables.table1.tbody += table1
-    return tables;
+    table.tbody += t
+    return table;
  }
 
- export function patientDetailsToRows(data:PatientResponseList) {
+export function patientDetailsToRows(data:PatientResponseList) {
     var tables:TableData = new TableData()
     var patient:Patient = data.patientJsons[0]
 
@@ -297,10 +296,9 @@ export function searchForPatient(name:string, pageNum:number, csrfToken:string) 
         headers: {'X-CSRF-TOKEN':csrfToken},
         success: (data:PatientResponseList) => {
             if(data.success) {
-                var tables:TableData = patientsToRows(data)
-                console.log('tables:',tables)
-                var t1 = tables.table1
-                //display doctor name name and username
+                var t1:Table = patientsToRows(data)
+                console.log('tables:',t1)
+                //display doctor name and username
                 $(t1.getTbodyId()).html(t1.tbody)
                 var tableBody = document.querySelector(t1.getTbodyId()) as HTMLTableElement
                 makeClickableTableRows(tableBody,selectRow)

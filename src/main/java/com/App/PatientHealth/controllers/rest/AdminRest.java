@@ -6,16 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.App.PatientHealth.domain.Admin;
-import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.User;
 import com.App.PatientHealth.requestObjects.AdminRegForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.AdminJson;
-import com.App.PatientHealth.responseObject.domain.PatientJson;
-import com.App.PatientHealth.responseObject.domain.UserJson;
 import com.App.PatientHealth.responseObject.lists.AdminListResponse;
-import com.App.PatientHealth.responseObject.lists.PatientListResponse;
-import com.App.PatientHealth.responseObject.lists.UserListResponse;
 import com.App.PatientHealth.services.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;

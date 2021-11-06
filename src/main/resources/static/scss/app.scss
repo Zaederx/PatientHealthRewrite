@@ -3,6 +3,7 @@ $light-red:#fad6bb;
 $yellow:#fdfc8a;
 $tomato:#f05c35;
 $btn-blue: rgb(41,120,237);
+$cool-grey: rgb(53,58,63);
 
 
 .highlight {
@@ -224,3 +225,14 @@ $div-height: 50px;
 //     //12 rows for each hour the surgery is open
 //     grid-template-rows: auto auto auto auto auto auto auto auto auto auto auto auto;
 // }
+
+
+// Popup appointment table
+.appointment-popup {
+    position: absolute;
+    left: 40%;
+    width: 300px;
+    height: 550px;
+    background-color: $cool-grey;
+    z-index: 2;
+}

@@ -3,11 +3,11 @@ package com.App.PatientHealth.domain.calendar;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Week {
+    Integer weekNumber;
     Day monday;
     Day tuesday;
     Day wednesday;
@@ -17,6 +17,7 @@ public class Week {
     Day sunday;
 
     public Week(int weekNumber, List<Appointment> appointments) {
+        this.weekNumber = weekNumber;
         //get specific week by week number
         LocalDate week = LocalDate.now().with(ChronoField.ALIGNED_WEEK_OF_YEAR, weekNumber);
         
@@ -121,6 +122,14 @@ public class Week {
 
     public void setSunday(Day sunday) {
         this.sunday = sunday;
+    }
+
+    public Integer getWeekNumber() {
+        return weekNumber;
+    }
+
+    public void setWeekNumber(Integer weekNumber) {
+        this.weekNumber = weekNumber;
     }
 
 }

@@ -1,178 +1,213 @@
-<script th:src="@{/js/calendar/calendar.js}"></script>
-<div id="btn-create-appointment">Create New Appointment</div>
-<div id="calendar" class="grid">
-    
-    <div id="times-container" class="times-container">
-        <div id="times" class="times">
-            <div>08:00</div>
-            <div>09:00</div>
-            <div>10:00</div>
-            <div>11:00</div>
-            <div>12:00</div>
-            <div>13:00</div>
-            <div>14:00</div>
-            <div>15:00</div>
-            <div>16:00</div>
-            <div>17:00</div>
-            <div>18:00</div>
-            <div>19:00</div>
-            <div>20:00</div>
-        </div>
+<div>
+    <script th:src="@{/js/calendar/calendar.js}"></script>
+    <!-- Create Appointment -->
+    <div id="btn-create-appointment" class="btn btn-primary">Create New Appointment</div>
+    <!-- Calendar Popup Message Div -->
+    <div id="calendar-message" style="display: none">
     </div>
-    
-    <div id="days" class="days">
-        <div id="titles-container" class="titles-container">
-            <div class="day-title">Monday</div>
-            <div class="day-title">Tuesday</div>     
-            <div class="day-title">Wednesday</div>     
-            <div class="day-title">Thursday</div>     
-            <div class="day-title">Friday</div>     
-            <div class="day-title">Saturday</div>     
-            <div class="day-title">Sunday</div>  
-        </div>
 
-        <div id="appointments" class="appointments-underlay">
-            <div id="monday-underlay" class="underlay">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            <div id="tuesday-underlay" class="underlay">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            <div id="wednesday-underlay" class="underlay">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            <div id="thursday-underlay" class="underlay">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            <div id="friday-underlay" class="underlay">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            <div id="saturday-underlay" class="underlay">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            <div id="sunday-underlay" class="underlay">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-        </div>
+    <!-- Appointment Popup -->
+    <div id="appointment-popup" class="appointment-popup" style="display: none">
+        <div id="appointment-popup-close" class="btn-x">X</div>
+        <div class="label label-default text-light">Enter Appointment Date and Time</div>
+        <!-- Date -->
+        <label for="appointment-date" class="label label-default text-light">Date</label>
+        <input id="appointment-date" type="date" class="form-control">
+        <br>
+        <!-- Time -->
+        <label for="appointment-time" class="label label-default text-light">Time</label>
+        <input id="appointment-time" type="time" class="form-control">
+        <br>
 
-        <div id="appointments" class="appointments-container">
-            <div id="monday-appointments" class="appointments">
-                
-            </div>
-            <div id="tuesday-appointments" class="appointments">
-                
-            </div>
-            <div id="wednesday-appointments" class="appointments">
-                
-            </div>
-            <div id="thursday-appointments" class="appointments">
-                
-            </div>
-            <div id="friday-appointments" class="appointments">
-                
-            </div>
-            <div id="saturday-appointments" class="appointments">
-                
-            </div>
-            <div id="sunday-appointments" class="appointments">
-                
-            </div>
-        </div>
-       
+        <!-- Duration In Minutes -->
+        <label for="appointment-time" class="label label-default text-light">Duration</label>
+        <input id="appointment-duration" type="number" min="15" max="60" class="form-control">
+        <br>
 
-        <div id="appointment-popup">
-            <input id="appointment-date" type="date">
-            <input id="appointment-time" type="time">
+        <!-- Appointment Type -->
+        <label for="appointment-type" class="label label-default text-light">Appointment Type</label>
+        <input id="appointment-type" type="text" class="form-control">
+        <br>
 
-            <div id="btn-appointment-submit">Submit</div>
-        </div>
+        <!-- Appointment Info -->
+        <label for="appointment-info" class="label label-default text-light">Appointment Information</label>
+        <input id="appointment-info" type="text" class="form-control">
+        <br>
 
+        <div id="btn-appointment-submit" class="btn btn-primary">Submit</div>
+    </div>
+
+
+    <!-- Calendar -->
+    <div id="calendar" class="grid">
         
-           
+        <div id="times-container" class="times-container">
+            <div id="times" class="times">
+                <div>08:00</div>
+                <div>09:00</div>
+                <div>10:00</div>
+                <div>11:00</div>
+                <div>12:00</div>
+                <div>13:00</div>
+                <div>14:00</div>
+                <div>15:00</div>
+                <div>16:00</div>
+                <div>17:00</div>
+                <div>18:00</div>
+                <div>19:00</div>
+                <div>20:00</div>
+            </div>
+        </div>
+        
+        <div id="days" class="days">
+            <div id="titles-container" class="titles-container">
+                <div class="day-title">Monday</div>
+                <div class="day-title">Tuesday</div>     
+                <div class="day-title">Wednesday</div>     
+                <div class="day-title">Thursday</div>     
+                <div class="day-title">Friday</div>     
+                <div class="day-title">Saturday</div>     
+                <div class="day-title">Sunday</div>  
+            </div>
+
+            <div id="appointments" class="appointments-underlay">
+                <div id="monday-underlay" class="underlay">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div id="tuesday-underlay" class="underlay">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div id="wednesday-underlay" class="underlay">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div id="thursday-underlay" class="underlay">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div id="friday-underlay" class="underlay">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div id="saturday-underlay" class="underlay">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div id="sunday-underlay" class="underlay">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+
+            <div id="appointments" class="appointments-container">
+                <div id="monday-appointments" class="appointments">
+                    
+                </div>
+                <div id="tuesday-appointments" class="appointments">
+                    
+                </div>
+                <div id="wednesday-appointments" class="appointments">
+                    
+                </div>
+                <div id="thursday-appointments" class="appointments">
+                    
+                </div>
+                <div id="friday-appointments" class="appointments">
+                    
+                </div>
+                <div id="saturday-appointments" class="appointments">
+                    
+                </div>
+                <div id="sunday-appointments" class="appointments">
+                    
+                </div>
+            </div>
+        
+
+            
+
+            
+            
+        </div>
+        
     </div>
-    
 </div>

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
@@ -22,6 +23,7 @@ import com.App.PatientHealth.requestObjects.AppointmentForm;
 @Entity
 public class Appointment {
 
+    //IMPORTANT FIGURE OUT HOW BEST TO STORE AND RETRIEVE DATES
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
@@ -35,7 +37,6 @@ public class Appointment {
     Integer durationInMinutes;
     @Column
     Integer weekNumber;
-
     @ManyToOne
     Doctor doctor;
     @ManyToOne
@@ -49,9 +50,12 @@ public class Appointment {
         }
         this.appointmentType = form.getAppointmentType();
         this.appointmentInfo = form.getAppointmentInfo();
-        this.dateTime = form.getDateTime();
         this.durationInMinutes = form.getDurationInMinutes();
         this.weekNumber = form.getWeekNumber();
+
+        //set dateTime
+        String dateTimeStr = form.getDatTimeStr();
+        this.dateTime = strToLocalDateTime(dateTimeStr);
         //remember to always assign doctor and patient in controller methods - requires userServices
     }
 
@@ -137,9 +141,25 @@ public class Appointment {
         this.id = form.getId();
         this.appointmentType = form.getAppointmentType();
         this.appointmentInfo = form.getAppointmentInfo();
-        this.dateTime = form.getDateTime();
+        
+        String dateTimeStr = form.getDatTimeStr();
+        this.dateTime = strToLocalDateTime(dateTimeStr);
         this.durationInMinutes = form.getDurationInMinutes();
         this.weekNumber = form.getWeekNumber();
+    }
+
+    /**
+     * Converts string to LocalDateTime object
+     * <br>
+     * E.g. // String str = "2016-03-04 11:30";
+     * 
+     * @param date
+     * @return
+     */
+    public LocalDateTime strToLocalDateTime(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
+        return dateTime;
     }
 
 }

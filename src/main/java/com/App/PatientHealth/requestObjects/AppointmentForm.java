@@ -1,23 +1,24 @@
 package com.App.PatientHealth.requestObjects;
 
-import java.time.LocalDateTime;
 
 public class AppointmentForm {
     
     Integer id;
     String appointmentType;
     String appointmentInfo;
-    LocalDateTime dateTime;
+    String date;//recieved in 2021-11-05 format from json
+    String time;
     Integer durationInMinutes;
     Integer weekNumber;
     Integer docId;
     Integer pId;
     
-    public AppointmentForm(int id, String appointmentType, String appointmentInfo, LocalDateTime dateTime, Integer durationInMinutes, Integer weekNumber, Integer docId, Integer pId) {
+    public AppointmentForm(int id, String appointmentType, String appointmentInfo, String date, String time, Integer durationInMinutes, Integer weekNumber, Integer docId, Integer pId) {
         this.id = id;
         this.appointmentType = appointmentType;
         this.appointmentInfo = appointmentInfo;
-        this.dateTime = dateTime;
+        this.date = date;
+        this.time = time;
         this.durationInMinutes = durationInMinutes;
         this.weekNumber = weekNumber;
         this.docId = docId;
@@ -48,12 +49,20 @@ public class AppointmentForm {
         this.appointmentInfo = appointmentInfo;
     }
 
-    public LocalDateTime getDateTime() {
-        return this.dateTime;
+    public String getDate() {
+        return this.date;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDate(String dateTime) {
+        this.date = dateTime;
+    }
+
+    public String getTime() {
+        return this.time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public Integer getDurationInMinutes() {
@@ -86,6 +95,11 @@ public class AppointmentForm {
 
     public void setPId(Integer pId) {
         this.pId = pId;
+    }
+
+
+    public String getDatTimeStr() {
+        return this.date+" "+this.time;
     }
 
 }
