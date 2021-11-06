@@ -38,6 +38,9 @@ public class Week {
         friday = new Day(fridayDate.getDayOfMonth(), DayOfWeek.FRIDAY.getValue());
         saturday = new Day(saturdayDate.getDayOfMonth(), DayOfWeek.SATURDAY.getValue());
         sunday = new Day(sundayDate.getDayOfMonth(), DayOfWeek.SUNDAY.getValue());
+
+        //set appointments to their respective Days
+        appointmentsToDays(appointments);
     }
 
     //find date from weeknumber and dayNum
