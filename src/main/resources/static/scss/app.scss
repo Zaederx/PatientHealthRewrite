@@ -142,6 +142,8 @@ $cool-grey: rgb(53,58,63);
 .single-appointment {
     position: relative;
     background-color: $light-red;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 // grid sizing for calendar rows
@@ -184,7 +186,7 @@ $div-height: 50px;
 .titles-container {
     grid-row: 1;
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .appointments-container {
@@ -192,7 +194,7 @@ $div-height: 50px;
     grid-column: 1;
     grid-row: 2;
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .appointments-container > * {

@@ -11,6 +11,7 @@ import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.calendar.Appointment;
 import com.App.PatientHealth.domain.calendar.Week;
 import com.App.PatientHealth.requestObjects.AppointmentForm;
+import com.App.PatientHealth.responseObject.AppointmentResponse;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.WeekResponse;
 import com.App.PatientHealth.services.UserDetailsServiceImpl;
@@ -30,6 +31,7 @@ public class CalendarRest {
     @Autowired
     UserDetailsServiceImpl userServices;
 
+    //IMPORTANT - MAKE SURE THAT IT IS FROM ONE DOCTOR
     @GetMapping("/get-current-week")
     public WeekResponse getThisWeeksAppointments() {
         //get the current week's number (out of 52 weeks)
@@ -89,6 +91,28 @@ public class CalendarRest {
         return res;
     }
 
+    @GetMapping("/get-appointment/{appointmentId}")
+    public AppointmentResponse getAppointmentById(@PathVariable String appointmentId) {
+        AppointmentResponse res = new AppointmentResponse();
+        int id = Integer.parseInt(appointmentId);
+
+        // get appointment by id
+        Optional<Appointment> appointmentOpt = userServices.getAppointmentRepo().findById(id);
+
+        //prepare response
+        if(appointmentOpt.isPresent()) {
+            Appointment appointment = appointmentOpt.get();
+            res.setAppointment(appointment);
+            res.setSuccess(true);
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No appointment found");
+        }
+
+        return res;
+    }
+
 
     /**
      * Edits the appointment details, but not doctor and patient
@@ -96,12 +120,12 @@ public class CalendarRest {
      * @param form
      * @return
      */
-    @PostMapping("/edit-appointment-details")
+    @PostMapping("/edit-appointment")
     public JsonResponse editAppointment(@RequestBody AppointmentForm form) {
         JsonResponse res = new JsonResponse();
 
         //find appointment
-        Optional<Appointment> appointmentOpt = userServices.getAppointmentRepo().findById(form.getId());
+        Optional<Appointment> appointmentOpt = userServices.getAppointmentRepo().findById(form.getAId());
 
         //make changes if appointment is found
         if (appointmentOpt.isPresent()) {
@@ -110,6 +134,8 @@ public class CalendarRest {
             try {
                 //save changes
                 userServices.getAppointmentRepo().save(appointment);
+                res.setSuccess(true);
+                res.setMessage("Appointment added successfully");
                 
             } catch (Exception e) {
                 res.setSuccess(false);

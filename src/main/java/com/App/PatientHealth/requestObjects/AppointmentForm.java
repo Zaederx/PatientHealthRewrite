@@ -3,7 +3,7 @@ package com.App.PatientHealth.requestObjects;
 
 public class AppointmentForm {
     
-    Integer id;
+    Integer aId;//appointment id
     String appointmentType;
     String appointmentInfo;
     String date;//recieved in 2021-11-05 format from json
@@ -13,8 +13,8 @@ public class AppointmentForm {
     Integer docId;
     Integer pId;
     
-    public AppointmentForm(int id, String appointmentType, String appointmentInfo, String date, String time, Integer durationInMinutes, Integer weekNumber, Integer docId, Integer pId) {
-        this.id = id;
+    public AppointmentForm(int aId, String appointmentType, String appointmentInfo, String date, String time, Integer durationInMinutes, Integer weekNumber, Integer docId, Integer pId) {
+        this.aId = aId;
         this.appointmentType = appointmentType;
         this.appointmentInfo = appointmentInfo;
         this.date = date;
@@ -25,12 +25,12 @@ public class AppointmentForm {
         this.pId = pId;
     }
 
-    public Integer getId() {
-        return this.id;
+    public Integer getAId() {
+        return this.aId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setAId(Integer id) {
+        this.aId = id;
     }
 
     public String getAppointmentType() {

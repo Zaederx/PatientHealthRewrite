@@ -6,15 +6,30 @@ var csrfToken = $("meta[name='_csrf']").attr("content") as string
 var pageNum = 0 //get current week via pagination
 var calendarErrorMessage = "Error retrieving calendar data"
 
-var calendarMessageId = '#calendar-message'
-var calendarMessageCloseBtnId = '#calendar-message-close'
-var patientTableId = '#patient-search-tbody'
-var doctorTableId = '#doctor-search-tbody'
+const calendarMessageId = '#calendar-message'
+const calendarMessageCloseBtnId = '#calendar-message-close'
+const patientTableId = '#patient-search-tbody'
+const doctorTableId = '#doctor-search-tbody'
+const appointmentPopupId = '#appointment-popup'
 var currentPatientId = ''
 var currentDoctorId = ''
+var selectedAppointmentId = ''
 var currentWeekNumber = 0
 
+getCurrentWeekAppointments()
 
+function getCurrentWeekAppointments() {
+    //set current
+    $.ajax({
+        url: "/rest/calendar/get-current-week/",
+        type: "GET",
+        contentType: "application/json",
+        dataType:"json",
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data) => handleCalendarSuccess(data),
+        error: () => handleError(calendarErrorMessage)
+    })
+}
 
 //have select button for doctor and patients search tables
 $('#btn-select-patient').on('click', () => {
@@ -29,28 +44,113 @@ $('#btn-select-doctor').on('click', () => {
 })
 $('#btn-create-appointment').on('click', () => {
     var date = new Date()
-    var docId = currentDoctorId
-    var pId = currentPatientId
-    openAppointmentPopup(date, docId, pId)
+    openAppointmentPopup_AddMode(date)
 })
 
-function openAppointmentPopup(date:Date, docId:string, pId:string) {
-    //display popup
-    $('#appointment-popup').show()
+function openAppointmentPopup_AddMode(date:Date) {
     //fill popup fields
-    $('#appointment-date').html(date.toDateString())
-    $('#appointment-time').html(date.toTimeString())
-    //fill hidden fields
-    $('#appointment-docId').html(docId)
-    $('#appointment-pId').html(pId)
+    $('#appointment-date').val(date.toDateString())
+    $('#appointment-time').val(date.toTimeString())
+
+    //enable input fields
+    $('#appointment-date').removeAttr('disabled')
+    $('#appointment-time').removeAttr('disabled')
+    $('#appointment-duration').removeAttr('disabled')
+    $('#appointment-type').removeAttr('disabled')
+    $('#appointment-info').removeAttr('disabled')
+
+    //enable submit button
+    $('#btn-appointment-submit').removeAttr('disabled')
+    $('#btn-appointment-submit').show()
+
+    //hide and disable edit button
+    $('#btn-appointment-edit').attr('disabled','')
+    $('#btn-appointment-edit').hide()
+
+    //hide and disable submit changes button
+    $('#btn-appointment-submit-changes').attr('disabled','')
+    $('#btn-appointment-submit-changes').hide()
+
+    //display popup
+    $(appointmentPopupId).show()
+
 }
 
-$('#appointment-popup-close').on('click', () => {
-    $('#appointment-popup').hide()
-})
-$('#btn-appointment-submit').on('click', () => submitAppointment())
+function openAppointmentPopup_ViewMode(appointment:Appointment) {
+    //set selected appointment id
+    selectedAppointmentId = appointment.id;
+    currentPatientId = appointment.pId;
+    currentDoctorId = appointment.docId;
+    
+    //fill appointment popup form with appointment details
+    $('#appointment-date').val(appointment.date)
+    $('#appointment-time').val(appointment.time)
+    $('#appointment-duration').val(String(appointment.durationInMinutes))
+    $('#appointment-type').val(appointment.appointmentType)
+    $('#appointment-info').val(appointment.appointmentInfo)
+    
+    //disable input fields
+    $('#appointment-date').attr('disabled','')
+    $('#appointment-time').attr('disabled','')
+    $('#appointment-duration').attr('disabled','')
+    $('#appointment-type').attr('disabled','')
+    $('#appointment-info').attr('disabled','')
 
-function submitAppointment() {
+    //disable submit button
+    $('#btn-appointment-submit').attr('disabled','')
+    $('#btn-appointment-submit').hide()
+
+    //show and enable edit button
+    $('#btn-appointment-edit').removeAttr('disabled')
+    $('#btn-appointment-edit').show()
+    $('#btn-appointment-edit').on('click', () => openAppointmentPopup_EditMode())
+
+    //hide and disable submit changes button
+    $('#btn-appointment-submit-changes').attr('disabled','')
+    $('#btn-appointment-submit-changes').hide()
+
+    //display / show appointment popup
+    $(appointmentPopupId).show()
+
+     
+}
+
+
+function openAppointmentPopup_EditMode() {
+    //enable input fields
+    $('#appointment-date').removeAttr('disabled')
+    $('#appointment-time').removeAttr('disabled')
+    $('#appointment-duration').removeAttr('disabled')
+    $('#appointment-type').removeAttr('disabled')
+    $('#appointment-info').removeAttr('disabled')
+
+    //hide and disable submit button
+    $('#btn-appointment-submit').attr('disabled','')
+    $('#btn-appointment-submit').hide()
+
+    //hide and disable edit button
+    $('#btn-appointment-edit').attr('disabled','')
+    $('#btn-appointment-edit').hide()
+
+    //show and enable submit changes button
+    $('#btn-appointment-submit-changes').removeAttr('disabled')
+    $('#btn-appointment-submit-changes').show()
+    $('#btn-appointment-submit-changes').on('click', () => submitAppointment("/rest/calendar/edit-appointment",selectedAppointmentId))
+
+    //display popup
+    $(appointmentPopupId).show()
+}
+
+
+
+
+$('#appointment-popup-close').on('click', () => {
+    $(appointmentPopupId).hide()
+})
+$('#btn-appointment-submit').on('click', () => submitAppointment('/rest/calendar/create-appointment/'))
+
+function submitAppointment(url:string, appointmentId?:string) {
+    var aId = appointmentId ? appointmentId : ''
     var date = $('#appointment-date').val()
     var time = $('#appointment-time').val()
     var durationInMinutes = $('#appointment-duration').val()
@@ -70,7 +170,7 @@ function submitAppointment() {
             $(calendarMessageId).hide()
         })
          //close appointment form popup
-         $('#appointment-popup').hide()
+         $(appointmentPopupId).hide()
     }
     if (docId == '') {
         //display warning message
@@ -81,13 +181,13 @@ function submitAppointment() {
             $(calendarMessageId).hide()
         })
          //close appointment form popup
-         $('#appointment-popup').hide()
+         $(appointmentPopupId).hide()
     }
     if (pId != '' && docId != '') {
-        var data = {date, time, appointmentType, appointmentInfo, durationInMinutes, weekNumber, docId, pId}
+        var data = {date, time, appointmentType, appointmentInfo, durationInMinutes, weekNumber, docId, pId , aId}
         //submit appointment via ajax
         $.ajax({
-            url: "/rest/calendar/create-appointment/",
+            url: url,
             data: JSON.stringify(data),
             type: "POST",
             contentType: "application/json",
@@ -106,7 +206,7 @@ function handleCreateAppointmentSuccess(data:JsonResponse) {
         //display success message
         $(calendarMessageId).html(popupMessage(data.message,'alert-info',calendarMessageCloseBtnId))
         //close appointment form popup
-        $('#appointment-popup').hide()
+        $(appointmentPopupId).hide()
         //refresh calendar
         getCurrentWeekAppointments()
     }
@@ -117,21 +217,18 @@ function handleCreateAppointmentSuccess(data:JsonResponse) {
 }
 
 
-getCurrentWeekAppointments()
-
-function getCurrentWeekAppointments() {
-    //set current
+function viewAppointment(id:string) {
+    //make request to server for appointment
     $.ajax({
-        url: "/rest/calendar/get-current-week/",
+        url: "/rest/calendar/get-appointment/"+id,
         type: "GET",
         contentType: "application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleCalendarSuccess(data),
-        error: () => handleError(calendarErrorMessage)
+        success: (data) => handleViewAppointmentSuccess(data),
+        error: () => handleError('Error fetching appointment details')
     })
 }
-
 
 const divHeight = 50 //px
 function appointmentToHtml(a:Appointment):string {
@@ -139,10 +236,26 @@ function appointmentToHtml(a:Appointment):string {
     var minute = Number(a.min)
     var position = appointmentPosition(divHeight, hour, minute)
     var height = appointmentDurationLength(divHeight, a.durationInMinutes)
-    var html = '<div class="single-appointment" data-position="' +position+'" style="top:'+position+'px; height:'+height+'"px>'+a.appointmentType+'</div>'
+    var html = '<div class="single-appointment" data-position="'+position+'" data-id="'+a.id+'" style="top:'+position+'px; height:'+height+'px">'+a.appointmentType+'</div>'
 
     return html
 }
+
+
+
+function handleViewAppointmentSuccess(data:AppointmentResponse) {
+    if (data.success) {
+        //display appointment information
+        openAppointmentPopup_ViewMode(data.appointment)
+    }
+    else {
+        //display warning message
+        $(calendarMessageId).html(popupMessage(data.message,'alert-warning',calendarMessageCloseBtnId))
+    }
+}
+
+
+
 
 /**
  * 
@@ -218,10 +331,40 @@ function handleCalendarSuccess(data:WeekResponse) {
         $('#saturday-appointments').html(saturday)
         $('#sunday-appointments').html(sunday)
 
+        //get individual day div's and enable appointments to be clicked
+        var mondayDiv = document.querySelector('#monday-appointments') as HTMLDivElement
+        var tuesdayDiv = document.querySelector('#tuesday-appointments') as HTMLDivElement
+        var wednesdayDiv = document.querySelector('#wednesday-appointments') as HTMLDivElement
+        var thursdayDiv = document.querySelector('#thursday-appointments') as HTMLDivElement
+        var fridayDiv = document.querySelector('#friday-appointments') as HTMLDivElement
+        var saturdayDiv = document.querySelector('#saturday-appointments') as HTMLDivElement
+        var sundayDiv = document.querySelector('#sunday-appointments') as HTMLDivElement
+
+        enableAppointmentClick(mondayDiv)
+        enableAppointmentClick(tuesdayDiv)
+        enableAppointmentClick(wednesdayDiv)
+        enableAppointmentClick(thursdayDiv)
+        enableAppointmentClick(fridayDiv)
+        enableAppointmentClick(saturdayDiv)
+        enableAppointmentClick(sundayDiv)
+
+
+
         //set current week number
         currentWeekNumber = data.week.weekNumber
     }
    
+}
+
+function enableAppointmentClick(dayDiv:HTMLDivElement) {
+    var appointmentDivs = dayDiv.querySelectorAll('div') 
+    appointmentDivs.forEach ( (appointment) => {
+        var id = appointment.getAttribute('data-id') as string
+        appointment.onclick = () => {
+            viewAppointment(id);
+        }
+    })
+    
 }
 
 function handleError(message:string) {

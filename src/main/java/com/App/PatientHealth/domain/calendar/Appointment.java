@@ -45,8 +45,8 @@ public class Appointment {
     public Appointment(){}
 
     public Appointment(AppointmentForm form) {
-        if(form.getId() != null) {
-            this.id = form.getId();
+        if(form.getAId() != null) {
+            this.id = form.getAId();
         }
         this.appointmentType = form.getAppointmentType();
         this.appointmentInfo = form.getAppointmentInfo();
@@ -56,6 +56,7 @@ public class Appointment {
         //set dateTime
         String dateTimeStr = form.getDatTimeStr();
         this.dateTime = strToLocalDateTime(dateTimeStr);
+        
         //IMPORTANT remember to always assign doctor and patient in controller methods - requires userServices
     }
 
@@ -138,7 +139,7 @@ public class Appointment {
     }
 
     public void update(AppointmentForm form) {
-        this.id = form.getId();
+        this.id = form.getAId();
         this.appointmentType = form.getAppointmentType();
         this.appointmentInfo = form.getAppointmentInfo();
         

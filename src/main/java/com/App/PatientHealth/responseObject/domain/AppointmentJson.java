@@ -4,24 +4,41 @@ import com.App.PatientHealth.domain.calendar.Appointment;
 
 public class AppointmentJson {
     
+    String id;
     String appointmentType;
     String appointmentInfo;
     String day;
     String hour;
     String min;
     String durationInMinutes;
+    String date;
+    String time;
+    String docId;
+    String pId;
 
     public AppointmentJson() {}
 
     public AppointmentJson(Appointment a) {
+        id = Integer.toString(a.getId());
         appointmentType = a.getAppointmentType();
         appointmentInfo = a.getAppointmentInfo();
         day = a.getDateTime().getDayOfWeek().name();
         hour = Integer.toString(a.getDateTime().getHour());
         min = Integer.toString(a.getDateTime().getMinute());
-        this.durationInMinutes = Integer.toString(a.getDurationInMinutes());
+        durationInMinutes = Integer.toString(a.getDurationInMinutes());
+        this.date = a.getDateTime().toLocalDate().toString();
+        this.time = a.getDateTime().toLocalTime().toString();
+        this.docId = Integer.toString(a.getDoctor().getId());
+        this.pId = Integer.toString(a.getPatient().getId());
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getAppointmentType() {
         return this.appointmentType;
@@ -72,5 +89,39 @@ public class AppointmentJson {
         this.durationInMinutes = durationInMinutes;
     }
 
+
+    public String getDate() {
+        return this.date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+
+    public String getTime() {
+        return this.time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+
+    public String getDocId() {
+        return this.docId;
+    }
+
+    public void setDocId(String docId) {
+        this.docId = docId;
+    }
+
+    public String getPId() {
+        return this.pId;
+    }
+
+    public void setPId(String pId) {
+        this.pId = pId;
+    }
 
 }
