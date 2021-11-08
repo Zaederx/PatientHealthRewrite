@@ -153,7 +153,7 @@ public class CalendarRest {
         return res;
     }
 
-    @DeleteMapping("/delete-appointment")
+    @DeleteMapping("/delete-appointment/{appointmentId}")
     public JsonResponse deleteAppointment(@PathVariable String appointmentId) {
         JsonResponse res = new JsonResponse();
         int id = Integer.parseInt(appointmentId);

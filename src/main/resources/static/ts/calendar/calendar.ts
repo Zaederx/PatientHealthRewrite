@@ -47,6 +47,12 @@ $('#btn-create-appointment').on('click', () => {
     openAppointmentPopup_AddMode(date)
 })
 
+
+$('#appointment-popup-close').on('click', () => {
+    $(appointmentPopupId).hide()
+})
+$('#btn-appointment-submit').on('click', () => submitAppointment('/rest/calendar/create-appointment/'))
+
 function openAppointmentPopup_AddMode(date:Date) {
     //fill popup fields
     $('#appointment-date').val(date.toDateString())
@@ -71,6 +77,10 @@ function openAppointmentPopup_AddMode(date:Date) {
     $('#btn-appointment-submit-changes').attr('disabled','')
     $('#btn-appointment-submit-changes').hide()
 
+    //hide and disable delete button
+    $('#btn-appointment-delete').attr('disabled','')
+    $('#btn-appointment-delete').hide()
+
     //display popup
     $(appointmentPopupId).show()
 
@@ -81,7 +91,7 @@ function openAppointmentPopup_ViewMode(appointment:Appointment) {
     selectedAppointmentId = appointment.id;
     currentPatientId = appointment.pId;
     currentDoctorId = appointment.docId;
-    
+
     //fill appointment popup form with appointment details
     $('#appointment-date').val(appointment.date)
     $('#appointment-time').val(appointment.time)
@@ -108,6 +118,10 @@ function openAppointmentPopup_ViewMode(appointment:Appointment) {
     //hide and disable submit changes button
     $('#btn-appointment-submit-changes').attr('disabled','')
     $('#btn-appointment-submit-changes').hide()
+
+    //hide and disable delete button
+    $('#btn-appointment-delete').attr('disabled','')
+    $('#btn-appointment-delete').hide()
 
     //display / show appointment popup
     $(appointmentPopupId).show()
@@ -137,6 +151,11 @@ function openAppointmentPopup_EditMode() {
     $('#btn-appointment-submit-changes').show()
     $('#btn-appointment-submit-changes').on('click', () => submitAppointment("/rest/calendar/edit-appointment",selectedAppointmentId))
 
+    //hide and disable delete button
+    $('#btn-appointment-delete').removeAttr('disabled')
+    $('#btn-appointment-delete').show()
+    $('#btn-appointment-delete').on('click', () => deleteAppointment(selectedAppointmentId))
+
     //display popup
     $(appointmentPopupId).show()
 }
@@ -144,10 +163,7 @@ function openAppointmentPopup_EditMode() {
 
 
 
-$('#appointment-popup-close').on('click', () => {
-    $(appointmentPopupId).hide()
-})
-$('#btn-appointment-submit').on('click', () => submitAppointment('/rest/calendar/create-appointment/'))
+
 
 function submitAppointment(url:string, appointmentId?:string) {
     var aId = appointmentId ? appointmentId : ''
@@ -199,6 +215,18 @@ function submitAppointment(url:string, appointmentId?:string) {
     }    
 }
 
+
+function deleteAppointment(id:string) {
+    $.ajax({
+        url: '/rest/calendar/delete-appointment/'+id,
+        type: "DELETE",
+        contentType: "application/json",
+        dataType:"json",
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data) => handleCreateAppointmentSuccess(data),
+        error: () => handleError('Error deleting appointment')
+    })
+}
 
 
 function handleCreateAppointmentSuccess(data:JsonResponse) {
