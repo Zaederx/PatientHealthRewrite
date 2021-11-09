@@ -1,5 +1,6 @@
 class Week {
     weekNumber: number;
+    mondayDateStr:string;
     monday:Day;
     tuesday:Day;
     wednesday:Day;
@@ -8,8 +9,9 @@ class Week {
     saturday:Day;
     sunday:Day;
     
-    constructor(weekNumber:number, monday:Day, tuesday:Day, wednesday:Day, thursday:Day, friday:Day, saturday:Day, sunday:Day) {
+    constructor(weekNumber:number, mondayDateStr:string,monday:Day, tuesday:Day, wednesday:Day, thursday:Day, friday:Day, saturday:Day, sunday:Day) {
         this.weekNumber = weekNumber;
+        this.mondayDateStr = mondayDateStr;
         this.monday = monday;
         this.tuesday = tuesday;
         this.wednesday = wednesday;

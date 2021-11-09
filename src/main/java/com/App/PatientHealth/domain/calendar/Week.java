@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class Week {
     Integer weekNumber;
+    String mondayDateStr;
     Day monday;
     Day tuesday;
     Day wednesday;
@@ -18,9 +19,13 @@ public class Week {
 
     public Week(int weekNumber, List<Appointment> appointments) {
         this.weekNumber = weekNumber;
+        
         //get specific week by week number
         LocalDate week = LocalDate.now().with(ChronoField.ALIGNED_WEEK_OF_YEAR, weekNumber);
         
+        //set date string
+        this.mondayDateStr = week.toString();
+
         //Week Day dates
         LocalDate mondayDate = week.with(DayOfWeek.MONDAY);
         LocalDate tuesdayDate = mondayDate.plusDays(1);
@@ -69,6 +74,16 @@ public class Week {
         List<Appointment> sundayList = appointments.stream().filter(a -> a.getDateTime().getDayOfWeek().getValue() == this.sunday.getDayOfWeek()).collect(Collectors.toList());
         this.sunday.setAppointments(sundayList);
     }
+
+
+    public String getMondayDateStr() {
+        return this.mondayDateStr;
+    }
+
+    public void setMondayDateStr(String mondayDateStr) {
+        this.mondayDateStr = mondayDateStr;
+    }
+
 
 
     public Day getMonday() {

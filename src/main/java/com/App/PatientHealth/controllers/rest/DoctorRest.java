@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.App.PatientHealth.domain.AppointmentRequest;
 import com.App.PatientHealth.domain.Doctor;
@@ -12,8 +11,6 @@ import com.App.PatientHealth.domain.MedicalNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
 import com.App.PatientHealth.domain.User;
-import com.App.PatientHealth.domain.calendar.Appointment;
-import com.App.PatientHealth.requestObjects.AppointmentForm;
 import com.App.PatientHealth.requestObjects.AppointmentRequestForm;
 import com.App.PatientHealth.requestObjects.DoctorRegForm;
 import com.App.PatientHealth.requestObjects.MedicalNoteForm;
@@ -29,19 +26,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +50,29 @@ public class DoctorRest {
 
     Logger logger = LoggerFactory.getLogger(DoctorRest.class);
 
+
+    @GetMapping("/current-doctor/get-id")
+    public JsonResponse getDoctorId() {
+        JsonResponse res = new JsonResponse();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        try {
+            //get current doctor id
+            Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findByUsername(username);
+
+            if(doctorOpt.isPresent()) {
+                Doctor doctor = doctorOpt.get();
+                String id = Integer.toString(doctor.getId());
+                res.setMessage(id);
+                res.setSuccess(true);
+            }
+        }
+        catch (Exception e) {
+            res.setSuccess(false);
+        }
+        
+        return res;
+    }
 
     //SECTION ******** Doctor *********
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)

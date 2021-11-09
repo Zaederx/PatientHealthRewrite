@@ -40,19 +40,31 @@ public class CalendarRest {
         LocalDateTime dateTime = LocalDateTime.now();
         WeekFields weekFields = WeekFields.of(Locale.getDefault()); 
         int weekNumber = dateTime.get(weekFields.weekOfWeekBasedYear());
-        // try {
-        //     Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(docId);
-        //     if (doctorOpt.isPresent()) {
-        //         Doctor doctor = doctorOpt.get();
-        //         doctor.getAppointments().stream().filter( a -> a.get)
-        //     }
-        // }
-        // catch (Exception e) {
-
-        // }
+       
         try {
             //find appointments for this week
             List<Appointment> appointments = userServices.getAppointmentRepo().findByDoctorIdAndWeekNumber(docId,weekNumber);
+            Week week = new Week(weekNumber, appointments);
+            res.setWeek(week);
+            res.setSuccess(true);
+        }
+        catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage("No appointments found");
+        }
+        return res; 
+    }
+
+
+    @GetMapping("/get-appointment/{docId}/{weekNum}")
+    public JsonResponse getDoctorsAppointments(@PathVariable String docId, @PathVariable String weekNum) {
+        int id = Integer.parseInt(docId);
+        int weekNumber = Integer.parseInt(weekNum);
+
+        WeekResponse res = new WeekResponse();
+        try {
+            //find appointments for this week
+            List<Appointment> appointments = userServices.getAppointmentRepo().findByDoctorIdAndWeekNumber(id,weekNumber);
             Week week = new Week(weekNumber, appointments);
             res.setWeek(week);
             res.setSuccess(true);

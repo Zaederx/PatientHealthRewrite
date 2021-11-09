@@ -23,21 +23,21 @@ function setPageNumVars(currentPageNum:number) {
     patientTablePageNext = patientTableCurrentPageNum + 1;
 }
 
-$('#btn-prev').on('click', () => {
+$('#btn-patient-table-prev').on('click', () => {
     var name = $('#patient-searchbar').val() as string;
     //ajax request for doctors - on previous page of results
     searchForPatient({name:name,pageNum:patientTablePagePrev,csrfToken:csrfToken})
     //set current page to previous page & update prev and next page numbers
     setPageNumVars(patientTablePagePrev as number)
 })
-$('#btn-next').on('click', () => {
+$('#btn-patient-table-next').on('click', () => {
     var name = $('#patient-searchbar').val() as string;
     //ajax request for doctors - on previous page of results
     searchForPatient({name:name,pageNum:patientTablePageNext,csrfToken:csrfToken})
     //set current page to next page & update prev and next page numbers
     setPageNumVars(patientTablePageNext as number)
 })
-$('#btn-go').on('click', () => {
+$('#btn-patient-table-go').on('click', () => {
     var name = $('#patient-searchbar').val() as string;
     var pageNum = Number($('#p-pageNum').html() as string)
     //ajax request for doctors - on previous page of results
@@ -49,7 +49,7 @@ $('#btn-go').on('click', () => {
 
 export function searchForPatient( obj :{name:string, pageNum:number, csrfToken:string, tableIdRoot?:string, successFunc?:Function, errorFunc?:Function}) {
     console.log("searchForPatient called")
-    $('#pageNum').html(String(obj.pageNum));
+    $('#p-pageNum').html(String(obj.pageNum));
     console.log("pageNum set to:",obj.pageNum)
     if (obj.successFunc == undefined) {
         obj.successFunc = patientSearchSuccessFunc
@@ -83,6 +83,9 @@ function patientSearchSuccessFunc(data:PatientResponseList, tableIdRoot:string) 
         makeClickableTableRows(tableBody,selectRow)
     }
     else {
+        var t1:Table = new Table()
+        t1.idRoot = tableIdRoot
+        $(t1.getTbodyId()).html('<td colspan="2">NO RESULTS</td>')
         $('#message').html(message(data.message,'alert-warning'))
     }
 }

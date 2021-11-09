@@ -6,19 +6,20 @@ var csrfToken = $("meta[name='_csrf']").attr("content") as string
 var pageNum = 0 //get current week via pagination
 var calendarErrorMessage = "Error retrieving calendar data"
 
+var calendarDate = new Date();
 const calendarMessageId = '#calendar-message'
 const calendarMessageCloseBtnId = '#calendar-message-close'
 const patientTableId = '#patient-search-tbody'
 const doctorTableId = '#doctor-search-tbody'
 const appointmentPopupId = '#appointment-popup'
 var currentPatientId = ''
-var currentDoctorId = ''
+export var currentDoctorId = ''
 var selectedAppointmentId = ''
 var currentWeekNumber = 0
 
 
 
-function getCurrentWeekAppointments(docId:string) {
+export function getCurrentWeekAppointments(docId:string) {
     if (docId != '' && docId!= null) {
         //set current
         $.ajax({
@@ -47,7 +48,7 @@ $('#btn-select-doctor').on('click', () => {
     getCurrentWeekAppointments(currentDoctorId)
 })
 $('#btn-create-appointment').on('click', () => {
-    var date = new Date()
+    var date = new Date(weekISO)
     openAppointmentPopup_AddMode(date)
 })
 
@@ -57,7 +58,7 @@ $('#appointment-popup-close').on('click', () => {
 })
 $('#btn-appointment-submit').on('click', () => submitAppointment('/rest/calendar/create-appointment/'))
 
-function openAppointmentPopup_AddMode(date:Date) {
+export function openAppointmentPopup_AddMode(date:Date) {
     //fill popup fields
     $('#appointment-date').val(date.toDateString())
     $('#appointment-time').val(date.toTimeString())
@@ -90,7 +91,7 @@ function openAppointmentPopup_AddMode(date:Date) {
 
 }
 
-function openAppointmentPopup_ViewMode(appointment:Appointment) {
+export function openAppointmentPopup_ViewMode(appointment:Appointment) {
     //set selected appointment id
     selectedAppointmentId = appointment.id;
     currentPatientId = appointment.pId;
@@ -134,7 +135,7 @@ function openAppointmentPopup_ViewMode(appointment:Appointment) {
 }
 
 
-function openAppointmentPopup_EditMode() {
+export function openAppointmentPopup_EditMode() {
     //enable input fields
     $('#appointment-date').removeAttr('disabled')
     $('#appointment-time').removeAttr('disabled')
@@ -169,7 +170,7 @@ function openAppointmentPopup_EditMode() {
 
 
 
-function submitAppointment(url:string, appointmentId?:string) {
+export function submitAppointment(url:string, appointmentId?:string) {
     var aId = appointmentId ? appointmentId : ''
     var date = $('#appointment-date').val()
     var time = $('#appointment-time').val()
@@ -220,7 +221,7 @@ function submitAppointment(url:string, appointmentId?:string) {
 }
 
 
-function deleteAppointment(id:string) {
+export function deleteAppointment(id:string) {
     $.ajax({
         url: '/rest/calendar/delete-appointment/'+id,
         type: "DELETE",
@@ -233,7 +234,7 @@ function deleteAppointment(id:string) {
 }
 
 
-function handleCreateAppointmentSuccess(data:JsonResponse) {
+export function handleCreateAppointmentSuccess(data:JsonResponse) {
     if (data.success) {
         //display success message
         $(calendarMessageId).html(popupMessage(data.message,'alert-info',calendarMessageCloseBtnId))
@@ -249,7 +250,7 @@ function handleCreateAppointmentSuccess(data:JsonResponse) {
 }
 
 
-function viewAppointment(id:string) {
+export function viewAppointment(id:string) {
     //make request to server for appointment
     $.ajax({
         url: "/rest/calendar/get-appointment/"+id,
@@ -262,8 +263,8 @@ function viewAppointment(id:string) {
     })
 }
 
-const divHeight = 50 * 12
-function appointmentToHtml(a:Appointment):string {
+export const divHeight = 50 * 12
+export function appointmentToHtml(a:Appointment):string {
     var hour = Number(a.hour)
     var minute = Number(a.min)
     var position = appointmentPosition(divHeight, hour, minute)
@@ -275,7 +276,7 @@ function appointmentToHtml(a:Appointment):string {
 
 
 
-function handleViewAppointmentSuccess(data:AppointmentResponse) {
+export function handleViewAppointmentSuccess(data:AppointmentResponse) {
     if (data.success) {
         //display appointment information
         openAppointmentPopup_ViewMode(data.appointment)
@@ -338,9 +339,15 @@ function appointmentDurationLength(divHeight:number, durationInMinutes:number) {
     return length
 }
 
-function handleCalendarSuccess(data:WeekResponse) {
+var weekISO = ''
+export function handleCalendarSuccess(data:WeekResponse) {
 
     if (data.success) {
+        //set pagination variables
+        setPageNumVarsCalendar(data.week.weekNumber)
+        weekISO = data.week.mondayDateStr
+        $('#weekNum').html(String(data.week.weekNumber))
+        //set week numbers for each
         var monday = ''
         var tuesday = ''
         var wednesday = ''
@@ -405,12 +412,7 @@ function handleCalendarSuccess(data:WeekResponse) {
         enableAppointmentClick(saturdayDiv)
         enableAppointmentClick(sundayDiv)
 
-
-
-        //set current week number
-        currentWeekNumber = data.week.weekNumber
     }
-   
 }
 
 function enableAppointmentClick(dayDiv:HTMLDivElement) {
@@ -421,11 +423,66 @@ function enableAppointmentClick(dayDiv:HTMLDivElement) {
             viewAppointment(id);
         }
     })
-    
 }
 
-function handleError(message:string) {
+export function handleError(message:string) {
     $('#message').html(message)
 }
 
-//
+
+/*SECTION Calendar forwards and backwards functionality */
+
+function getAppointments(docId:number, weekNumber:number) {
+    $.ajax({
+        url: "/rest/calendar/get-appointment/"+docId+'/'+weekNumber,
+        type: "GET",
+        contentType: "application/json",
+        dataType:"json",
+        headers: {'X-CSRF-TOKEN':csrfToken},
+        success: (data) => handleCalendarSuccess(data),
+        error: () => handleError('Error fetching appointment details')
+    })
+}
+
+/**the current page number */
+var calendarCurrentWeekNum = 1
+var calendarPrevWeekNum = 1
+var calendarNextWeekNum = 2
+
+function setPageNumVarsCalendar(currentPageNum:number) {
+    calendarCurrentWeekNum = currentPageNum;
+    calendarPrevWeekNum = calendarCurrentWeekNum - 1;
+    calendarNextWeekNum = calendarCurrentWeekNum + 1;
+    console.log('calendarCurrentWeekNum:',calendarCurrentWeekNum)
+    console.log('calendarPrevWeekNum:',calendarPrevWeekNum)
+    console.log('calendarNextWeekNum:',calendarNextWeekNum)
+}
+
+export function setCurrentDoctorId(id:string) {
+    currentDoctorId = id
+}
+
+$('#btn-calendar-week-prev').on('click', () => {
+    //ajax request for doctors - on previous page of results
+    getAppointments(Number(currentDoctorId), calendarPrevWeekNum)
+
+    //set current page to previous page & update prev and next page numbers
+    // setPageNumVarsCalendar(calendarPrevWeekNum as number)
+})
+$('#btn-calendar-week-next').on('click', () => {
+    //ajax request for calendar - on next page of results
+    getAppointments(Number(currentDoctorId),calendarNextWeekNum)
+
+    //set current page to next page & update prev and next page numbers
+    // setPageNumVarsCalendar(calendarNextWeekNum as number)
+})
+//allow users to select a calendar week from a calendar input
+$('#btn-calendar-week-go').on('click', () => {
+    //TODO //IMPORTANT
+    var weekNum = Number($('#weekNum').html() as string)
+    //ajax request for calendar - on set page of results
+    getAppointments(Number(currentDoctorId),weekNum)
+    
+    //set current page to the entered page number & update prev and next page numbers
+    // setPageNumVarsCalendar(weekNum as number)
+})

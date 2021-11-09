@@ -8,6 +8,7 @@ import com.App.PatientHealth.domain.calendar.Week;
 public class WeekJson {
 
     Integer weekNumber;
+    String mondayDateStr;
     DayJson monday;
     DayJson tuesday;
     DayJson wednesday;
@@ -19,6 +20,7 @@ public class WeekJson {
     public WeekJson() {}
     public WeekJson(Week week) {
         this.weekNumber = week.getWeekNumber();
+        this.mondayDateStr = week.getMondayDateStr();
         this.monday = new DayJson(week.getMonday());
         this.tuesday = new DayJson(week.getTuesday());
         this.wednesday = new DayJson(week.getWednesday());
@@ -92,5 +94,14 @@ public class WeekJson {
     public void setWeekNumber(Integer weekNumber) {
         this.weekNumber = weekNumber;
     }
+
+    public String getMondayDateStr() {
+        return this.mondayDateStr;
+    }
+
+    public void setMondayDateStr(String mondayDateStr) {
+        this.mondayDateStr = mondayDateStr;
+    }
+
 
 }

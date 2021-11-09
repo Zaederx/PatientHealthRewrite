@@ -1,5 +1,4 @@
 <div>
-    <script th:src="@{/js/calendar/calendar.js}"></script>
     <!-- Create Appointment -->
     <div id="btn-create-appointment" class="btn btn-primary">Create New Appointment</div>
     <!-- Calendar Popup Message Div -->
@@ -217,5 +216,13 @@
             
         </div>
         
+    </div>
+
+    <div id="calendar-buttons">
+        <span id="btn-calendar-week-prev" class="btn btn-primary">Prev</span>
+        <span id="weekNum" class="pageNum" contenteditable="true"></span>
+        <span id="weekTotal" class="pageTotal">52</span>
+        <span id="btn-calendar-week-go" class="btn btn-primary">Go to page</span>
+        <span id="btn-calendar-week-next" class="btn btn-primary">Next</span>
     </div>
 </div>
