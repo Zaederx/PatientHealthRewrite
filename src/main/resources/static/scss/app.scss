@@ -134,17 +134,7 @@ $cool-grey: rgb(53,58,63);
     table-layout: fixed;
 }
 
-// .appointment[data-position] {
-//     position: relative;
-//     top: attr(data-position px);
-// }
 
-.single-appointment {
-    position: relative;
-    background-color: $light-red;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 // grid sizing for calendar rows
 $row1-size: 10%;
@@ -208,6 +198,23 @@ $div-height: 50px;
     display: grid;
     grid-template-columns: auto auto auto auto auto auto auto;
 }
+// .appointment[data-position] {
+//     position: relative;
+//     top: attr(data-position px);
+// }
+
+.appointments {
+    // outline left and right of a div - for day distinction
+    box-shadow: -2px 0px 0px 0px black, 2px 0px 0px 0px black;
+}
+
+.single-appointment {
+    position: relative;
+    background-color: $light-red;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 .day-title {
 

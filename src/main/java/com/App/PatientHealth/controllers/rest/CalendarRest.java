@@ -32,17 +32,27 @@ public class CalendarRest {
     UserDetailsServiceImpl userServices;
 
     //IMPORTANT - MAKE SURE THAT IT IS FROM ONE DOCTOR
-    @GetMapping("/get-current-week")
-    public WeekResponse getThisWeeksAppointments() {
+    @GetMapping("/get-current-week/{docId}")
+    public WeekResponse getThisWeeksAppointments(@PathVariable(name = "docId") String doctorId) {
+        int docId = Integer.parseInt(doctorId);
         //get the current week's number (out of 52 weeks)
         WeekResponse res = new WeekResponse();
         LocalDateTime dateTime = LocalDateTime.now();
         WeekFields weekFields = WeekFields.of(Locale.getDefault()); 
         int weekNumber = dateTime.get(weekFields.weekOfWeekBasedYear());
-        
+        // try {
+        //     Optional<Doctor> doctorOpt = userServices.getDoctorPaging().findById(docId);
+        //     if (doctorOpt.isPresent()) {
+        //         Doctor doctor = doctorOpt.get();
+        //         doctor.getAppointments().stream().filter( a -> a.get)
+        //     }
+        // }
+        // catch (Exception e) {
+
+        // }
         try {
             //find appointments for this week
-            List<Appointment> appointments = userServices.getAppointmentRepo().findByWeekNumber(weekNumber);
+            List<Appointment> appointments = userServices.getAppointmentRepo().findByDoctorIdAndWeekNumber(docId,weekNumber);
             Week week = new Week(weekNumber, appointments);
             res.setWeek(week);
             res.setSuccess(true);

@@ -16,19 +16,22 @@ var currentDoctorId = ''
 var selectedAppointmentId = ''
 var currentWeekNumber = 0
 
-getCurrentWeekAppointments()
 
-function getCurrentWeekAppointments() {
-    //set current
-    $.ajax({
-        url: "/rest/calendar/get-current-week/",
-        type: "GET",
-        contentType: "application/json",
-        dataType:"json",
-        headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleCalendarSuccess(data),
-        error: () => handleError(calendarErrorMessage)
-    })
+
+function getCurrentWeekAppointments(docId:string) {
+    if (docId != '' && docId!= null) {
+        //set current
+        $.ajax({
+            url: "/rest/calendar/get-current-week/"+docId,
+            type: "GET",
+            contentType: "application/json",
+            dataType:"json",
+            headers: {'X-CSRF-TOKEN':csrfToken},
+            success: (data) => handleCalendarSuccess(data),
+            error: () => handleError(calendarErrorMessage)
+        })
+    }
+    
 }
 
 //have select button for doctor and patients search tables
@@ -41,6 +44,7 @@ $('#btn-select-doctor').on('click', () => {
     console.log('doctor selected')
     //set patient id
     currentDoctorId = getSelectedItemId(doctorTableId)
+    getCurrentWeekAppointments(currentDoctorId)
 })
 $('#btn-create-appointment').on('click', () => {
     var date = new Date()
@@ -236,7 +240,7 @@ function handleCreateAppointmentSuccess(data:JsonResponse) {
         //close appointment form popup
         $(appointmentPopupId).hide()
         //refresh calendar
-        getCurrentWeekAppointments()
+        getCurrentWeekAppointments(currentDoctorId)
     }
     else {
         //display error message
@@ -258,7 +262,7 @@ function viewAppointment(id:string) {
     })
 }
 
-const divHeight = 50 //px
+const divHeight = 50 * 12
 function appointmentToHtml(a:Appointment):string {
     var hour = Number(a.hour)
     var minute = Number(a.min)
@@ -285,6 +289,23 @@ function handleViewAppointmentSuccess(data:AppointmentResponse) {
 
 
 
+var hourSlots = new Map()
+
+hourSlots.set(8,1)
+hourSlots.set(9,2)
+hourSlots.set(10,3)
+hourSlots.set(11,4)
+hourSlots.set(12,5)
+hourSlots.set(13,6)
+hourSlots.set(14,7)
+hourSlots.set(15,8)
+hourSlots.set(16,9)
+hourSlots.set(17,10)
+hourSlots.set(18,11)
+hourSlots.set(19,12)
+hourSlots.set(20,13)
+
+
 /**
  * 
  * @param divHeight the hieght of the div to put the appointment div into
@@ -293,19 +314,27 @@ function handleViewAppointmentSuccess(data:AppointmentResponse) {
  * @returns 
  */
 function appointmentPosition(divHeight:number, hour:number, minute:number):number {
-    var surgeryHours = 12
-    var sixtyMins = 60
-    var hourSlot = (divHeight/surgeryHours)
-    var minSlot = (divHeight/surgeryHours/sixtyMins)
-    var positionHour = hourSlot * hour
-    var positionMinute =  minSlot * minute
-    var position = (positionHour + positionMinute) + 13//10 pixels off
+    //hour and 
+    const surgeryHours = 12
+    const sixtyMins = 60
+    //height of single unit - hour and mintue
+    var hourUnit = (divHeight/surgeryHours)
+    var minUnit = (hourUnit/sixtyMins)
+    //position given the appointment hour and minute
+    var positionHour = hourUnit * (hourSlots.get(hour) - 1)
+    var positionMinute =  minUnit * minute
+    var position = (positionHour + positionMinute)
     return position
 }
 
 function appointmentDurationLength(divHeight:number, durationInMinutes:number) {
-    var sixtyMins = 60
-    var length = (divHeight/sixtyMins) * durationInMinutes
+    // constants
+    const surgeryHours = 12
+    const sixtyMins = 60
+    //height of single unit - hour and mintue
+    var hourUnit = (divHeight/surgeryHours)
+    var minUnit = (hourUnit/sixtyMins)
+    var length = minUnit * durationInMinutes
     return length
 }
 

@@ -1,5 +1,5 @@
 import { makeClickableTableRows, selectRow } from "../admin-view/admin-module1.js";
-import { doctorsToRows, Table } from "../admin-view/admin-module2.js";
+import { doctorsToRowsDetailed, Table } from "../admin-view/admin-module2.js";
 import { popupMessage } from "../doctor-view/doctor-view-patient-details.js";
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string//needed for post requests
@@ -80,7 +80,7 @@ export function searchForDoctor( obj :{name:string, pageNum:number, csrfToken:st
 
 function doctorSearchSuccessFunc(data:DoctorResponseList, tableIdRoot:string) {
     if(data.success) {
-        var t1:Table = doctorsToRows(data)
+        var t1:Table = doctorsToRowsDetailed(data)
         t1.idRoot = tableIdRoot
         console.warn('tableBodyId',t1.getTbodyId())
         //display doctor name and username

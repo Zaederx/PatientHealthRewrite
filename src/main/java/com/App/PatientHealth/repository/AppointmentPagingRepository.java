@@ -8,4 +8,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface AppointmentPagingRepository extends PagingAndSortingRepository<Appointment,Integer>{
     List<Appointment> findByWeekNumber(int weekNumber);
+    List<Appointment> findByDoctorIdAndWeekNumber(int id, int weekNumber);
 }

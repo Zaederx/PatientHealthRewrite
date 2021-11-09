@@ -89,7 +89,24 @@ export function doctorsToRows(data:DoctorResponseList) {
     data.doctorJsons.forEach( d => {
         table1 += '<tr data-id="'+d.id+'" data-selected="false" data-userType="doctor">'+
                         '<td>'+d.name+'</td>' + 
-                        '<td>'+d.username+'</td>'
+                        '<td>'+d.username+'</td>'+
+                    '</tr>';
+        
+    })
+    table.tbody = table1;
+    return table;
+ }
+
+ export function doctorsToRowsDetailed(data:DoctorResponseList) {
+    var table:Table = new Table()
+
+    var table1 = ''
+    data.doctorJsons.forEach( d => {
+        table1 += '<tr data-id="'+d.id+'" data-selected="false" data-userType="doctor">'+
+                        '<td>'+d.name+'</td>' + 
+                        '<td>'+d.username+'</td>'+
+                        '<td>'+d.specialisation+'</td>' + 
+                        '<td>'+d.email+'</td>'+
                     '</tr>';
         
     })
