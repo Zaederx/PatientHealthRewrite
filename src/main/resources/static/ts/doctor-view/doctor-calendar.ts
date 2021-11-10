@@ -25,6 +25,10 @@ window.onload = () => {
     getCurrentDoctorsId().then ( () => {
         getCurrentWeekAppointments(currentDoctorId)
     })
+
+    //remove edit appointment button from DOM
+    //doctor should not be able to edit - only admin
+    $('#btn-appointment-edit').remove()
 }
 
 //get this doctor's id

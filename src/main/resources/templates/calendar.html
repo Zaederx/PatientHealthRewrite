@@ -6,40 +6,41 @@
     </div>
 
     <!-- Appointment Popup -->
-    <div id="appointment-popup" class="appointment-popup" style="display: none">
+    <div id="appointment-popup" class="alert alert-info appointment-popup" style="display: none">
         <div id="appointment-popup-close" class="btn-x">X</div>
-        <div class="label label-default text-light">Enter Appointment Date and Time</div>
+        <div >Enter Appointment Date and Time</div>
+        <br>
         <!-- Date -->
-        <label for="appointment-date" class="label label-default text-light">Date</label>
+        <label for="appointment-date" >Date</label>
         <input id="appointment-date" type="date" class="form-control">
         <br>
         <!-- Time -->
-        <label for="appointment-time" class="label label-default text-light">Time</label>
+        <label for="appointment-time" >Time</label>
         <input id="appointment-time" type="time" class="form-control">
         <br>
 
         <!-- Duration In Minutes -->
-        <label for="appointment-duration" class="label label-default text-light">Duration</label>
+        <label for="appointment-duration" >Duration</label>
         <input id="appointment-duration" type="number" min="15" max="60" class="form-control">
         <br>
 
         <!-- Appointment Type -->
-        <label for="appointment-type" class="label label-default text-light">Appointment Type</label>
+        <label for="appointment-type" >Appointment Type</label>
         <input id="appointment-type" type="text" class="form-control">
         <br>
 
         <!-- Appointment Info -->
-        <label for="appointment-info" class="label label-default text-light">Appointment Information</label>
-        <input id="appointment-info" type="text" class="form-control">
+        <label for="appointment-info" >Appointment Information</label>
+        <span contenteditable id="appointment-info" type="text" class="editable form-control" data-placeholder="Appointment Information"></span>
         <br>
 
         <button id="btn-appointment-submit" class="btn btn-primary">Submit</button>
 
-        <button id="btn-appointment-edit" class="btn btn-info" style="display: none">Edit</button>
+        <button id="btn-appointment-edit" class="btn btn-warning" style="display: none">Edit</button>
 
         <button id="btn-appointment-submit-changes" class="btn btn-info" style="display: none">Submit Changes</button>
 
-        <button id="btn-appointment-delete" class="btn btn-info" style="display: none">Delete</button>
+        <button id="btn-appointment-delete" class="btn btn-danger" style="display: none">Delete</button>
 
 
     </div>

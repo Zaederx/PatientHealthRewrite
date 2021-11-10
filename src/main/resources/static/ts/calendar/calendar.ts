@@ -51,24 +51,46 @@ $('#btn-create-appointment').on('click', () => {
     var date = new Date(weekISO)
     openAppointmentPopup_AddMode(date)
 })
-
-
 $('#appointment-popup-close').on('click', () => {
     $(appointmentPopupId).hide()
 })
 $('#btn-appointment-submit').on('click', () => submitAppointment('/rest/calendar/create-appointment/'))
 
+/**
+ * Enables the Appointment Popup input fields
+ */
+function enableInputFields() {
+    $('#appointment-date').removeAttr('disabled')
+    $('#appointment-time').removeAttr('disabled')
+    $('#appointment-duration').removeAttr('disabled')
+    $('#appointment-type').removeAttr('disabled')
+    //enable contenteditable span field
+    $('#appointment-info').attr('contenteditable')
+    $('#appointment-info').addClass('editable')
+    $('#appointment-info').removeClass('disabled')
+}
+
+/**
+ * Disables the Appointment Popup input fields
+ */
+function disableInputFields() {
+    //disable input fields
+    $('#appointment-date').attr('disabled','')
+    $('#appointment-time').attr('disabled','')
+    $('#appointment-duration').attr('disabled','')
+    $('#appointment-type').attr('disabled','')
+    //disable contenteditable span field
+    $('#appointment-info').removeAttr('contenteditable')
+    $('#appointment-info').removeClass('editable')
+    $('#appointment-info').addClass('disabled')
+}
 export function openAppointmentPopup_AddMode(date:Date) {
     //fill popup fields
     $('#appointment-date').val(date.toDateString())
     $('#appointment-time').val(date.toTimeString())
 
     //enable input fields
-    $('#appointment-date').removeAttr('disabled')
-    $('#appointment-time').removeAttr('disabled')
-    $('#appointment-duration').removeAttr('disabled')
-    $('#appointment-type').removeAttr('disabled')
-    $('#appointment-info').removeAttr('disabled')
+    enableInputFields()
 
     //enable submit button
     $('#btn-appointment-submit').removeAttr('disabled')
@@ -97,19 +119,16 @@ export function openAppointmentPopup_ViewMode(appointment:Appointment) {
     currentPatientId = appointment.pId;
     currentDoctorId = appointment.docId;
 
+    //disable input fields
+    disableInputFields()
+
     //fill appointment popup form with appointment details
     $('#appointment-date').val(appointment.date)
     $('#appointment-time').val(appointment.time)
     $('#appointment-duration').val(String(appointment.durationInMinutes))
     $('#appointment-type').val(appointment.appointmentType)
-    $('#appointment-info').val(appointment.appointmentInfo)
-    
-    //disable input fields
-    $('#appointment-date').attr('disabled','')
-    $('#appointment-time').attr('disabled','')
-    $('#appointment-duration').attr('disabled','')
-    $('#appointment-type').attr('disabled','')
-    $('#appointment-info').attr('disabled','')
+    //fill contenteditable span
+    $('#appointment-info').html(appointment.appointmentInfo)
 
     //disable submit button
     $('#btn-appointment-submit').attr('disabled','')
@@ -131,17 +150,15 @@ export function openAppointmentPopup_ViewMode(appointment:Appointment) {
     //display / show appointment popup
     $(appointmentPopupId).show()
 
-     
 }
 
 
 export function openAppointmentPopup_EditMode() {
+    //NOTE: FIELDS ARE ALREADY FILLED FROM VIEW_MODE
+    //WHICH PRECEDES ACCESSING EDIT MODE
+
     //enable input fields
-    $('#appointment-date').removeAttr('disabled')
-    $('#appointment-time').removeAttr('disabled')
-    $('#appointment-duration').removeAttr('disabled')
-    $('#appointment-type').removeAttr('disabled')
-    $('#appointment-info').removeAttr('disabled')
+    enableInputFields()
 
     //hide and disable submit button
     $('#btn-appointment-submit').attr('disabled','')

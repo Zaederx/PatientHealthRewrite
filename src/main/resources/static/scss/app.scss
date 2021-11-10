@@ -4,8 +4,11 @@ $yellow:#fdfc8a;
 $tomato:#f05c35;
 $btn-blue: rgb(41,120,237);
 $cool-grey: rgb(53,58,63);
+$disable-input-grey: rgb(233,236,239);
 
-
+.disabled {
+    background-color:$disable-input-grey !important;
+}
 .highlight {
     background-color:$light-blue;
 }
@@ -198,6 +201,7 @@ $div-height: 50px;
     display: grid;
     grid-template-columns: auto auto auto auto auto auto auto;
 }
+
 // .appointment[data-position] {
 //     position: relative;
 //     top: attr(data-position px);
@@ -217,7 +221,7 @@ $div-height: 50px;
 
 
 .day-title {
-
+    text-align: center;
 }
 
 .underlay div {
@@ -238,11 +242,11 @@ $div-height: 50px;
 
 // Popup appointment table
 .appointment-popup {
-    position: absolute;
+    position: absolute !important; //override bootstrap
     left: 40%;
     width: 300px;
-    height: 550px;
-    background-color: $cool-grey;
+    height: 650px;
+    // background-color: $cool-grey;
     z-index: 2;
 }
 
