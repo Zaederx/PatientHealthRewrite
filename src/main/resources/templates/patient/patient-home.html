@@ -1,27 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
+    <div th:replace="head"></div>
+	<script type="module" th:src="@{/js/patient-view/patient-dashboard.js}" defer></script>
     <style>
     .btn-space{
     	margin-right: 10px;
     }
     </style>
-    <!-- CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-    <!-- Popper JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-
-    <!-- JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
     <title>Patient Home</title>
   </head>
   <body>
@@ -35,114 +21,47 @@
 
     </div>
     
-    <!-- Content div -->
-    <div class="container col-sm-9" ><!-- style="background-color:grey;" -->
-    	<!-- Model - For ViewingPrescriptions -->
-    	<div id="presModal" class="modal fade" role="dialog">
-    		<div class="modal-dialog">
-    			<!-- Modal Content  -->
-    			<div class="modal-content">
-    				<div class="modal-header">
-    					<h4 class="modal-title">Prescription</h4>
-    					<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle" style="color:red;" aria-hidden="true"></i></button>
-    				</div>
-    				<div class="modal-body">
-    					<h5 id="presModal-subTitle"></h5>
-    					<p id="presModal-body"></p>
-    				</div>
-    			</div>
-    		</div>
-    		
-    	</div>
-    	
-    	<br>
-   
+	<div class="container justify-content-center">
+
     	<div class="row">
+			<!-- Next Appointment -->
+	    	<div class="col-sm-6">
+	    		<button type="button" class="btn btn-info dashboard-badge">
+					Appointments <span id="appointments-badge-num" class="badge badge-light">N/A</span>
+					<!-- <span class="sr-only">unread messages</span> -->
+				  </button>
+	    	</div>
 	    	<!-- Active Prescriptions -->
 	    	<div class="col-sm-6"> 
-	    		<!-- Table -->
-	    		<table class="table">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Active Prescriptions</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="prescriptions">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	
-	    	<!-- Next Appointment -->
-	    	<div class="col-sm-6">
-	    		<!-- Table -->
-	    		<table class="table">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Next Appointment</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="appointments">
-		    		<!-- Filled via ajax method -->
-	    			</tbody>
-	    		</table>
+	    		<button type="button" class="btn btn-primary dashboard-badge">
+					Prescriptions <span id="prescriptions-badge-num" class="badge badge-light">N/A</span>
+					<!-- <span class="sr-only">unread messages</span> -->
+				  </button>
 	    	</div>
     	</div>
     	
     	<div class="row">
-    	<!-- Last Message -->
-    	<div class="col-sm-6"> 
-	    		<!-- Table -->
-	    		<table class="table">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Last Message</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="lastMessage">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	
-    	<!-- Notes -->
-    	<div class="col-sm-6"> 
-	    		<!-- Table -->
-	    		<table class="table">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Notes</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="notes">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
+			<!-- Last Message -->
+			<div class="col-sm-6"> 
+				<button type="button" class="btn btn-warning dashboard-badge">
+					Messages <span id="messages-badge-num" class="badge badge-light">5</span>
+					<!-- <span class="sr-only">unread messages</span> -->
+				  </button>
+			</div>
+				
+			<!-- Notes -->
+			<div class="col-sm-6"> 
+				<button type="button" class="btn btn-danger dashboard-badge">
+					Medical Notes <span id="medical-notes-badge-num" class="badge badge-light">N/A</span>
+					<!-- <span class="sr-only">unread messages</span> -->
+				  </button>
+			</div>
 	    </div>
     	<br><br><br><br><br><br>
-    </div>
-    
-	  <div id="cancelAppointmentModel" class="modal" tabindex="-1" role="dialog">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title">Are you Sure?</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span><!-- &times for x button -->
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        <p>If yes, tell us why and we might be able to reschedule or find a way to make it work.</p>
-	        <textarea id="appointment-modal-text"></textarea>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-primary">Save changes</button>
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	      </div>
-	    </div>
-	  </div>
 	</div>
+    
+    
+	  
   </body>
   
 </html>

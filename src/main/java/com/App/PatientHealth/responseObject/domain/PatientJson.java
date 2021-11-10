@@ -7,6 +7,7 @@ import com.App.PatientHealth.domain.AppointmentRequest;
 import com.App.PatientHealth.domain.MedicalNote;
 import com.App.PatientHealth.domain.Patient;
 import com.App.PatientHealth.domain.Prescription;
+import com.App.PatientHealth.domain.calendar.Appointment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -21,12 +22,14 @@ public class PatientJson extends UserJson {
     String doctorName;
     String doctorEmail;
     List<PrescriptionJson> prescriptions;
-    List<MedicalNoteJson> doctorNotes;
+    List<MedicalNoteJson> medicalNotes;
     List<AppointmentRequestJson> appointmentRequests;
+    List<AppointmentJson> appointments;
     public PatientJson(){
         this.prescriptions = new ArrayList<PrescriptionJson>();
-        this.doctorNotes = new ArrayList<MedicalNoteJson>();
+        this.medicalNotes = new ArrayList<MedicalNoteJson>();
         this.appointmentRequests = new ArrayList<AppointmentRequestJson>();
+        this.appointments = new ArrayList<AppointmentJson>();
     }
 
     public PatientJson(Patient p){
@@ -41,11 +44,12 @@ public class PatientJson extends UserJson {
             this.doctorEmail = "N/A";
         }
         this.prescriptions = toPrescriptionJsons(p.getPrescriptions());
-        this.doctorNotes = toDoctorNoteJsons(p.getDoctorNotes());
+        this.medicalNotes = toDoctorNoteJsons(p.getDoctorNotes());
         this.appointmentRequests = toAppointmentRequestJsons(p.getAppointmentRequests());
+        this.appointments = toAppointmentJsons(p.getAppointments());
     }
 
- 
+/* *********** Helper Functions *********** */ 
     public List<PrescriptionJson> toPrescriptionJsons(List<Prescription> prescriptions) {
         List<PrescriptionJson> json = new ArrayList<PrescriptionJson>();
         prescriptions.forEach(n -> {
@@ -70,9 +74,19 @@ public class PatientJson extends UserJson {
         return json;
     }
 
+    public List<AppointmentJson> toAppointmentJsons(List<Appointment> appointments) {
+        List<AppointmentJson> json = new ArrayList<AppointmentJson>();
+        appointments.forEach(a -> {
+            json.add(new AppointmentJson (a));
+        });
+        return json;
+    }
+
+
     
 
 
+/* *********** Getters and Setters *********** */  
     public String getDoctorName() {
         return this.doctorName;
     }
@@ -107,12 +121,12 @@ public class PatientJson extends UserJson {
         this.prescriptions = prescriptions;
     }
 
-    public List<MedicalNoteJson> getDoctorNotes() {
-        return doctorNotes;
+    public List<MedicalNoteJson> getMedicalNotes() {
+        return medicalNotes;
     }
 
-    public void setDoctorNotes(List<MedicalNoteJson> doctorNotes) {
-        this.doctorNotes = doctorNotes;
+    public void setMedicalNotes(List<MedicalNoteJson> doctorNotes) {
+        this.medicalNotes = doctorNotes;
     }
 
     public List<AppointmentRequestJson> getAppointmentRequests() {
@@ -122,4 +136,14 @@ public class PatientJson extends UserJson {
     public void setAppointmentRequests(List<AppointmentRequestJson> appointmentRequests) {
         this.appointmentRequests = appointmentRequests;
     }
+
+    public List<AppointmentJson> getAppointments() {
+        return this.appointments;
+    }
+
+    public void setAppointments(List<AppointmentJson> appointments) {
+        this.appointments = appointments;
+    }
+
+    
 }

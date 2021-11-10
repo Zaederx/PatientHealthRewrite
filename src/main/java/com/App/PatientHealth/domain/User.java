@@ -1,5 +1,9 @@
 package com.App.PatientHealth.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +33,11 @@ public class User {
     protected String email;
     @Column
     protected String role;
+    @OneToMany(cascade = CascadeType.ALL)
+    List<Message> messagesSent;
+    @ManyToMany(cascade = CascadeType.ALL)
+    List<Message> messagesReceived;
+
     @Transient
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -38,6 +49,8 @@ public class User {
         this.password = encoder.encode(password);
         this.email = email;
         this.role = role;
+        this.messagesSent = new ArrayList<Message>();
+        this.messagesReceived = new ArrayList<Message>();
     }
 
     public int getId() {
@@ -87,6 +100,32 @@ public class User {
     public String getRole() {
         return role;
     }
+
+    public List<Message> getMessagesSent() {
+        return this.messagesSent;
+    }
+
+    public void setMessagesSent(List<Message> messagesSent) {
+        this.messagesSent = messagesSent;
+    }
+
+    public List<Message> getMessagesReceived() {
+        return this.messagesReceived;
+    }
+
+    public void setMessagesReceived(List<Message> messagesReceived) {
+        this.messagesReceived = messagesReceived;
+    }
+
+    public BCryptPasswordEncoder getEncoder() {
+        return this.encoder;
+    }
+
+    public void setEncoder(BCryptPasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
+
+
 
     @Override
     public String toString() {

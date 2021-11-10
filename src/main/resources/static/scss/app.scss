@@ -17,7 +17,7 @@ $disable-input-grey: rgb(233,236,239);
     background-color:$light-red;
 }
 
-.highlight-yellow{
+.highlight-yellow {
     background-color:$yellow;
 }
 
@@ -37,13 +37,13 @@ $disable-input-grey: rgb(233,236,239);
     border-radius: 5px;
 }
 
-.bar-space{
+.bar-space {
     margin-right: 30px;
     margin-left:30px;
     margin-bottom:5px;
 }
 
-.btn-width{
+.btn-width {
     width:20%;
 }
 
@@ -56,6 +56,19 @@ $disable-input-grey: rgb(233,236,239);
     margin-left: 30px;
     margin-bottom:5px;
 }
+
+.dashboard-badge {
+    height: 200px;
+    width: 300px;
+    margin-bottom: 50px;
+    margin-right: 50px;
+    font-size: x-large !important;
+}
+
+.dashboard-badge span {
+    font-size: x-large;
+}
+
 
 /* Note: using Table Flow as alternative to Bootstrap table-responsive, 
  * which doesn't work well in some situations

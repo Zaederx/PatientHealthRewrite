@@ -1,0 +1,33 @@
+<!-- Navigation Bar -->
+      <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center row">
+        <ul class="navbar-nav">
+          <li class="nav-item" >
+            <a class="nav-link" th:href="@{/patient/home}"><button class="btn btn-secondary active">User Home</button></a>
+          </li>
+          <li class="nav-item">
+          	<div class="dropdown">
+		       	<a class="nav-link" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		       	<button class="btn btn-primary dropdown-toggle">Services</button> 
+		       	</a>
+		       	<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+		       		<a class="dropdown-item" th:href="@{/patient/appointments/manage}">Manage Appointments</a>
+		       		<a class="dropdown-item" th:href="@{/patient/medication/requests}">Medication Requests</a>
+		       		<a class="dropdown-item" th:href="@{/patient/prescriptions/view}">View Prescriptions</a>
+		       		<a class="dropdown-item" th:href="@{/patient/messages/manage}">Messages</a>
+		       	</div>
+        	</div>
+          </li>
+          <li class="nav-item" >
+            <a class="nav-link" th:href="@{/patient/doctor/details}"><button class="btn btn-primary">Doctor Details</button></a>
+          </li>
+           <li class="nav-item" >
+            <a class="nav-link" th:href="@{/patient/details}"><button class="btn btn-primary">Account Details</button></a>
+            </li>
+          <li class="nav-item" >
+            <a class="nav-link" th:href="@{/patient/help}"><button class="btn btn-primary">Need Help?</button></a>
+          </li>
+           <li class="nav-item" >
+            <a class="nav-link" th:href="@{/logout}"><button class="btn btn-primary">Logout</button></a>
+          </li>
+        </ul> 
+      </nav>

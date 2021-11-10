@@ -358,7 +358,7 @@ function loadPatientPrescriptionTable(data:PatientResponseList) {
 function loadPatientDoctorNotesTable(data:PatientResponseList) {
     var patient = data.patientJsons[0]
     var rows = ''
-    patient.doctorNotes.forEach( note => {
+    patient.medicalNotes.forEach( note => {
         var row = '<tr data-id="'+note.id+ '" '+
         'data-selected="false" data-userType="patient">'+
                         '<td>'+note.noteHeading+'</td>'+ 
@@ -538,7 +538,7 @@ function viewMedicalNote(optId?:number) {
     var id:number = optId ? optId : Number(getSelectedItemId('#patient-medical-notes-tbody'))
     
     //find it in list of current patient prescriptions
-    var note = currentPatientDetails.doctorNotes.filter((n)=>{return n.id == id})[0]
+    var note = currentPatientDetails.medicalNotes.filter((n)=>{return n.id == id})[0]
 
     //display
     var html = 
@@ -569,7 +569,7 @@ function viewMedicalNote(optId?:number) {
 
 function editMedicalNote(id:number) {
     //find it in list of current patient prescriptions
-    var note = currentPatientDetails.doctorNotes.filter((n)=>{return n.id == id})[0]
+    var note = currentPatientDetails.medicalNotes.filter((n)=>{return n.id == id})[0]
 
     //display
     var html = 

@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,13 +29,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("rest/patient")
+@RequestMapping("/rest/patient")
 @RestController
 public class PatientRest {
 
     @Autowired
     UserDetailsServiceImpl userServices;
     
+
+    @GetMapping("/get-current-patient-info")
+    public PatientListResponse getPatientInfo() {
+        PatientListResponse res = new PatientListResponse();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        try {
+            Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
+
+            if (patientOpt.isPresent()) {
+                Patient p = patientOpt.get();
+                res.getPatientJsons().add(new PatientJson(p));
+                res.setSuccess(true);
+            }
+            else {
+                res.setSuccess(false);
+                res.setMessage("No patient details found");
+            }
+        } catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage("Problem retrieving patient details from database");
+        }
+
+        return res;
+        
+    }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public JsonResponse createPatient(@RequestBody PatientRegForm form) {
@@ -141,33 +168,4 @@ public class PatientRest {
 
 
 
-//    //add prescription to patient
-//    @PostMapping("/add-prescription")
-//    public JsonResponse addPrescriptionToPatient(@RequestBody PrescriptionForm form) {
-//        JsonResponse res = new JsonResponse();
-
-//        Prescription prescription = new Prescription(form);
-//        Optional<Patient> patientOpt = userServices.getPatientPaging().findById(form.getPatientId());
-
-//        if(patientOpt.isPresent()) {
-//            Patient patient = patientOpt.get();
-//            patient.getPrescriptions().add(prescription);
-           
-//            try {
-//                 userServices.getPrescriptionRepo().save(prescription);
-//                 userServices.getPatientPaging().save(patient);
-//            }
-//            catch (Exception e) {
-                
-//            }
-//            res.setSuccess(true);
-//            res.setMessage("Prescription added successfully");
-//        }
-//        else {
-//            res.setSuccess(false);
-//            res.setMessage("No patient found to add prescription"); 
-//        }
-       
-//        return res;
-//    }
 }

@@ -1,5 +1,9 @@
 package com.App.PatientHealth.responseObject.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.App.PatientHealth.domain.Message;
 import com.App.PatientHealth.domain.User;
 
 public class UserJson {
@@ -8,6 +12,8 @@ public class UserJson {
     String username;
     String email;
     String role;
+    List<MessageJson> messagesSent;
+    List<MessageJson> messagesRecieved;
 
     public UserJson() {}
     public UserJson(User u) {
@@ -16,6 +22,18 @@ public class UserJson {
         this.username = u.getUsername();
         this.email = u.getEmail();
         this.role = u.getRole();
+        this.messagesSent = toMessageJsons(u.getMessagesSent());
+        this.messagesRecieved = toMessageJsons(u.getMessagesReceived());
+    }
+
+    public List<MessageJson> toMessageJsons(List<Message> messages) {
+        List<MessageJson> messagesJsons = new ArrayList<MessageJson>();
+        
+        messages.forEach(m -> {
+            messagesJsons.add(new MessageJson(m));
+        });
+
+        return messagesJsons;
     }
 
 
@@ -60,4 +78,23 @@ public class UserJson {
         this.role = role;
     }
     
+
+    public List<MessageJson> getMessagesSent() {
+        return this.messagesSent;
+    }
+
+    public void setMessagesSent(List<MessageJson> messagesSent) {
+        this.messagesSent = messagesSent;
+    }
+
+    public List<MessageJson> getMessagesRecieved() {
+        return this.messagesRecieved;
+    }
+
+    public void setMessagesRecieved(List<MessageJson> messagesRecieved) {
+        this.messagesRecieved = messagesRecieved;
+    }
+
+    
+
 }

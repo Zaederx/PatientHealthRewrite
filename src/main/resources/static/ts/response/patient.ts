@@ -1,18 +1,21 @@
 class Patient extends User {
     DOB:string;
-    doctorName: string;
+    doctorName:string;
     doctorEmail:string;
     prescriptions:Prescription[];
-    doctorNotes:DoctorNote[];
+    medicalNotes:DoctorNote[];
     appointmentRequests:AppointmentRequest[];
+    appointments:Appointment[];
+    
 
-    constructor(id:number, name:string, username:string, email:string, doctorName:string, doctorEmail:string, DOB:string, prescriptions:Prescription[],doctorNotes:DoctorNote[], appointmentRequests:AppointmentRequest[]) {
-        super(id, name, username, email,'patient');
+    constructor(id:number, name:string, username:string, email:string, doctorName:string, doctorEmail:string, DOB:string, prescriptions:Prescription[],doctorNotes:DoctorNote[], appointmentRequests:AppointmentRequest[],appointments: Appointment[], messagesSent:MessageJson[], messagesRecieved:MessageJson[]) {
+        super(id, name, username, email, 'patient', messagesSent, messagesRecieved);
         this.doctorName = doctorName;
         this.doctorEmail = doctorEmail;
         this.DOB = DOB;
         this.prescriptions = prescriptions;
-        this.doctorNotes = doctorNotes;
+        this.medicalNotes = doctorNotes;
         this.appointmentRequests = appointmentRequests;
+        this.appointments = appointments;
     }
 }
