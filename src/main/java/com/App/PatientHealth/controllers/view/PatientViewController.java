@@ -28,4 +28,13 @@ public class PatientViewController {
         return "patient/patient-medical-notes";
     }
 
+    @GetMapping("/view-messages")
+    public String viewMessages() {
+        return "patient/patient-messages";
+    }
+
+    @GetMapping("/view-assistance")
+    public String viewHelp() {
+        return "patient/patient-assistance";
+    }
 }

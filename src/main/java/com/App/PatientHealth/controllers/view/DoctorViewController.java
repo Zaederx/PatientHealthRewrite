@@ -23,4 +23,9 @@ public class DoctorViewController {
         return "doctor/doctor-calendar";
     }
 
+    @GetMapping("/assistance")
+    public String viewAssistance() {
+        return "doctor/doctor-assistance";
+    }
+
 }

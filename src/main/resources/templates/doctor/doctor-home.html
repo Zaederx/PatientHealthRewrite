@@ -14,91 +14,28 @@
    <div th:replace="doctor/doctor-nav"></div>
 	</div>
 	 <!-- Content div -->
-    <div class="container col-sm-9" ><!-- style="background-color:grey;" -->
-	<!-- Model - For ViewingPrescriptions -->
-    	<div id="presModal" class="modal fade" role="dialog">
-    		<div class="modal-dialog">
-    			<!-- Modal Content  -->
-    			<div class="modal-content">
-    				<div class="modal-header">
-    					<h4 class="modal-title">Notices</h4>
-    					<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle" style="color:red;" aria-hidden="true"></i></button>
-    				</div>
-    				<div class="modal-body">
-    					<h5 id="presModal-subTitle"></h5>
-    					<p id="presModal-body"></p>
-    				</div>
-    			</div>
-    		</div>
-    		
-    	</div>
-    	
-    	<br>
-   
-    	<div class="row">
-	    	<!-- Active Prescriptions -->
-	    	<div class="col-sm-6"> 
-	    		<!-- Table -->
-	    		<table class="table">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Staff Notices</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="notices">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	
-	    	<!-- Next Appointment -->
-	    	<div class="col-sm-6">
-	    		<!-- Table -->
-	    		<table class="table">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Next Appointment</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="appointment">
-		    		<!-- Filled via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-    	</div>
-    	
-    	<div class="row">
-    	<!-- Last Message -->
-    	<div class="col-sm-6"> 
-	    		<!-- Table -->
-	    		<table class="table">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Last Message</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="lastMessage">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	
-    	<!-- Notes -->
-    	<div class="col-sm-6"> 
-	    		<!-- Table -->
-	    		<table class="table">
-	    			<thead>
-	    				<tr>
-		    				<th colspan="2">Notes</th>
-	    				</tr>
-	    			</thead>
-	    			<tbody id="notes">
-	    			<!-- Fill via ajax method -->
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    </div>
-    	<br><br><br><br><br><br>
+    <div class="container col-sm-9" >
+		<div class="row">
+				<!-- Next Appointment -->
+			<div class="col-sm-6">
+				<a th:href="@{/doctor/view-patients}">
+					<button type="button" class="btn btn-info dashboard-badge" >
+						Patient Details 
+						
+					</button>
+				</a>
+				
+			</div>
+			<!-- Active Prescriptions -->
+			<div class="col-sm-6"> 
+				<a th:href="@{/doctor/calendar}">
+					<button type="button" class="btn btn-primary dashboard-badge" >
+						Calendar
+					</button>
+				</a>
+				
+			</div>
+		</div>
 	</div>
 
 </body>

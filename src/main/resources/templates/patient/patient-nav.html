@@ -10,21 +10,21 @@
 		       	<button class="btn btn-primary dropdown-toggle">Services</button> 
 		       	</a>
 		       	<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-		       		<a class="dropdown-item" th:href="@{/patient/appointments/manage}">Manage Appointments</a>
-		       		<a class="dropdown-item" th:href="@{/patient/medication/requests}">Medication Requests</a>
-		       		<a class="dropdown-item" th:href="@{/patient/prescriptions/view}">View Prescriptions</a>
-		       		<a class="dropdown-item" th:href="@{/patient/messages/manage}">Messages</a>
+		       		<a class="dropdown-item" th:href="@{/patient/view-appointments}">Appointments</a>
+		       		<a class="dropdown-item" th:href="@{/patient/view-prescriptions}">Prescriptions</a>
+		       		<a class="dropdown-item" th:href="@{/patient/view-medical-notes}">Medical Notes</a>
+		       		<a class="dropdown-item" th:href="@{/patient/view-messages}">Messages</a>
 		       	</div>
         	</div>
           </li>
-          <li class="nav-item" >
-            <a class="nav-link" th:href="@{/patient/doctor/details}"><button class="btn btn-primary">Doctor Details</button></a>
-          </li>
-           <li class="nav-item" >
+          <!-- <li class="nav-item" >
+            <a class="nav-link" th:href="@{/patient/doctor-details}"><button class="btn btn-primary">Doctor Details</button></a>
+          </li> -->
+           <!-- <li class="nav-item" >
             <a class="nav-link" th:href="@{/patient/details}"><button class="btn btn-primary">Account Details</button></a>
-            </li>
+            </li> -->
           <li class="nav-item" >
-            <a class="nav-link" th:href="@{/patient/help}"><button class="btn btn-primary">Need Help?</button></a>
+            <a class="nav-link" th:href="@{/patient/view-assistance}"><button class="btn btn-primary">Need Help?</button></a>
           </li>
            <li class="nav-item" >
             <a class="nav-link" th:href="@{/logout}"><button class="btn btn-primary">Logout</button></a>

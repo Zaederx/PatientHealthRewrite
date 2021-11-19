@@ -3,7 +3,7 @@
 
 <head>
   <div th:replace="head"></div>
-  <title>Patient Assistance</title>
+  <title>Doctor Assistance</title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
     <h1>Assistance</h1>
     <h3>We all need assistance now and then.</h3>
     <!-- Navigation -->
-    <div th:replace="patient/patient-nav"></div>
+    <div th:replace="doctor/doctor-nav"></div>
   </div>
 
   <div class="container text-center">
@@ -19,7 +19,7 @@
     <div id="accordian">
       <div class="card">
         <div class="card-header">
-          <a class="card-link" data-toggle="collapse" href="#c1">How can I order my prescription?</a>
+          <a class="card-link" data-toggle="collapse" href="#c1">How can I make a prescription for my patient?</a>
         </div>
       </div>
 
@@ -32,7 +32,7 @@
       </div>
       <div class="card">
         <div class="card-header">
-          <a class="card-link" data-toggle="collapse" href="#c2">How can I book and appointment with my doctor?</a>
+          <a class="card-link" data-toggle="collapse" href="#c2">How can I view patient medical notes?</a>
         </div>
       </div>
       <div id="c2" class="collapse" data-parent="#accordian">
