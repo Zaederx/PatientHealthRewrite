@@ -15,8 +15,17 @@ public class PatientViewController {
 
     @GetMapping("/view-prescriptions")
     public String viewPrescriptions() {
-        //TODO - VIEW PRESCRIPTIONS
-        return "doctor/home";
+        return "patient/patient-prescriptions";
+    }
+
+    @GetMapping("/view-appointments")
+    public String viewAppointments() {
+        return "patient/patient-appointments";
+    }
+
+    @GetMapping("/view-medical-notes")
+    public String viewMedicalNotes() {
+        return "patient/patient-medical-notes";
     }
 
 }

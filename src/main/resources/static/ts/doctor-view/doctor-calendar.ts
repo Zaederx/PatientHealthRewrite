@@ -1,5 +1,5 @@
 import { getSelectedItemId } from "../admin-view/admin-search-users.js"
-import { currentDoctorId, getCurrentWeekAppointments, handleCalendarSuccess, handleError, openAppointmentPopup_ViewMode, setCurrentDoctorId, submitAppointment, viewAppointment } from "../calendar/calendar.js"
+import { currentDoctorId, getCurrentWeekAppointments, handleCalendarSuccess, handleError, openAppointmentPopup_ViewMode, setCurrentDoctorId, submitAppointment, getAppointments } from "../calendar/calendar.js"
 import { popupMessage } from "../doctor-view/doctor-view-patient-details.js"
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string

@@ -23,34 +23,39 @@ public class Patient extends User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy="patient")
     List<Prescription> prescriptions;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
-    List<MedicalNote> doctorNotes;
+    List<MedicalNote> medicalNotes;
     @ManyToOne(cascade = CascadeType.ALL)
     Doctor doctor;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     List<AppointmentRequest> appointmentRequests;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     List<Appointment> appointments;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    List<PatientAppointmentRequest> patientAppointmentRequests;
 
 
     public Patient() {
         this.prescriptions = new ArrayList<Prescription>();
-        this.doctorNotes = new ArrayList<MedicalNote>();
+        this.medicalNotes = new ArrayList<MedicalNote>();
         this.appointmentRequests = new ArrayList<AppointmentRequest>();
         this.appointments = new ArrayList<Appointment>();
+        this.patientAppointmentRequests = new ArrayList<PatientAppointmentRequest>();
     }
 
     public Patient(PatientRegForm p) {
         super(p.getName(),p.getUsername(),
         p.getPassword(), p.getEmail(), "PATIENT");
         this.prescriptions = new ArrayList<Prescription>();
-        this.doctorNotes = new ArrayList<MedicalNote>();
+        this.medicalNotes = new ArrayList<MedicalNote>();
+        this.patientAppointmentRequests = new ArrayList<PatientAppointmentRequest>();
     }
 
     public Patient(String name, String username, String password, String email, String DOB) {
         super(name,username,password,email,"PATIENT");
         this.DOB = DOB;
         this.prescriptions = new ArrayList<Prescription>();
-        this.doctorNotes = new ArrayList<MedicalNote>();
+        this.medicalNotes = new ArrayList<MedicalNote>();
+        this.patientAppointmentRequests = new ArrayList<PatientAppointmentRequest>();
     }
 
     public Patient(String fname, String lname, String username, String email,List<Prescription> medication, String DOB, Doctor doctor) {
@@ -58,7 +63,8 @@ public class Patient extends User {
         this.DOB = DOB;
         this.doctor = doctor;
         this.prescriptions = new ArrayList<Prescription>();
-        this.doctorNotes = new ArrayList<MedicalNote>();
+        this.medicalNotes = new ArrayList<MedicalNote>();
+        this.patientAppointmentRequests = new ArrayList<PatientAppointmentRequest>();
     }
 
     public List<Prescription> getPrescriptions() {
@@ -69,12 +75,12 @@ public class Patient extends User {
         this.prescriptions = medication;
     }
 
-    public List<MedicalNote> getDoctorNotes() {
-        return doctorNotes;
+    public List<MedicalNote> getMedicalNotes() {
+        return medicalNotes;
     }
 
-    public void setDoctorNotes(List<MedicalNote> doctorNotes) {
-        this.doctorNotes = doctorNotes;
+    public void setMedicalNotes(List<MedicalNote> doctorNotes) {
+        this.medicalNotes = doctorNotes;
     }
 
     public List<AppointmentRequest> getAppointmentRequests() {
@@ -109,4 +115,14 @@ public class Patient extends User {
     public void setAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
     }
+
+
+    public List<PatientAppointmentRequest> getPatientAppointmentRequests() {
+        return this.patientAppointmentRequests;
+    }
+
+    public void setPatientAppointmentRequests(List<PatientAppointmentRequest> patientAppointmentRequests) {
+        this.patientAppointmentRequests = patientAppointmentRequests;
+    }
+
 }

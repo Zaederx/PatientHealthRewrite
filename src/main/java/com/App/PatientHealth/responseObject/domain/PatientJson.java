@@ -44,7 +44,7 @@ public class PatientJson extends UserJson {
             this.doctorEmail = "N/A";
         }
         this.prescriptions = toPrescriptionJsons(p.getPrescriptions());
-        this.medicalNotes = toDoctorNoteJsons(p.getDoctorNotes());
+        this.medicalNotes = toDoctorNoteJsons(p.getMedicalNotes());
         this.appointmentRequests = toAppointmentRequestJsons(p.getAppointmentRequests());
         this.appointments = toAppointmentJsons(p.getAppointments());
     }

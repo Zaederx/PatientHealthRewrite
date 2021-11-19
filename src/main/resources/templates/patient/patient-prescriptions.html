@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <div th:replace="head"></div>
+    <script type="module" th:src="@{/js/patient-view/patient-prescriptions.js}" defer></script>
+    <title>Patient Prescriptions</title>
+  </head>
+  <body>
+    <div class="jumbotron text-center">
+      <h1>Prescriptions</h1>
+      <h3>You can manage them it all from here.</h3>
+      <!-- Navigation Bar -->
+      <div th:replace="patient/patient-nav"></div>
+    </div>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th colspan="2" class="text-center">Prescriptions</th>
+        </tr>
+        <tr>
+          <th colspan="1">Name</th>
+          <th colspan="1">Directions</th>
+        </tr>
+      </thead>
+      <tbody id="patient-prescriptions-tbody" class="highlight-table-body-row" >
+      <!-- Filled via ajax method -->
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-class DoctorNote {
+class MedicalNote {
     id:number
     noteHeading:string
     noteBody:string

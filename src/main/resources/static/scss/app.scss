@@ -263,7 +263,48 @@ $div-height: 50px;
     z-index: 2;
 }
 
+// Popup appointment table
+.appointment-popup-short {
+    position: absolute !important; //override bootstrap
+    left: 40%;
+    width: 300px;
+    height: 400px;
+    // background-color: $cool-grey;
+    z-index: 2;
+}
+
+
 #appointment-info {
     height: 100px;
     resize: both;
+}
+
+
+// Patient Medical Notes Page
+.medical-notes-grid {
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+.medical-notes-col1 {
+    grid-column: 1;
+}
+
+.medical-notes-col2 {
+    grid-column: 2;
+
+}
+.medical-note-display {
+    height: 300px;
+    margin-left: 50px;
+}
+
+.medical-note-heading {
+
+}
+
+.medical-note-body {
+    margin-top: 20px;
+    height: 200px;
+    overflow-y: scroll;
 }

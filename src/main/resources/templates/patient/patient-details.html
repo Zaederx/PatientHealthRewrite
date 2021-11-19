@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <style>
+    .btn-space{
+    	margin-right: 10px;
+    }
+
+    .details label,p {
+    	display: inline;
+    }
+/*
+    *.center-left{
+	display:table;
+ 	margin : auto;
+	margin-left:100px;
+	}
+	*.center-left * {
+	text-align:left;
+	} */
+    </style>
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!-- JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Patient Home</title>
+  </head>
+  <body>
+  <!-- Header/Banner -->
+    <div class="jumbotron text-center">
+        <h1>Welcome Home</h1>
+        <h3>Accessible health care at you convenience</h3>
+
+        <!-- Navigation Bar -->
+        <div th:replace="patient/patient-nav"></div>
+
+    </div>
+	<div class="container-fluid">
+	 	<p id="message"></p>
+	    <div class="container-fluid d-flex justify-content-center text-center row" id="messages"></div>
+	</div>    
+
+	<div id="accordion" class="continer-fluid">
+     
+    <!-- CARD 1 - Account Details -->
+  <div id="account-card" class="card text-center">
+    <div class="card-header" id="headingOne">
+        <button class="username-error btn btn-link" onclick="setRegBtn('#reg-btn-patient')" data-toggle="collapse" data-target="#accountDetailsCollapse" aria-expanded="true" aria-controls="accountDetailsCollapse">
+          Account Details
+        </button>
+    </div>
+    <div id="accountDetailsCollapse" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+	      <div id="accountDetailsDiv" class="container d-flex flex-sm-column col-sm-8">
+	    	<div><label for="patient-username">Username: </label><p id="patient-username"></p></div>
+	    	<div><label for="patient-password">Password:</label><p id="patient-password">*********</p></div>
+
+	      </div>
+      </div>
+      <button class="btn btn-primary" onclick="displayEditAccountDetailsCard();">Edit</button>
+    </div>
+  </div>
+
+  <!-- Edit Account -->
+	<div id="edit-account-card" class="card text-center">
+    <div class="card-header" id="headingEdit">
+        <button class="username-error btn btn-link" data-toggle="collapse" data-target="#editAccountDetailsCollapse" aria-expanded="false" aria-controls="editAccountDetailsCollapse">
+          Edit Account Details
+        </button>
+    </div>
+    <div id="editAccountDetailsCollapse" class="collapse show" aria-labelledby="headingEdit" data-parent="#accordion">
+      <div class="card-body">
+	      <div id="editAccountDetailsDiv" class="container d-flex flex-sm-column col-sm-6">
+	      <form class="form-group" id="editAccountForm">
+  	    	<div><label for="edit-patient-username">Edit Username:</label><input class="form-control text-center" id="edit-patient-username" name="username" placeholder="John A. Smith"/></div>
+  	    	<div><label for="edit-patient-password">Current Password:</label><input class="form-control text-center" id="edit-patient-password" name="current"/></div>
+  	    	<div><label for="edit-patient-new-password">New Password:</label><input class="form-control text-center" id="edit-patient-new-password" name="new"/></div>
+	    	  <div><label for="edit-patient-repeat-password">Repeat New Password:</label><input class="form-control text-center" id="edit-patient-repeat-password" name="repeat"/></div>
+	    	</form>
+	      </div>
+      </div>
+      <button class="btn btn-danger" onclick="hideEditAccountDetailsCard();">Cancel</button>
+       <button class="btn btn-primary" onclick="submitEditAccountDetailsForm();">Submit</button>
+    </div>
+  </div>
+
+   <!-- CARD 2 - Personal Details -->
+  <div class="card text-center">
+    <div class="card-header" id="headingTwo">
+        <button class="username-error btn btn-link" onclick="setRegBtn('#reg-btn-patient')" data-toggle="collapse" data-target="#personalDetailsCollapse" aria-expanded="true" aria-controls="personalDetailsCollapse">
+          Personal Details
+        </button>
+    </div>
+    <div id="personalDetailsCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+	      <div class="container d-flex flex-sm-column col-sm-8 justify-content-center">
+
+	      </div>
+      </div>
+    </div>
+  </div> 
+
+
+ </div>
+  </body>
+  <script>
+
+
+  /* Functions to display/hide Account Editing Collapse card */
+  function displayEditAccountDetailsCard() {
+	  console.log('***************** displayEditAccountDetailsCard called ******************');
+	  $('#account-card').hide();
+	  $('#edit-account-card').show();
+  }
+
+  function hideEditAccountDetailsCard() {
+	  console.log('***************** hideEditAccountDetailsCard called ******************');
+	  $('#account-card').show();
+	  $('#edit-account-card').hide();
+  }
+
+  function submitEditAccountDetailsForm() {
+	  console.log('********* submitEditAccountDetailsForm called *********');
+    var form = $('#editAccountForm').serialize();
+    console.log(form);
+    $.ajax({
+		  type:'GET',
+		  url:'/ajax/patient/editAccount?'+form,
+		  success:function(data) {
+        var str = JSON.stringify(data);
+        var res = JSON.parse(str);
+        var m = '';
+        if (res.response == false) {
+        	console.log("$('#messsage').text(res.message)");
+        	for (var i = 0; i < res.count; i++) {
+        		m += '<p class="alert alert-danger show">'+res.messages[i]+'</p>';
+        	}
+        } else {
+        	console.log('else statement');
+        	for (var i = 0; i < res.count; i++) {
+        		m += '<p class="alert alert-info show">'+res.messages[i]+'</p>';
+        	}
+        	console.log(m);
+          $('#editAccountForm')[0].reset();
+        }
+        $('#messages').html(m);
+		  },
+		  error:function(){
+
+		  }
+	  })
+  }
+
+  function editPersonalDetails() {
+	  console.log('***************** editPersonalDetails called ******************');
+	  $.ajax({
+		  type:'GET',
+		  url:'',
+		  success:function() {
+
+		  },
+		  error:function(){
+
+		  }
+	  })
+  }
+
+  /* Set Prescirption name and Description */
+
+  var presName;
+  var preDescription;
+  function setPrescriptionName(pName,pDesc) {
+	  console.log("*********** setPrescriptionModal called ***********");
+	  console.log(pName);
+	  console.log(pDesc);
+	  presName = pName;
+	  presDescription = pDesc;
+	  displayPrescription();
+  }
+
+  function displayPrescription() {
+	  console.log("*********** displayPrescriptionModal called ***********");
+	  $('#presModal-subTitle').text(presName);
+	  $('#presModal-body').text(presDescription);
+  }
+
+ 
+
+  $(document).ready($('#edit-account-card').hide());
+  
+  /* Retrieve Username*/
+  $(document).ready(function() {
+	  $.ajax({
+		  type:'GET',
+		  url: '/ajax/patient/retrieve-u',
+		  success: function(response) {
+			  var data = JSON.stringify(response);
+		      var res = JSON.parse(data);
+		      
+		      if (res.response == false) {
+		    	  $('#message').text(res.message);
+		      } else {
+		    	  $('#patient-username').text(res.message);
+		    	 
+		      }
+		  },
+		  error: function() {
+			  
+		  }
+	  });
+  });
+  
+ 
+   
+  //RETRIEVE
+  /* Method to retrieve active prescriptions */
+  $(document).ready(function(){
+	  $.ajax({
+		  type:'GET',
+		  url:'/ajax/patient/prescriptions',
+		  success:function(response) {
+			  var dString = JSON.stringify(response);
+			  var data = JSON.parse(dString);
+			  if (data.count == 0) {
+				  console.log("data count zero if statement");
+				  $('#prescriptions').html("<tr><td>No Active Prescriptions</td></tr>");
+			  } else {
+				  var m;
+				  for (var i = 0 ; i < data.count; i++ ) {
+					  m += '<row><td>'+data.prescriptions[i].medication.name+'</td>'
+					  + '<td><button onclick="setPrescriptionName(\''+data.prescriptions[i].medication.name+'\',\''+data.prescriptions[i].directions+'\')\;" class="btn btn-primary btn-space" data-toggle="modal" data-target="#presModal">View</button>'
+					  +'<button onclick="cancelPrescription('+data.prescriptions[i].id+')\;" class="btn btn-danger">Cancel</button></td></row>';
+				  }
+				  $('#prescriptions').html(m);
+			  }
+		  },
+		  error:function() {
+			  $('#prescriptions').html("An error has occured. Please try refreshing the page.");
+		  }
+	  });
+  });
+
+  /* Method to retrieve next appointment */
+  $(document).ready(function(){
+	  $.ajax({
+		  type:'GET',
+		  url:'',
+		  success:function(data) {
+			  var m;
+			  for (var i = 0 ; i < data.count; i++ ) {
+				  m += '<row><td>'+data.message+'</td>'
+				  + '<td><button onclick="editAppointment('+data.id+')">Edit</button>'
+				  +'<button onclick="deleteAppointment('+data.id+')\;">Delete</button></td></row>';
+			  }
+			  $('#prescriptions').html(m);
+		  },
+		  error:function(){
+
+		  }
+	  });
+  });
+
+  //FILL
+  /* Method to fill active prescriptions */
+
+  /* Method to fill Next appointment */
+
+  </script>
+</html>

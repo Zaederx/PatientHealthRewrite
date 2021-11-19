@@ -26,35 +26,46 @@
     	<div class="row">
 			<!-- Next Appointment -->
 	    	<div class="col-sm-6">
-	    		<button type="button" class="btn btn-info dashboard-badge">
-					Appointments <span id="appointments-badge-num" class="badge badge-light">N/A</span>
-					<!-- <span class="sr-only">unread messages</span> -->
-				  </button>
+				<a th:href="@{/patient/view-appointments}">
+					<button type="button" class="btn btn-info dashboard-badge" >
+						Appointments <span id="appointments-badge-num" class="badge badge-light">N/A</span>
+						<!-- <span class="sr-only">unread messages</span> -->
+					</button>
+				</a>
+	    		
 	    	</div>
 	    	<!-- Active Prescriptions -->
 	    	<div class="col-sm-6"> 
-	    		<button type="button" class="btn btn-primary dashboard-badge">
-					Prescriptions <span id="prescriptions-badge-num" class="badge badge-light">N/A</span>
-					<!-- <span class="sr-only">unread messages</span> -->
-				  </button>
+				<a th:href="@{/patient/view-prescriptions}">
+					<button type="button" class="btn btn-primary dashboard-badge" >
+						Prescriptions <span id="prescriptions-badge-num" class="badge badge-light">N/A</span>
+						<!-- <span class="sr-only">unread messages</span> -->
+					</button>
+				</a>
+	    		
 	    	</div>
     	</div>
     	
     	<div class="row">
 			<!-- Last Message -->
 			<div class="col-sm-6"> 
-				<button type="button" class="btn btn-warning dashboard-badge">
-					Messages <span id="messages-badge-num" class="badge badge-light">5</span>
-					<!-- <span class="sr-only">unread messages</span> -->
-				  </button>
+				<a th:href="@{/patient/view-messages}">
+					<button type="button" class="btn btn-warning dashboard-badge" >
+						Messages <span id="messages-badge-num" class="badge badge-light">5</span>
+						<!-- <span class="sr-only">unread messages</span> -->
+					</button>
+				</a>
 			</div>
 				
 			<!-- Notes -->
 			<div class="col-sm-6"> 
-				<button type="button" class="btn btn-danger dashboard-badge">
-					Medical Notes <span id="medical-notes-badge-num" class="badge badge-light">N/A</span>
-					<!-- <span class="sr-only">unread messages</span> -->
-				  </button>
+				<a th:href="@{/patient/view-medical-notes}">
+					<button type="button" class="btn btn-danger dashboard-badge" >
+						Medical Notes <span id="medical-notes-badge-num" class="badge badge-light">N/A</span>
+						<!-- <span class="sr-only">unread messages</span> -->
+					</button>
+				</a>
+				
 			</div>
 	    </div>
     	<br><br><br><br><br><br>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+  <head>
+    <div th:replace="head"></div>
+	<script type="module" th:src="@{/js/patient-view/patient-medical-notes.js}" defer></script>
+
+    <title>Patient Medical Notes</title>
+  </head>
+  <body>
+  <!-- Header/Banner -->
+    <div class="jumbotron text-center">
+      <h1>Things you need</h1>
+      <h3>At you finger tips</h3>
+      
+      <!-- Navigation Bar -->
+      <div th:replace="patient/patient-nav"></div>
+
+    </div>
+    
+	<div class="container justify-content-center">
+        <!-- Medical Notes Grid -->
+        <div class="medical-notes-grid">
+            <button id="btn-view-note" class="btn btn-primary"> View Medical Note </button>
+            <!-- col 1 -->
+            <div class="medical-notes-col1">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th colspan="2" class="text-center">Medical Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody id="medical-notes-tbody" class="highlight-table-body-row">
+                    <!-- Filled via ajax method -->
+                    </tbody>
+                  </table>
+            </div>
+
+            <!-- col 2 -->
+            <div class="medical-notes-col2">
+                <div class="alert alert-info medical-note-display">
+                    <div class="form-control medical-note-heading" id="medical-note-heading"></div>
+                    <div class="form-control medical-note-body" id="medical-note-body"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+	  
+  </body>
+  
+</html>

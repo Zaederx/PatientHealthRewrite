@@ -2,13 +2,23 @@ import { handleError } from "../calendar/calendar.js"
 import { popupMessage } from "../doctor-view/doctor-view-patient-details.js"
 
 var csrfToken = $("meta[name='_csrf']").attr("content")
+
+//BADGE INFO NUM IDs
 const appointmentsBadgeNumId = '#appointments-badge-num'
 const prescriptionsBadgeNumId = '#prescriptions-badge-num'
 const messageBadgeNumId = '#message-badge-num'
 const medicalNotesBadgeNumId = '#medical-notes-badge-num'
 
+//BADGE IDs
+const appointmentsBadgeId = '#appointments-badge'
+const prescriptionsBadgeId = '#prescriptions-badge'
+const messageBadgeId = '#message-badge'
+const medicalNotesBadgeId = '#medical-notes-badge'
 
-window.onload = () => fetchBadgeCount()
+
+window.onload = () => {
+    fetchBadgeCount()
+}
 
 //fetch Appointment badge count
 function fetchBadgeCount() {

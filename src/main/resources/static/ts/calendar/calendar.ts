@@ -15,8 +15,21 @@ const appointmentPopupId = '#appointment-popup'
 var currentPatientId = ''
 export var currentDoctorId = ''
 var selectedAppointmentId = ''
-var currentWeekNumber = 0
 
+
+/**the current page number */
+var calendarCurrentWeekNum = 1
+var calendarPrevWeekNum = 1
+var calendarNextWeekNum = 2
+
+function setPageNumVarsCalendar(currentPageNum:number) {
+    calendarCurrentWeekNum = currentPageNum;
+    calendarPrevWeekNum = calendarCurrentWeekNum - 1;
+    calendarNextWeekNum = calendarCurrentWeekNum + 1;
+    console.log('calendarCurrentWeekNum:',calendarCurrentWeekNum)
+    console.log('calendarPrevWeekNum:',calendarPrevWeekNum)
+    console.log('calendarNextWeekNum:',calendarNextWeekNum)
+}
 
 
 export function getCurrentWeekAppointments(docId:string) {
@@ -46,6 +59,7 @@ $('#btn-select-doctor').on('click', () => {
     //set patient id
     currentDoctorId = getSelectedItemId(doctorTableId)
     getCurrentWeekAppointments(currentDoctorId)
+    console.warn('currentDoctorId:', currentDoctorId)
 })
 $('#btn-create-appointment').on('click', () => {
     var date = new Date(weekISO)
@@ -193,8 +207,8 @@ export function submitAppointment(url:string, appointmentId?:string) {
     var time = $('#appointment-time').val()
     var durationInMinutes = $('#appointment-duration').val()
     var appointmentType = $('#appointment-type').val()
-    var appointmentInfo = $('#appointment-info').val()
-    var weekNumber = currentWeekNumber
+    var appointmentInfo = $('#appointment-info').html()
+    var weekNumber = calendarCurrentWeekNum
     var docId = currentDoctorId
     var pId = currentPatientId
     console.warn('pId:',pId)
@@ -267,18 +281,7 @@ export function handleCreateAppointmentSuccess(data:JsonResponse) {
 }
 
 
-export function viewAppointment(id:string) {
-    //make request to server for appointment
-    $.ajax({
-        url: "/rest/calendar/get-appointment/"+id,
-        type: "GET",
-        contentType: "application/json",
-        dataType:"json",
-        headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleViewAppointmentSuccess(data),
-        error: () => handleError('Error fetching appointment details')
-    })
-}
+
 
 export const divHeight = 50 * 12
 export function appointmentToHtml(a:Appointment):string {
@@ -442,38 +445,50 @@ function enableAppointmentClick(dayDiv:HTMLDivElement) {
     })
 }
 
+//display a popup message error
 export function handleError(message:string) {
-    $('#message').html(message)
+    var messageDivId = '#calendar-message'
+    var closeBtnId = '#calendar-message-close'
+    //display message
+    $(messageDivId).html(popupMessage(message,'alert-info', closeBtnId))
+    //enable popup message close button
+    $(closeBtnId).on('click', () => {
+        $(messageDivId).hide()
+    })
 }
 
 
 /*SECTION Calendar forwards and backwards functionality */
+export function getAppointments(docId:number, weekNumber:number, success:Function = handleCalendarSuccess) {
+    if (docId && weekNumber) {
+        $.ajax({
+            url: "/rest/calendar/get-week-appointments/"+docId+'/'+ weekNumber,
+            type: "GET",
+            contentType: "application/json",
+            dataType:"json",
+            headers: {'X-CSRF-TOKEN':csrfToken},
+            success: (data) => success(data),
+            error: () => handleError('Error fetching appointment details')
+        })
+    }
+    else {
+        handleError('Error fetching appointment details')
+    }
+}
 
-function getAppointments(docId:number, weekNumber:number) {
+export function viewAppointment(id:string) {
+    //make request to server for appointment
     $.ajax({
-        url: "/rest/calendar/get-appointment/"+docId+'/'+weekNumber,
+        url: "/rest/calendar/get-appointment/"+id,
         type: "GET",
         contentType: "application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleCalendarSuccess(data),
+        success: (data) => handleViewAppointmentSuccess(data),
         error: () => handleError('Error fetching appointment details')
     })
 }
 
-/**the current page number */
-var calendarCurrentWeekNum = 1
-var calendarPrevWeekNum = 1
-var calendarNextWeekNum = 2
-
-function setPageNumVarsCalendar(currentPageNum:number) {
-    calendarCurrentWeekNum = currentPageNum;
-    calendarPrevWeekNum = calendarCurrentWeekNum - 1;
-    calendarNextWeekNum = calendarCurrentWeekNum + 1;
-    console.log('calendarCurrentWeekNum:',calendarCurrentWeekNum)
-    console.log('calendarPrevWeekNum:',calendarPrevWeekNum)
-    console.log('calendarNextWeekNum:',calendarNextWeekNum)
-}
 
 export function setCurrentDoctorId(id:string) {
     currentDoctorId = id
@@ -481,14 +496,14 @@ export function setCurrentDoctorId(id:string) {
 
 $('#btn-calendar-week-prev').on('click', () => {
     //ajax request for doctors - on previous page of results
-    getAppointments(Number(currentDoctorId), calendarPrevWeekNum)
+    getAppointments(Number(currentDoctorId), calendarPrevWeekNum, handleCalendarSuccess)
 
     //set current page to previous page & update prev and next page numbers
     // setPageNumVarsCalendar(calendarPrevWeekNum as number)
 })
 $('#btn-calendar-week-next').on('click', () => {
     //ajax request for calendar - on next page of results
-    getAppointments(Number(currentDoctorId),calendarNextWeekNum)
+    getAppointments(Number(currentDoctorId),calendarNextWeekNum, handleCalendarSuccess)
 
     //set current page to next page & update prev and next page numbers
     // setPageNumVarsCalendar(calendarNextWeekNum as number)
@@ -498,7 +513,7 @@ $('#btn-calendar-week-go').on('click', () => {
     //TODO //IMPORTANT
     var weekNum = Number($('#weekNum').html() as string)
     //ajax request for calendar - on set page of results
-    getAppointments(Number(currentDoctorId),weekNum)
+    getAppointments(Number(currentDoctorId),weekNum, handleCalendarSuccess)
     
     //set current page to the entered page number & update prev and next page numbers
     // setPageNumVarsCalendar(weekNum as number)

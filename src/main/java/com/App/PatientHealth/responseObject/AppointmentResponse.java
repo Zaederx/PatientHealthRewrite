@@ -3,6 +3,7 @@ package com.App.PatientHealth.responseObject;
 import com.App.PatientHealth.domain.calendar.Appointment;
 import com.App.PatientHealth.responseObject.domain.AppointmentJson;
 
+
 public class AppointmentResponse extends JsonResponse {
     AppointmentJson appointment;
 

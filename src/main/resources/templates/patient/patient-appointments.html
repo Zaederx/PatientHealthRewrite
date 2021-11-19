@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+  <head>
+    <div th:replace="head"></div>
+	<script type="module" th:src="@{/js/patient-view/patient-appointments.js}" defer></script>
+    <title>Patient Home</title>
+  </head>
+  <body>
+  <!-- Header/Banner -->
+    <div class="jumbotron text-center">
+      <h1>Welcome Home</h1>
+      <h3>Accessible health care at you convenience</h3>
+
+      <!-- Navigation Bar -->
+	  <div th:replace="patient/patient-nav"></div>
+    </div>
+
+    <!-- Content div -->
+    <div class="container col-sm-10" ><!-- style="background-color:grey;" -->
+
+
+	<div id="response-messages"></div>
+    	
+
+
+	<div id="add-patient-accordion" class="accordion">
+    	<!-- CARD 1 - Request New Appointment  -->
+		  <div class="card text-center">
+		    <div class="card-header" id="headingOne">
+		        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#patientCollapse" aria-expanded="false" aria-controls="patientCollapse">
+		          Request New Appointment
+		        </button>
+		    </div>
+		    <div id="patientCollapse" class="collapse" aria-labelledby="headingOne" data-parent="#add-patient-accordion">
+		      <div class="card-body">
+			    	<br>
+			    	<div class="">
+			    		<!-- Appointment Request Form - Ajax version -->
+    					<form id="appointment-request-form" class="form-group col-sm-8 offset-sm-2">
+					    	<label for="topics">Appointment Type</label>
+					    	<select class="form-control"id="topics" name="appointmentType">
+					    		<option value="Check Up">Check Up</option>
+					<option value="Medical Question">Medical Question</option>
+					<option value="Medical Concern">Medical Concern</option>
+					<option value="Urgent">Urgent</option>
+					<option value="Travel Related">Travel Related</option>
+					<option value="Prescription Review">Prescription Review</option>
+					<option value="Mental Health">Mental Health</option>
+					<option value="Other">Other</option>
+					    	</select>
+							<br>
+					    	<label for="description">Description</label>
+					    	<textarea form="appointment-request-form" id="description" class="form-control text-center" name="description"></textarea>
+							<br>
+
+							<!-- Time / Session Preference-->
+					    	<label>Time Preference:</label><br>
+					    	<label for="morning">Morning</label><input id="morning" class="text-center"type="radio" name="session" value="true" checked></input>
+					    	<label for="afternoon">Afternoon</label><input id="afternoon" class="text-center"type="radio" name="session" value="false"></input>
+		    	
+		    			</form>
+		    			<button id="btn-submit-appointment" class="btn btn-primary" >Submit</button>
+		    		</div>
+		      </div>
+		    </div>
+		  </div>
+    	</div><!-- END OF ACCORDIAN DIV -->
+    	
+    	
+    	<br><br>
+    	<div class="row">
+
+			<!--SECTION Appointment Requests  -->
+	    	<div class="col-sm-4">
+	    		<!-- Table -->
+	    		<table class="table table-bordered table-striped">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="1">Appointment Requests</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody id="patient-appointment-requests-tbody" class="highlight-table-body-row" >
+		    		<!-- Filled via ajax method -->
+	    			</tbody>
+	    		</table>
+				<br>
+				<button id="display-appointment-requests" class="btn btn-primary">Display Request Info</button>
+	    	</div>
+
+			<div id="patient-appointment-requests-popup" class="alert alert-info appointment-popup-short" style="display: none">
+				<div id="request-popup-close" class="btn-x">X</div>
+				<label for="rquest-appointment-type">Appointment Type</label>
+				<select class="form-control"id="request-appointment-type" name="appointmentType">
+					<option value="Check Up">Check Up</option>
+					<option value="Medical Question">Medical Question</option>
+					<option value="Medical Concern">Medical Concern</option>
+					<option value="Urgent">Urgent</option>
+					<option value="Travel Related">Travel Related</option>
+					<option value="Prescription Review">Prescription Review</option>
+					<option value="Mental Health">Mental Health</option>
+					<option value="Other">Other</option>
+				</select>
+				<br>
+
+				<!-- Description -->
+				<label for="request-appointment-info">Appointment Info</label>
+				<textarea id="request-appointment-info" class="form-control" name="description"></textarea>
+				<br>
+
+				<!-- Time Preference / Session -->
+				<label>Time Preference:</label><br>
+				<label for="morning-session">Morning</label>
+				<input id="morning-session" class="text-center"type="radio" name="session" value="true"></input>
+				<label for="afternoon-session">Afternoon</label>
+				<input id="afternoon-session" class="text-center"type="radio" name="session" value="false"></input>
+			</div>
+
+
+
+
+
+	    	<!-- Appointments -->
+	    	<div class="col-sm-4">
+	    		<!-- Table -->
+	    		<table class="table table-bordered table-striped">
+	    			<thead>
+	    				<tr>
+		    				<th colspan="1">Next Appointment</th>
+	    				</tr>
+	    			</thead>
+	    			<tbody id="appointments-tbody">
+		    		<!-- Filled via ajax method -->
+	    			</tbody>
+	    		</table>
+				<br>
+				<button id="display-appointment" class="btn btn-primary">Display Appointment</button>
+	    	</div>
+
+			<div id="appointment-popup" class="alert alert-info appointment-popup" style="display: none">
+
+				<div id="appointment-popup-close" class="btn-x">X</div>
+				<div>Appointment Details</div>
+				<br>
+
+				<!-- Date -->
+				<label for="appointment-date">Date</label>
+				<input id="appointment-date" type="date" class="form-control" disabled="disabled">
+				<br>
+
+				<!-- Time -->
+				<label for="appointment-time">Time</label>
+				<input id="appointment-time" type="time" class="form-control" disabled="disabled">
+				<br>
+		
+				<!-- Duration In Minutes -->
+				<label for="appointment-duration">Duration</label>
+				<input id="appointment-duration" type="number" min="15" max="60" class="form-control" disabled="disabled">
+				<br>
+		
+				<!-- Appointment Type -->
+				<label for="appointment-type">Appointment Type</label>
+				<input id="appointment-type" type="text" class="form-control" disabled="disabled">
+				<br>
+		
+				<!-- Appointment Info -->
+				<label for="appointment-info">Appointment Information</label>
+				<span id="appointment-info" type="text" class="form-control disabled" data-placeholder="Appointment Information">Another routine checkup for hearing.</span>
+				<br>
+		
+				
+			</div>
+
+	    	
+    	</div>
+    	
+    	<br><br><br><br><br><br>
+    </div>
+
+
+  </body>
+</html>

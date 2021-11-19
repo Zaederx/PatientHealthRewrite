@@ -2,6 +2,7 @@ package com.App.PatientHealth.services;
 
 import java.util.ArrayList;
 
+import com.App.PatientHealth.domain.PatientAppointmentRequest;
 import com.App.PatientHealth.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.App.PatientHealth.repository.AppointmentRequestPagingRepository;
 import com.App.PatientHealth.repository.DoctorPagingRepository;
 import com.App.PatientHealth.repository.GmcRepository;
 import com.App.PatientHealth.repository.MedicalNotePagingRepository;
+import com.App.PatientHealth.repository.PatientAppointmentRequestRepository;
 import com.App.PatientHealth.repository.PatientPagingRepository;
 import com.App.PatientHealth.repository.PrescriptionPagingRepository;
 import com.App.PatientHealth.repository.UserPagingRepository;
@@ -47,10 +49,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	MedicalNotePagingRepository medicalNoteRepo;
 
 	@Autowired
-	AppointmentRequestPagingRepository requestRepo;
+	AppointmentRequestPagingRepository doctorAppointmentRequestRepo;
 
 	@Autowired
 	AppointmentPagingRepository appointmentRepo;
+
+	@Autowired
+	PatientAppointmentRequestRepository patientAppointmentRequestRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -116,10 +121,55 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	}
 
 	public AppointmentRequestPagingRepository getAppointmentRequestRepo() {
-		return requestRepo;
+		return doctorAppointmentRequestRepo;
 	}
 
 	public AppointmentPagingRepository getAppointmentRepo() {
 		return appointmentRepo;
 	}
+
+	public void setUserPaging(UserPagingRepository userPaging) {
+		this.userPaging = userPaging;
+	}
+	public void setAdminPaging(AdminPagingRepository adminPaging) {
+		this.adminPaging = adminPaging;
+	}
+	public void setDoctorPaging(DoctorPagingRepository doctorPaging) {
+		this.doctorPaging = doctorPaging;
+	}
+	public void setPatientPaging(PatientPagingRepository patientPaging) {
+		this.patientPaging = patientPaging;
+	}
+	public void setGRepo(GmcRepository gRepo) {
+		this.gRepo = gRepo;
+	}
+	public void setPrescriptionRepo(PrescriptionPagingRepository prescriptionRepo) {
+		this.prescriptionRepo = prescriptionRepo;
+	}
+	public void setMedicalNoteRepo(MedicalNotePagingRepository medicalNoteRepo) {
+		this.medicalNoteRepo = medicalNoteRepo;
+	}
+
+
+	public AppointmentRequestPagingRepository getDoctorAppointmentRequestRepo() {
+		return this.doctorAppointmentRequestRepo;
+	}
+
+	public void setDoctorAppointmentRequestRepo(AppointmentRequestPagingRepository doctorAppointmentRequestRepo) {
+		this.doctorAppointmentRequestRepo = doctorAppointmentRequestRepo;
+	}
+	public void setAppointmentRepo(AppointmentPagingRepository appointmentRepo) {
+		this.appointmentRepo = appointmentRepo;
+	}
+
+	public PatientAppointmentRequestRepository getPatientAppointmentRequestRepository() {
+		return this.patientAppointmentRequestRepository;
+	}
+
+	public void setPatientAppointmentRequestRepository(PatientAppointmentRequestRepository patientAppointmentRequestRepository) {
+		this.patientAppointmentRequestRepository = patientAppointmentRequestRepository;
+	}
+
+
+	
 }

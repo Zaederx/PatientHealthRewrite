@@ -4,14 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.App.PatientHealth.domain.AppointmentRequest;
 import com.App.PatientHealth.domain.Patient;
-import com.App.PatientHealth.domain.Prescription;
+import com.App.PatientHealth.domain.PatientAppointmentRequest;
 import com.App.PatientHealth.domain.User;
+import com.App.PatientHealth.requestObjects.AppointmentRequestForm;
+import com.App.PatientHealth.requestObjects.PatientAppointmentRequestForm;
 import com.App.PatientHealth.requestObjects.PatientRegForm;
-import com.App.PatientHealth.requestObjects.PrescriptionForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.domain.PatientJson;
+import com.App.PatientHealth.responseObject.lists.AppointmentListResponse;
+import com.App.PatientHealth.responseObject.lists.MedicalNotesListResponse;
+import com.App.PatientHealth.responseObject.lists.PatientAppointmentRequestListResponse;
 import com.App.PatientHealth.responseObject.lists.PatientListResponse;
+import com.App.PatientHealth.responseObject.lists.PrescriptionListResponse;
 import com.App.PatientHealth.services.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +64,7 @@ public class PatientRest {
             res.setSuccess(false);
             res.setMessage("Problem retrieving patient details from database");
         }
-
         return res;
-        
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -167,5 +171,133 @@ public class PatientRest {
    }
 
 
+
+   @GetMapping("/get-patient-appointment-requests")
+   public PatientAppointmentRequestListResponse getPatientAppointmentRequests() {
+       PatientAppointmentRequestListResponse res = new PatientAppointmentRequestListResponse();
+
+       String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+       try {
+            Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
+
+            if(patientOpt.isPresent()) {
+                Patient patient = patientOpt.get();
+                res = new PatientAppointmentRequestListResponse(patient.getPatientAppointmentRequests());
+                res.setSuccess(true);
+            }
+            else {
+                res.setSuccess(false);
+                res.setMessage("No patient found to retrieve details");
+            }
+            
+        }
+        catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage("Problem retrieving patient from database");
+        }
+
+        return res;
+   }
+
+
+   @GetMapping("/get-appointments")
+   public AppointmentListResponse getAppointments() {
+       AppointmentListResponse res = new AppointmentListResponse();
+       String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+       try {
+            Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
+
+            if(patientOpt.isPresent()) {
+                Patient patient = patientOpt.get();
+                res = new AppointmentListResponse(patient.getAppointments());
+                res.setSuccess(true);
+            }
+            else {
+                res.setSuccess(false);
+                res.setMessage("No patient found to retrieve details");
+            }
+            
+        }
+        catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage("Problem retrieving patient from database");
+        }
+        return res;
+   }
+
+
+   @PostMapping("/submit-appointment-request")
+   public JsonResponse submitAppointmentRequest(@RequestBody PatientAppointmentRequestForm form) {
+       JsonResponse res = new JsonResponse();
+       //get patient id
+       String username = SecurityContextHolder.getContext().getAuthentication().getName();
+       Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
+
+        if(patientOpt.isPresent()) {
+
+            
+            //set request with form information
+            PatientAppointmentRequest request = new PatientAppointmentRequest(form);
+            //add patient to request
+            request.setPatient(patientOpt.get());
+
+            //save request
+            try {
+                userServices.getPatientAppointmentRequestRepository().save(request);
+                res.setSuccess(true);
+                res.setMessage("Appointment request added successfully");
+            } catch (Exception e) {
+                res.setSuccess(false);
+                res.setMessage("Problem saving appointment request");
+            }
+        }
+        else {
+            res.setSuccess(false);
+            res.setMessage("No patient found to retrieve details");
+        }
+      
+       return res;
+   }
+
+
+   //SECTION Prescriptions
+   @GetMapping("/get-prescriptions")
+   public PrescriptionListResponse getPatientPrescriptions() {
+       PrescriptionListResponse res = new PrescriptionListResponse();
+       String username = SecurityContextHolder.getContext().getAuthentication().getName();
+       Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
+
+        if(patientOpt.isPresent()) {
+            Patient patient = patientOpt.get();
+            res = new PrescriptionListResponse(patient.getPrescriptions());
+            res.setSuccess(true);
+        } 
+        else {
+            res.setSuccess(false);
+            res.setMessage("No patient details found");
+        }
+       return res;
+   }
+
+   //SECTION Medical Notes
+   @GetMapping("/get-medical-notes")
+   public MedicalNotesListResponse getPatientMedicalNotes() {
+    MedicalNotesListResponse res = new MedicalNotesListResponse();
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
+
+     if(patientOpt.isPresent()) {
+         Patient patient = patientOpt.get();
+         res = new MedicalNotesListResponse(patient.getMedicalNotes());
+         res.setSuccess(true);
+     } 
+     else {
+         res.setSuccess(false);
+         res.setMessage("No patient details found");
+     }
+    return res;
+   }
 
 }

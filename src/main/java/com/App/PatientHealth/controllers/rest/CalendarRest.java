@@ -56,7 +56,7 @@ public class CalendarRest {
     }
 
 
-    @GetMapping("/get-appointment/{docId}/{weekNum}")
+    @GetMapping("/get-week-appointments/{docId}/{weekNum}")
     public JsonResponse getDoctorsAppointments(@PathVariable String docId, @PathVariable String weekNum) {
         int id = Integer.parseInt(docId);
         int weekNumber = Integer.parseInt(weekNum);

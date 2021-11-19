@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <link rel="stylesheet" type="text/css" href="/css/app-css.css">
+    <style>
+    .btn-space{
+    	margin-right: 10px;
+    }
+    
+    /* Note: using Table Flow as alternative to Boostrap table-repsonsive, 
+  	which doesn't work well in this situation 
+  	Apply table-flow to div outside desired table*/
+	.table-flow { 
+	  	overflow-x:auto;
+	}
+	.highlight {
+		background-color:#86dcff;
+	}
+	#patient-search-table-body tr:hover {
+		background-color:#86dcff;
+	}
+	
+	#doctor-search-table-body tr:hover {
+		background-color:#86dcff;
+	}
+    </style>
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!-- JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <title>Patient Home</title>
+  </head>
+  <body>
+  <!-- Header/Banner -->
+    <div class="jumbotron text-center">
+      <h1>Welcome Home</h1>
+      <h3>Accessible health care at you convenience</h3>
+      
+      <!-- Navigation Bar -->
+        <!-- Navigation Bar -->
+        <div th:replace="patient/patient-nav"></div>
+
+    </div>
+    
+    <!-- Content div -->
+    <div class="container col-sm-9" ><!-- style="background-color:grey;" -->
+    	<!-- Model - For ViewingPrescriptions -->
+    	<div id="presModal" class="modal fade" role="dialog">
+    		<div class="modal-dialog">
+    			<!-- Modal Content  -->
+    			<div class="modal-content">
+    				<div class="modal-header">
+    					<h4 class="modal-title">Prescription</h4>
+    					<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle" style="color:red;" aria-hidden="true"></i></button>
+    				</div>
+    				<div class="modal-body">
+    					<h5 id="presModal-subTitle"></h5>
+    					<p id="presModal-body"></p>
+    				</div>
+    			</div>
+    		</div>
+    		
+    	</div>
+
+    </div>
+    
+	 
+  </body>
+  <script>
+  
+
+  var dataMessages;
+  var recipient;
+  
+  /*View Prescriptions*/
+  function displayMessage(i) {
+	  console.log("*********** displayMessageModal called ***********");
+	  $('#messageModal-subTitle').text(dataStore.messages[i].title);
+	  $('#messageModal-body').text(dataStore.messages[i].body);
+  } 
+  
+  
+  
+
+  function sendMessage() {
+	  recipient;
+	  var messageBody = $('#messageBody').val();
+  }
+  
+  function replyToMessage() {
+	  
+  }
+  
+  function retrieveMessages() {
+	  $.ajax({
+		  type:'GET',
+		  url:'/ajax/patient/messages',
+		  success:function(response) {
+			  var dString = JSON.stringify(response);
+			  var data = JSON.parse(dString);
+			  if (data.count == 0) {
+				  console.log("data count zero if statement");
+				  $('#messages').html("<tr><td>No Messages</td></tr>");
+			  } else {
+				  dataMessages = data;
+				  var m = "";
+				  for (var i = 0 ; i < data.listSize; i++ ) {
+					  m += '<tr><td onclick="displayMessage('+i+')\" data-toggle="modal" data-target="#presModal">'+data.messages[i].sender+'</td>'
+					  +'<tr><td>'+data.messages[i].title+'</td>'
+					  +'<button onclick="replyToMessage('+i+')\;" class="btn btn-danger">Reply</button></td></tr>';
+				  }
+				  console.log("Show output:\n"+m);
+				  $('#appointments').html(m);
+			  }
+		  },
+		  error:function() {
+			  $('#appointments').html("An error has occured. Please try refreshing the page.");
+		  }
+	  });
+  }
+  
+  var csrfToken = $("meta[name='_csrf']").attr("content");//needed for post requests
+  
+  function cancelAppointment(i,message) {
+	  $.ajax({
+		  headers: {'X-CSRF-TOKEN':csrfToken},
+		  type:"POST",
+		  url:'/ajax/patient/appointments/cancel/'+dataAppointments[i].id+"/"+message,
+		  success:function(response) {
+			  var dString = JSON.stringify(response);
+			  var data = JSON.parse(dString);
+			  if (data.count == 0) {
+				  console.log("data count zero if statement");
+				  $('#appointments').html("<tr><td>No Active Prescriptions</td></tr>");
+			  } else {
+				  dataStore = data;
+				  var m = "";
+				  for (var i = 0 ; i < data.listSize; i++ ) {
+					  m += '<tr><td>'+data.prescriptions[i].medication.name+'</td>'
+					  + '<td><button onclick="displayPrescription('+i+')\" class="btn btn-primary btn-space" data-toggle="modal" data-target="#presModal">View</button>'
+					  +'<button onclick="cancelPrescription('+data.prescriptions[i].id+')\;" class="btn btn-danger">Cancel</button></td></tr>';
+				  }
+				  console.log("Show output:\n"+m);
+				  $('#appointments').html(m);
+			  }
+		  },
+		  error:function() {
+			  $('#appointments').html("An error has occured. Please try refreshing the page.");
+		  }
+	  });
+	  
+  }
+  
+  
+  //RETRIEVE
+  /* Method to retrieve active prescriptions */
+  $(document).ready(function(){
+	  $.ajax({
+		  type:'GET',
+		  url:'/ajax/patient/prescriptions',
+		  success:function(response) {
+			  var dString = JSON.stringify(response);
+			  var data = JSON.parse(dString);
+			  if (data.count == 0) {
+				  console.log("data count zero if statement");
+				  $('#prescriptions').html("<tr><td>No Active Prescriptions</td></tr>");
+			  } else {
+				  dataStore = data;
+				  var m = "";
+				  for (var i = 0 ; i < data.listSize; i++ ) {
+					  m += '<tr><td>'+data.prescriptions[i].medication.name+'</td>'
+					  + '<td><button onclick="displayPrescription('+i+')\" class="btn btn-primary btn-space" data-toggle="modal" data-target="#presModal">View</button></td></tr>';
+				  }
+				  console.log("Show output:\n"+m);
+				  $('#prescriptions').html(m);
+			  }
+		  },
+		  error:function() {
+			  $('#prescriptions').html("An error has occured. Please try refreshing the page.");
+		  }
+	  });
+  });
+  
+  /* Method to retrieve next appointments */
+  $(document).ready(function(){
+	  $.ajax({
+		  type:'GET',
+		  url:'/calendar/patient/events',
+		  success:function(data) {
+			  dataAppointments = data;
+			  if (data.response == false) {
+				  $('#appointments').html(data.message);
+			  } 
+			  else {
+				  var m = "";
+				  for (var i = 0 ; i < data.listSize; i++ ) {
+					  m += '<row><td>'+data.message+'</td>'
+					  + '<td><button onclick="cancelAppointmentModal('+i+')">Cancel</button>';
+				  }
+				  console.log('appointments:'+m);
+				  $('#appointments').html(m);
+			  }
+		  },
+		  error:function(){
+			  
+		  }
+	  });
+  });
+  
+  /*Test*/
+/*   $(document).ready(function(){
+	  $.ajax({
+		  type:'GET',
+		  url:'/calendar/test',
+		  success:function(data) {
+			  dataAppointments = data;
+				  m += '<row><td>'+data.message+'</td>'
+				  + '<td><button onclick="cancelAppointmentModal('+i+')">Cancel</button>';
+			  console.log('appointments:'+m);
+			  $('#appointments').html(m);
+		  },
+		  error:function(){
+			  
+		  }
+	  });
+  }); */
+  //FILL
+  /* Method to fill active prescriptions */
+  
+  /* Method to fill Next appointment */
+  
+  </script>
+</html>

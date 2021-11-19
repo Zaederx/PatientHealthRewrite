@@ -31,24 +31,27 @@ export const plain = ''
  * @param csrfToken 
  */
 export function selectRow(tableBody:HTMLTableElement,row:HTMLTableRowElement, csrfToken?:string) {
+    console.log('row selected')
     var selected = row.getAttribute('data-selected')
     var id = row.getAttribute('data-id') as string
     if (selected == 'false') {
         //get previously selected row if there is one
         var previouslySelected = tableBody.querySelector('tr[data-selected=true]') as HTMLTableRowElement
-        //if there is - unselect this row
+        //if there is a previously selcted row - unselect this row
         if (previouslySelected) {
             highlightRow(previouslySelected,plain)
             previouslySelected.setAttribute('data-selected','false')
         }
-        
+
         //highlight newly selected row
         highlightRow(row,yellow)
+        //set newlyselected row attribute 'data-selected' to true
+        row.setAttribute('data-selected', 'true')
+        
         if(csrfToken) {
             displayDoctorsPatientDetails(id,csrfToken)
         }
-        //set newlyselected row attribute 'data-selected' to true
-        row.setAttribute('data-selected', 'true')
+        
     }    
         
 }
@@ -77,6 +80,7 @@ export function makeClickableTableRows(tableBody:HTMLTableElement,select:Functio
 }
 
 export function highlightRow(row:HTMLTableRowElement, colour:string) {
+    console.log('highlighting row')
     row.style.backgroundColor = colour;
 }
 
