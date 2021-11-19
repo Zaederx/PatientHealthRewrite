@@ -53,12 +53,21 @@ $('#btn-select-patient').on('click', () => {
     console.log('patient selected')
     //set patient id
     currentPatientId = getSelectedItemId(patientTableId)
+    //indicate patient is selected
+    if (currentPatientId) {
+        indicatePatientSelected()
+    }
 })
 $('#btn-select-doctor').on('click', () => {
     console.log('doctor selected')
     //set patient id
     currentDoctorId = getSelectedItemId(doctorTableId)
+    //get appointments for calendar
     getCurrentWeekAppointments(currentDoctorId)
+    //indicate doctor is selected
+    if (currentDoctorId) {
+        indicateDoctorSelected()
+    }
     console.warn('currentDoctorId:', currentDoctorId)
 })
 $('#btn-create-appointment').on('click', () => {
@@ -79,7 +88,7 @@ function enableInputFields() {
     $('#appointment-duration').removeAttr('disabled')
     $('#appointment-type').removeAttr('disabled')
     //enable contenteditable span field
-    $('#appointment-info').attr('contenteditable')
+    $('#appointment-info').attr('contenteditable','')
     $('#appointment-info').addClass('editable')
     $('#appointment-info').removeClass('disabled')
 }
@@ -253,15 +262,18 @@ export function submitAppointment(url:string, appointmentId?:string) {
 
 
 export function deleteAppointment(id:string) {
-    $.ajax({
-        url: '/rest/calendar/delete-appointment/'+id,
-        type: "DELETE",
-        contentType: "application/json",
-        dataType:"json",
-        headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleCreateAppointmentSuccess(data),
-        error: () => handleError('Error deleting appointment')
-    })
+    var deleteAppointment = confirm('Are you sure you want to delete this Appointment?')
+    if (deleteAppointment == true) {
+        $.ajax({
+            url: '/rest/calendar/delete-appointment/'+id,
+            type: "DELETE",
+            contentType: "application/json",
+            dataType:"json",
+            headers: {'X-CSRF-TOKEN':csrfToken},
+            success: (data) => handleCreateAppointmentSuccess(data),
+            error: () => handleError('Error deleting appointment')
+        })
+    }
 }
 
 
@@ -285,10 +297,12 @@ export function handleCreateAppointmentSuccess(data:JsonResponse) {
 
 export const divHeight = 50 * 12
 export function appointmentToHtml(a:Appointment):string {
+    //work out position
     var hour = Number(a.hour)
     var minute = Number(a.min)
     var position = appointmentPosition(divHeight, hour, minute)
     var height = appointmentDurationLength(divHeight, a.durationInMinutes)
+    //set html to be returned - with position information
     var html = '<div class="single-appointment" data-position="'+position+'" data-id="'+a.id+'" style="top:'+position+'px; height:'+height+'px">'+a.appointmentType+'</div>'
 
     return html
@@ -518,3 +532,18 @@ $('#btn-calendar-week-go').on('click', () => {
     //set current page to the entered page number & update prev and next page numbers
     // setPageNumVarsCalendar(weekNum as number)
 })
+
+//SECTION SELECTED BUTTONS
+const doctorSelectId = '#doctor-selected'
+const patientSelectId = '#patient-selected'
+function indicateDoctorSelected() {
+    $(doctorSelectId).removeClass('btn-danger')
+    $(doctorSelectId).addClass('btn-info')
+    $(doctorSelectId).text('Doctor Selected')
+}
+function indicatePatientSelected() {
+    $(patientSelectId).removeClass('btn-danger')
+    $(patientSelectId).addClass('btn-info')
+    $(patientSelectId).text('Patient Selected')
+}
+    

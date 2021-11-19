@@ -2,10 +2,10 @@ import { validateEmail } from "./admin-module4.js";
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string;//needed for post requests
 //global boolean window variables - to identify which fields have passed as valid
-var pNameValid = false
-var pUsernameValid = false 
-var pEmailValid = false
-var pPasswordValid = false
+var pNameValid = {val:false}
+var pUsernameValid = {val:false}
+var pEmailValid = {val:false}
+var pPasswordValid = {val:false}
 
 function showPassword(id:string){
     //show both passwords as plain text
@@ -47,18 +47,20 @@ function passwordMessages(data:PasswordResponse) {
  * @param enableBtn id of button to be enabled if response returns success as true
  * @param disableBtn id of button to be dispable if repsonse returns success as false
  */
-export function handleSuccess(data:JsonResponse,errorId:string, validBool:string, enableBtn:Function, disableBtn:Function) {
+export function handleSuccess(data:JsonResponse,errorId:string, validBool:{val:boolean}, enableBtn:Function, disableBtn:Function) {
     if(data.success == false) {
         $(errorId).html(message(data.message));
         $(errorId).show()
         //@ts-ignore
-        window[validBool] = false
+        validBool.val = false
+        console.log(`validBool: ${validBool.val}`)
         disableBtn()
     } 
     else {
         $(errorId).hide()
         //@ts-ignore
-        window[validBool] = true
+        validBool.val = true
+        console.log(`validBool: ${validBool.val}`)
         enableBtn()
     }
 }
@@ -71,19 +73,21 @@ export function handleSuccess(data:JsonResponse,errorId:string, validBool:string
  * @param enableBtn id of button to be enabled if response returns success as true
  * @param disableBtn id of button to be dispable if repsonse returns success as false
  */
-export function handlePasswordSuccess(data:PasswordResponse,errorId:string, validBool:string, enableBtn:Function, disableBtn:Function) {
+export function handlePasswordSuccess(data:PasswordResponse,errorId:string, validBool:{val:boolean}, enableBtn:Function, disableBtn:Function) {
     if(data.success == false) {
         var m = passwordMessages(data)
         $(errorId).html(m);
         $(errorId).show()
         //@ts-ignore
-        window[validBool] = false
+        validBool.val = false
+        console.log(`validBool: ${validBool.val}`)
         disableBtn()
     } 
     else {
         $(errorId).hide()
         //@ts-ignore
-        window[validBool] = true
+        validBool.val = true
+        console.log(`validBool: ${validBool.val}`)
         enableBtn()
     }
 }
@@ -95,20 +99,28 @@ $('#admin-show-password').on('focus', () => showPassword('#admin-password'))
 $('#admin-hide-password').on('focus', () => hidePassword('#admin-password'))
 //toggle doctor password
 $('#doctor-show-password').on('focus', () => showPassword('#doctor-password'))
-$('#doctor-hide-password').on('focus', () => hidePassword('#doctor-password'))
+$('#doctor-hide-password').on('focus', () => hidePassword('#doctor-password'));
 
 
 
 /*SECTION Patient Validation & Registration */
+//disable button to start with
+(document.querySelector('#reg-btn-patient') as HTMLButtonElement).disabled = true
 function disablePatientRegBtn() {
-    if (!pNameValid || !pUsernameValid || !pEmailValid || !pPasswordValid) {
+    console.warn('disablePatientRegBtn called')
+    console.warn(`pNameValid: ${pNameValid.val} \n pUsernameValid: ${pUsernameValid.val}\n pPasswordValid: ${pPasswordValid.val}\n pEmailVaild: ${pEmailValid.val}`)
+    if (pNameValid.val || pUsernameValid.val || pEmailValid.val || pPasswordValid.val) {
         (document.querySelector('#reg-btn-patient') as HTMLButtonElement).disabled = true
+        console.warn('button disabled')
     }
 }
 
 function enablePatientRegBtn() {
-    if (pNameValid && pUsernameValid && pEmailValid && pPasswordValid) {
+    console.warn('enablePatientRegBtn called')
+    console.warn(`pNameValid: ${pNameValid.val} \n pUsernameValid: ${pUsernameValid.val}\n pPasswordValid: ${pPasswordValid.val}\n pEmailVaild: ${pEmailValid.val}`)
+    if (pNameValid.val && pUsernameValid.val && pEmailValid.val && pPasswordValid.val) {
         (document.querySelector('#reg-btn-patient') as HTMLButtonElement).disabled = false
+        console.warn('button enabled')
     }
 }
 
@@ -124,7 +136,7 @@ $('#patient-name').on('input', function () {
         contentType:"application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#patient-name-error', "pNameValid", enablePatientRegBtn, disablePatientRegBtn)
+        success: (data) => handleSuccess(data,'#patient-name-error', pNameValid, enablePatientRegBtn, disablePatientRegBtn)
     })
 })
 
@@ -139,7 +151,7 @@ $('#patient-username').on('input', function () {
         contentType:"application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#patient-username-error', "pUsernameValid", enablePatientRegBtn, disablePatientRegBtn)
+        success: (data) => handleSuccess(data,'#patient-username-error', pUsernameValid, enablePatientRegBtn, disablePatientRegBtn)
     })
 })
 
@@ -148,7 +160,7 @@ $('#patient-email').on('input', function () {
 })
 
 function handleSuccessEmail(data:JsonResponse) {
-    handleSuccess(data,'#patient-email-error', "pEmailValid", enablePatientRegBtn, disablePatientRegBtn)
+    handleSuccess(data,'#patient-email-error', pEmailValid, enablePatientRegBtn, disablePatientRegBtn)
 }
 
 $('#patient-password1').on('input', function () {
@@ -162,7 +174,7 @@ $('#patient-password1').on('input', function () {
         contentType:"application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handlePasswordSuccess(data,'#patient-password-error', "pPasswordValid", enablePatientRegBtn, disablePatientRegBtn)
+        success: (data) => handlePasswordSuccess(data,'#patient-password-error', pPasswordValid, enablePatientRegBtn, disablePatientRegBtn)
     })
 })
 
@@ -177,7 +189,7 @@ $('#patient-password2').on('input', function () {
         contentType:"application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handlePasswordSuccess(data,'#patient-password-error', "pPasswordValid", enablePatientRegBtn, disablePatientRegBtn)
+        success: (data) => handlePasswordSuccess(data,'#patient-password-error', pPasswordValid, enablePatientRegBtn, disablePatientRegBtn)
     })
 })
 $('#reg-btn-patient').on('click', ()=> postPatient())
@@ -212,20 +224,20 @@ function postPatient() {
 
 
 /*SECTION Doctor Validation Registration */
-var dNameValid = false
-var dGmcValid = false
-var dUsernameValid = false 
-var dEmailValid = false
-var dPasswordValid = false
+var dNameValid = {val:false}
+var dGmcValid = {val:false}
+var dUsernameValid = {val:false}
+var dEmailValid = {val:false}
+var dPasswordValid = {val:false}
 
 function disableDoctorRegBtn() {
-    if (!dNameValid || !dGmcValid || !dUsernameValid || !dEmailValid || !dPasswordValid) {
+    if (dNameValid.val || dGmcValid.val || dUsernameValid.val || dEmailValid.val || dPasswordValid.val) {
         (document.querySelector('#reg-btn-doctor') as HTMLButtonElement).disabled = true
     }
 }
 
 function enableDoctorRegBtn() {
-    if (dNameValid && dGmcValid && dUsernameValid && dEmailValid && dPasswordValid) {
+    if (dNameValid.val && dGmcValid.val && dUsernameValid.val && dEmailValid.val && dPasswordValid.val) {
         (document.querySelector('#reg-btn-doctor') as HTMLButtonElement).disabled = false
     }
 }
@@ -240,7 +252,7 @@ $('#doctor-name').on('input', function () {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#doctor-name-error', 'dEmailValid', enableDoctorRegBtn, disableDoctorRegBtn)
+        success: (data) => handleSuccess(data,'#doctor-name-error', dEmailValid, enableDoctorRegBtn, disableDoctorRegBtn)
     })
 })
 
@@ -254,7 +266,7 @@ $('#doctor-gmcNum').on('input', function() {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#doctor-gmcNum-error', 'dGmcValid', enableDoctorRegBtn, disableDoctorRegBtn)
+        success: (data) => handleSuccess(data,'#doctor-gmcNum-error', dGmcValid, enableDoctorRegBtn, disableDoctorRegBtn)
     })
 })
 
@@ -269,7 +281,7 @@ $('#doctor-username').on('input', function () {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#doctor-username-error', 'dUsernameValid', enableDoctorRegBtn, disableDoctorRegBtn)
+        success: (data) => handleSuccess(data,'#doctor-username-error', dUsernameValid, enableDoctorRegBtn, disableDoctorRegBtn)
     })
 })
 
@@ -283,7 +295,7 @@ $('#doctor-email').on('input', function () {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#doctor-email-error', 'dEmailValid', enableDoctorRegBtn, disableDoctorRegBtn)
+        success: (data) => handleSuccess(data,'#doctor-email-error', dEmailValid, enableDoctorRegBtn, disableDoctorRegBtn)
     })
 })
 
@@ -298,7 +310,7 @@ $('#doctor-password1').on('input', function () {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handlePasswordSuccess(data,'#doctor-password-error', 'dPasswordValid', enableDoctorRegBtn, disableDoctorRegBtn)
+        success: (data) => handlePasswordSuccess(data,'#doctor-password-error', dPasswordValid, enableDoctorRegBtn, disableDoctorRegBtn)
     })
 })
 
@@ -313,7 +325,7 @@ $('#doctor-password2').on('input', function () {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handlePasswordSuccess(data,'#doctor-password-error', 'dPasswordValid', enableDoctorRegBtn, disableDoctorRegBtn)
+        success: (data) => handlePasswordSuccess(data,'#doctor-password-error', dPasswordValid, enableDoctorRegBtn, disableDoctorRegBtn)
     })
 })
 
@@ -349,19 +361,19 @@ function postDoctor() {
 
 
 /*SECTION Admin Validation & Registration */
-var aNameValid = false
-var aUsernameValid = false 
-var aEmailValid = false
-var aPasswordValid = false
+var aNameValid = {val:false}
+var aUsernameValid = {val:false}
+var aEmailValid = {val:false}
+var aPasswordValid = {val:false}
 
 function disableAdminRegBtn() {
-    if (!aNameValid || !aUsernameValid || !aEmailValid || !aPasswordValid) {
+    if (aNameValid.val || aUsernameValid.val || aEmailValid.val || aPasswordValid.val) {
         (document.querySelector('#reg-btn-patient') as HTMLButtonElement).disabled = true
     }
 }
 
 function enableAdminRegBtn() {
-    if (aNameValid && aUsernameValid && aEmailValid && aPasswordValid) {
+    if (aNameValid.val && aUsernameValid.val && aEmailValid.val && aPasswordValid.val) {
         (document.querySelector('#reg-btn-patient') as HTMLButtonElement).disabled = false
     }
 }
@@ -376,7 +388,7 @@ $('#admin-name').on('input', function () {
         contentType:"application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#admin-name-error', 'aNameValid', enableAdminRegBtn, disableAdminRegBtn)
+        success: (data) => handleSuccess(data,'#admin-name-error', aNameValid, enableAdminRegBtn, disableAdminRegBtn)
     })
 })
 
@@ -391,7 +403,7 @@ $('#admin-username').on('input', function () {
         contentType:"application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#admin-username-error', 'aUsernameValid', enableAdminRegBtn, disableAdminRegBtn)
+        success: (data) => handleSuccess(data,'#admin-username-error', aUsernameValid, enableAdminRegBtn, disableAdminRegBtn)
     })
 })
 
@@ -405,7 +417,7 @@ $('#admin-email').on('input', function () {
         contentType:"application/json",
         dataType:"json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handleSuccess(data,'#admin-email-error', 'aEmailValid', enableAdminRegBtn, disableAdminRegBtn)
+        success: (data) => handleSuccess(data,'#admin-email-error', aEmailValid, enableAdminRegBtn, disableAdminRegBtn)
     })
 })
 
@@ -420,7 +432,7 @@ $('#admin-password1').on('input', function () {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handlePasswordSuccess(data,'#admin-password-error', 'aPasswordValid', enableAdminRegBtn, disableAdminRegBtn)
+        success: (data) => handlePasswordSuccess(data,'#admin-password-error', aPasswordValid, enableAdminRegBtn, disableAdminRegBtn)
     })
 })
 
@@ -435,7 +447,7 @@ $('#admin-password2').on('input', function () {
         contentType: "application/json",
         dataType: "json",
         headers: {'X-CSRF-TOKEN':csrfToken},
-        success: (data) => handlePasswordSuccess(data,'#admin-password-error', 'aPasswordValid', enableAdminRegBtn, disableAdminRegBtn)
+        success: (data) => handlePasswordSuccess(data,'#admin-password-error', aPasswordValid, enableAdminRegBtn, disableAdminRegBtn)
     })
 })
 

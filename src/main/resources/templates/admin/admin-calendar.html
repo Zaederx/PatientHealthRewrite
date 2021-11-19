@@ -18,7 +18,6 @@
     <div th:replace="admin/admin-nav"></div>
   </div>
   <div class="container text-center">  
-    <img class="img-fluid" th:src="@{/img/felipe-furtado-2zDXqgTzEFE-unsplash.jpg}" alt="administration background image">
     <br>
     <br>
     <br>
@@ -35,7 +34,10 @@
     <br>
     <br>
     <!-- Calendar -->
-    <script type="module" th:src="@{/js/calendar/calendar.js}"></script>
+    <div id="doctor-selected" class="btn btn-danger">Doctor Not Selected</div>
+    <div id="patient-selected" class="btn btn-danger">Patient Not Selected</div>
+    <br>
+    <br>
     <div th:replace="calendar"></div>
   </div>
 </body>
