@@ -1,6 +1,3 @@
-#css
-src/main/resources/static/css/
-
 #Java Project files
 .classpath
 .project
@@ -9,8 +6,6 @@ bin
 
 #vscode
 .vscode
-#js file folder
-js
 
 #node_modules
 node_modules

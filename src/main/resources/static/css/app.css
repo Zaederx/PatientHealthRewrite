@@ -1,0 +1,271 @@
+.disabled {
+  background-color: #e9ecef !important;
+}
+
+.highlight {
+  background-color: #86dcff;
+}
+
+.highlight-red {
+  background-color: #fad6bb;
+}
+
+.highlight-yellow {
+  background-color: #fdfc8a;
+}
+
+/* Done this way (double statement) to override bootstrap while hovering
+ * on tables with this class
+ */
+.highlight-table-body-row.highlight-table-body-row tr:hover {
+  background-color: #86dcff;
+}
+
+.highlight-red-table-body-row.highlight-red-table-body-row tr:hover {
+  background-color: #fad6bb;
+}
+
+.hr-divider {
+  border: 1px solid #9ca9a9;
+  border-radius: 5px;
+}
+
+.bar-space {
+  margin-right: 30px;
+  margin-left: 30px;
+  margin-bottom: 5px;
+}
+
+.btn-width {
+  width: 20%;
+}
+
+.btn-space {
+  margin-right: 30px;
+  margin-bottom: 5px;
+}
+
+.btn-space-left {
+  margin-left: 30px;
+  margin-bottom: 5px;
+}
+
+.dashboard-badge {
+  height: 200px;
+  width: 300px;
+  margin-bottom: 50px;
+  margin-right: 50px;
+  font-size: x-large !important;
+}
+
+.dashboard-badge span {
+  font-size: x-large;
+}
+
+/* Note: using Table Flow as alternative to Bootstrap table-responsive, 
+ * which doesn't work well in some situations
+ * Apply table-flow to div outside desired table*/
+.table-flow {
+  overflow-x: auto;
+}
+
+.pageNum {
+  border: solid #2978ed;
+  padding: 5px 15px;
+  margin-left: 10px;
+  margin-right: 0px;
+}
+
+.pageTotal {
+  border: solid #2978ed;
+  background-color: #2978ed;
+  color: white;
+  padding: 5px 15px;
+  margin-left: 0px;
+  margin-right: 10px;
+}
+
+.popup-form {
+  margin: auto;
+  padding: 20px;
+  z-index: 1;
+  width: 300px;
+  height: 300px;
+  background-color: #86dcff;
+  position: absolute;
+  top: 15%;
+  left: 15%;
+}
+
+.popup {
+  position: absolute !important;
+  left: 30%;
+  z-index: 1;
+}
+
+.field {
+  padding: 5px;
+  background-color: white;
+}
+
+.editable {
+  padding: 5px;
+  background-color: white;
+  white-space: pre-wrap;
+  word-wrap: normal;
+  display: block;
+}
+
+.editable:empty:before {
+  content: attr(data-placeholder);
+  color: #6d6d6d;
+}
+
+.btn-x {
+  background-color: #f05c35;
+  color: white;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  margin-left: 80%;
+}
+
+.info-table tbody {
+  display: block;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+.info-table tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  height: 800px;
+}
+
+.times-container {
+  display: grid;
+  grid-template-rows: 10% 90%;
+}
+
+.times-container div {
+  height: 50px;
+  text-align: center;
+  justify-content: center;
+}
+
+.times-container div:nth-child(even) {
+  background-color: #86dcff;
+}
+
+.times {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.days {
+  grid-column: 2;
+  display: grid;
+  grid-template-rows: 10% 90%;
+}
+
+.titles-container {
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.appointments-container {
+  z-index: 1;
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.appointments-container > * {
+  opacity: 0.5;
+}
+
+.appointments-underlay {
+  z-index: 0;
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+}
+
+.appointments {
+  box-shadow: -2px 0px 0px 0px black, 2px 0px 0px 0px black;
+}
+
+.single-appointment {
+  position: relative;
+  background-color: #fad6bb;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.day-title {
+  text-align: center;
+}
+
+.underlay div {
+  height: 50px;
+}
+
+.underlay div:nth-child(even) {
+  background-color: #86dcff;
+}
+
+.appointment-popup {
+  position: absolute !important;
+  left: 40%;
+  width: 300px;
+  height: 650px;
+  z-index: 2;
+}
+
+.appointment-popup-short {
+  position: absolute !important;
+  left: 40%;
+  width: 300px;
+  height: 400px;
+  z-index: 2;
+}
+
+#appointment-info {
+  height: 100px;
+  resize: both;
+}
+
+.medical-notes-grid {
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
+
+.medical-notes-col1 {
+  grid-column: 1;
+}
+
+.medical-notes-col2 {
+  grid-column: 2;
+}
+
+.medical-note-display {
+  height: 300px;
+  margin-left: 50px;
+}
+
+.medical-note-body {
+  margin-top: 20px;
+  height: 200px;
+  overflow-y: scroll;
+}
+
+/*# sourceMappingURL=app.css.map */
