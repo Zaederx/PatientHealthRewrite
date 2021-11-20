@@ -42,9 +42,6 @@ test {
 	}
 }
 
-// Expanding project properties - https://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto.properties-and-configuration.expand-properties.gradle
-processResources {
-    expand(project.properties)
-}
+
 
 
