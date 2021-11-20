@@ -219,8 +219,8 @@ export function submitAppointment(url, appointmentId) {
     }
 }
 export function deleteAppointment(id) {
-    var confirmation = confirm('Are you sure you want to delete this Appointment?');
-    if (confirmation == true) {
+    var response = confirm('Are you sure you want to delete this Appointment?');
+    if (response == true) {
         $.ajax({
             url: '/rest/calendar/delete-appointment/' + id,
             type: "DELETE",

@@ -98,4 +98,4 @@ task compileTS() {
 whenever build or bootRun is called
  */
 
-build.dependsOn compileSass, compileTS
+// build.dependsOn compileSass, compileTS
