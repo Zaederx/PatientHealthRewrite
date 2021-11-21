@@ -33,6 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http
 				.requiresChannel()
+				//for heroku ssl
+				.requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+      .requiresSecure()
 				// .anyRequest()
 				// .requiresSecure()
 				
