@@ -26,15 +26,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsServiceImpl uDetails;
 	@Override
-	protected void configure (HttpSecurity https) throws Exception {
+	protected void configure (HttpSecurity http) throws Exception {
 		//for testing purposes - to be configured later
 //		https.authorizeRequests().antMatchers("/").permitAll(); 
 		
 
-		https
+		http
 				.requiresChannel()
-				.anyRequest()
-				.requiresSecure()
+				// .anyRequest()
+				// .requiresSecure()
 				
 			.and()
 				.authorizeRequests()
