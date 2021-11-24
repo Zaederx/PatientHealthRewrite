@@ -52,38 +52,43 @@ public class PatientJson extends UserJson {
 /* *********** Helper Functions *********** */ 
     public List<PrescriptionJson> toPrescriptionJsons(List<Prescription> prescriptions) {
         List<PrescriptionJson> json = new ArrayList<PrescriptionJson>();
-        prescriptions.forEach(n -> {
-            json.add(new PrescriptionJson(n));
-        });
+        if(prescriptions.size() > 0) {
+            prescriptions.forEach(n -> {
+                json.add(new PrescriptionJson(n));
+            });
+        }
         return json;
     }
 
     public List<MedicalNoteJson> toDoctorNoteJsons(List<MedicalNote> notes) {
         List<MedicalNoteJson> json = new ArrayList<MedicalNoteJson>();
-        notes.forEach(n -> {
-            json.add(new MedicalNoteJson (n));
-        });
+        if (notes != null && notes.size() > 0) {
+            notes.forEach(n -> {
+                json.add(new MedicalNoteJson (n));
+            });
+        }
         return json;
     }
 
     public List<AppointmentRequestJson> toAppointmentRequestJsons(List<AppointmentRequest> requests) {
         List<AppointmentRequestJson> json = new ArrayList<AppointmentRequestJson>();
-        requests.forEach(req -> {
-            json.add(new AppointmentRequestJson (req));
-        });
+        if (requests != null && requests.size() > 0) {
+            requests.forEach(req -> {
+                json.add(new AppointmentRequestJson (req));
+            });
+        }
         return json;
     }
 
     public List<AppointmentJson> toAppointmentJsons(List<Appointment> appointments) {
         List<AppointmentJson> json = new ArrayList<AppointmentJson>();
-        appointments.forEach(a -> {
-            json.add(new AppointmentJson (a));
-        });
+        if(appointments != null && appointments.size() > 0) {
+            appointments.forEach(a -> {
+                json.add(new AppointmentJson (a));
+            });
+        }
         return json;
     }
-
-
-    
 
 
 /* *********** Getters and Setters *********** */  

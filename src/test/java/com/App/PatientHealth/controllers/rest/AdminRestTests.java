@@ -1,25 +1,18 @@
 package com.App.PatientHealth.controllers.rest;
 
 import org.junit.jupiter.api.Test;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.equalTo;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +24,6 @@ import com.App.PatientHealth.repository.UserPagingRepository;
 import com.App.PatientHealth.requestObjects.AdminRegForm;
 import com.App.PatientHealth.responseObject.JsonResponse;
 import com.App.PatientHealth.responseObject.lists.AdminListResponse;
-import com.App.PatientHealth.responseObject.lists.PatientListResponse;
 import com.App.PatientHealth.services.UserDetailsServiceImpl;
 
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -57,6 +49,7 @@ public class AdminRestTests {
     AdminRest restController;
 
 
+    //SECTION CREATE ADMIN
     @Test
     void createAdminReturnsSuccessResponse() {
         //given
@@ -115,6 +108,7 @@ public class AdminRestTests {
         assertThat(res.getMessage(), is("User already exists with username:"+takenUsername));
     }
 
+    //SECTION GET ADMIN BY ID
     @Test
     void getAdminByIdReturnsSuccessfulResponseGivenValidId() {
         //given
@@ -136,7 +130,6 @@ public class AdminRestTests {
         assertThat(res.getMessage(), is(""));
     }
 
-
     @Test
     void getAdminByIdReturnsUnsuccessfulResponseGivenInvalidId() {
         //given
@@ -157,6 +150,8 @@ public class AdminRestTests {
         assertThat(res.getMessage(), is(not("")));
     }
 
+
+    //SECTION LIST ADMIN 
     @Test
     void listAdminReturnsSuccessfulResponseGivenPageNumber() {
         //given
@@ -189,8 +184,7 @@ public class AdminRestTests {
 
     }
 
-
-   
+    //SECTION GET ADMIN BY FIRSTNAME
     @Test
     void findAdminByFirstnameReturnsSuccessfulGivenNameFromDB() {
         //given
