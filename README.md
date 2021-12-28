@@ -15,8 +15,7 @@ See site at [link](https://patient-health-app.herokuapp.com)
 * [Running the project](#running-the-project)
 * [Project Shortcomings](#shortcomings)
 * [Modifications](#modifications)
-* [Trello Board](https://trello.com/b/e8hwRTpR/patientapp)
-* [***Video Walkthrough - Youtube***](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s)
+* [Trello Board Original Project](https://trello.com/b/e8hwRTpR/patientapp) & [Trello Board Current Project](https://trello.com/b/pI50op1x/patient-health-rewrite)
 
 ## Background
 My project was to create a system that would allow patients with chronic illness to book appointments online and view prescriptions.
@@ -164,6 +163,4 @@ as shown in the image below:
 ## Modifications
 I would like to extend it with a messaging system in the future. I would also like to add a some way for patients to set up orders for prescriptions but I'd need to give some thought to how it might be implemented in a way that really enhaces the project, rather than just being sent to a dummy Pharmacy API, (as prescriptions are handled by the pharmacy, not the GP, which is was this Patient Health App is desgined for - Surgery patient,doctor and admin use).
 <!-- In future once done: I have since gone back and have worked on completing aspects of the project not related to Google Cloud Console [see here for explaination](#main). -->
-
-##Youtube Walkthrough
 
