@@ -1,8 +1,8 @@
 # Patient's Health WebApp
 Based off of something I started for a university project in my final year that was not fully completed.
 
-Also be sure to see 
-## [YOUTUBE WALKTHROUGH](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s)
+<!-- Also be sure to see 
+## [YOUTUBE WALKTHROUGH](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s) -->
 
 ## Tables of Contents
 * [Background](#background)
