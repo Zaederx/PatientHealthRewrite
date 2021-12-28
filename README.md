@@ -148,7 +148,7 @@ User Name: admin
 Password: admin
 
 as shown in the image below:
-![h2console](./images/h2console.png)
+![h2console](./readme-images/h2console.png)
 
 
 
