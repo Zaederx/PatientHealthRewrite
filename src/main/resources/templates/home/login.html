@@ -45,7 +45,7 @@
   
   <!-- <div class="row"> -->
     
-  <form class="form-group col-sm-4" th:action="@{/authenticateUser}" method="POST">
+  <form class="form-group" th:action="@{/authenticateUser}" method="POST">
     <div th:if="${param.error}" class="alert alert-info">
       Username or password is incorrect.
     </div>
