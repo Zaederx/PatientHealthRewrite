@@ -153,13 +153,7 @@ as shown in the image below:
 
 
 ## Project Shortcomings
- ### Main
- 
-
-### Aside
-
-
-### Summary
+There could be a lot more testing. I've done some to demonstrate some skill in testing, but with it being just myself working on the project and it being just for portfolio purposes, I've not done a lot of it for the sake of time, but enough to demonstrate the principle.
 
 
 ## Modifications
