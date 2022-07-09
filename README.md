@@ -45,7 +45,7 @@ My project was to create a system that would allow patients with chronic illness
     ### Explanation of Each Technology's Role
 
     #### Java
-    Is used to write/create the server side of the application. This include main data structures for manipulating database information as POJO objects on ther server side.
+    Is used to write/create the server side of the application. This includes main data structures for manipulating database information as POJO objects on ther server side.
 
     #### Gradle
     A build tool technology (i.e. like Maven) used to provide easily portable/shareable dependency management.
