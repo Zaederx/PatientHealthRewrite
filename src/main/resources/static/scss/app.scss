@@ -97,8 +97,9 @@ $disable-input-grey: rgb(233,236,239);
     margin: auto;
     padding: 20px;
     z-index: 1;
-    width: 300px;
-    height: 300px;
+    width: 500px;
+    min-height: 500px;
+    overflow-y: scroll;
     background-color: $light-blue;
     position: absolute;
     top: 15%;
@@ -305,6 +306,10 @@ $div-height: 50px;
 
 .medical-note-body {
     margin-top: 20px;
-    height: 200px;
+    min-height: 200px;
     overflow-y: scroll;
+}
+
+.text-body {
+    height: 100px;
 }
