@@ -9,8 +9,6 @@ bin
 
 #vscode
 .vscode
-#js file folder
-js
 
 #node_modules
 node_modules
