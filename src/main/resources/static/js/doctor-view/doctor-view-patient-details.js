@@ -356,7 +356,7 @@ function viewPrescription(optId) {
         '<label>Medication Name:</label>' +
         '<div class="field">' + prescription.medicationName + '</div>' +
         '<label>Doctors Directions:</label>' +
-        '<div class="field">' + prescription.doctorsDirections + '</div>' +
+        '<div class="field text-body">' + prescription.doctorsDirections + '</div>' +
         '<div id="' + popupPrescriptionsId.substring(1) + '-edit"  class="btn btn-warning">Edit</div>' +
         '<div id="' + popupPrescriptionsId.substring(1) + '-delete" class="btn btn-danger">Delete</div>';
     displayInfoPopup(popupPrescriptionsId, html);
@@ -381,7 +381,7 @@ function editPrescription(id) {
         '<label>Medication Name:</label>' +
         '<span id="' + popupPrescriptionsId.substring(1) + '-medication-name"' + ' contenteditable="true" class="editable">' + prescription.medicationName + '</span>' +
         '<label>Doctors Directions:</label>' +
-        '<span id="' + popupPrescriptionsId.substring(1) + '-doctors-directions"' + 'contenteditable="true" class="editable">' + prescription.doctorsDirections + '</span>' +
+        '<span id="' + popupPrescriptionsId.substring(1) + '-doctors-directions"' + 'contenteditable="true" class="editable text-body">' + prescription.doctorsDirections + '</span>' +
         '<div id="' + popupPrescriptionsId.substring(1) + '-submit"  class="btn btn-warning">Submit</div>' +
         '<div id="' + popupPrescriptionsId.substring(1) + '-back" class="btn btn-danger">Back</div>';
     displayInfoPopup(popupPrescriptionsId, html);
@@ -462,6 +462,7 @@ function deletePrescription(prescriptionId) {
         });
     }
 }
+//SECTION - MEDICAL NOTE
 function viewMedicalNote(optId) {
     //get selected prescription id
     var id = optId ? optId : Number(getSelectedItemId('#patient-medical-notes-tbody'));
@@ -497,7 +498,7 @@ function editMedicalNote(id) {
         '<label>Note Heading:</label>' +
         '<div id="' + popupNotesId.substring(1) + '-heading" contenteditable="true" class="editable">' + note.noteHeading + '</div>' +
         '<label>Note Body:</label>' +
-        '<div id="' + popupNotesId.substring(1) + '-body" contenteditable="true" class="editable">' + note.noteBody + '</div>' +
+        '<div id="' + popupNotesId.substring(1) + '-body" contenteditable="true" class="editable text-body">' + note.noteBody + '</div>' +
         '<div id="' + popupNotesId.substring(1) + '-submit" class="btn btn-warning">Submit</div>' +
         '<div id="' + popupNotesId.substring(1) + '-back" class="btn btn-danger">=Back</div>';
     displayInfoPopup(popupNotesId, html);
@@ -623,7 +624,7 @@ function editAppointmentRequest(id) {
         '<label>Appointment Type:</label>' +
         '<div id="' + popupRequestsId.substring(1) + '-type"contenteditable="true" class="editable">' + request.appointmentType + '</div>' +
         '<label>Appointment Info:</label>' +
-        '<div id="' + popupRequestsId.substring(1) + '-info" contenteditable="true" class="editable">' + request.appointmentInfo + '</div>' +
+        '<div id="' + popupRequestsId.substring(1) + '-info" contenteditable="true" class="editable text-body">' + request.appointmentInfo + '</div>' +
         '<div id="' + popupRequestsId.substring(1) + '-submit"  class="btn btn-warning">Submit</div>' +
         '<div id="' + popupRequestsId.substring(1) + '-back" class="btn btn-danger">Back</div>';
     //display Info Popup

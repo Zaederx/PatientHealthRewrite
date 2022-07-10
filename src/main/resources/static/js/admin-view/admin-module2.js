@@ -32,6 +32,7 @@ export class Table {
  *
  * i.e. There are three tables in admin-search-users.html view
  * and this object helps to match information to the right table
+ * whether that be table 1, 2 or 3
  */
 export class TableData {
     constructor(table1, table2, table3) {
@@ -190,7 +191,8 @@ export function searchForDoctor(name, pageNum, csrfToken) {
  * @returns rows:TableData
  */
 export function patientsToRows(data) {
-    var table = new Table();
+    console.log("patientsToRows:", data);
+    var table = new Table("#user-select-");
     var t = '';
     data.patientJsons.forEach(p => {
         t += '<tr data-id="' + p.id + '" data-selected="false" data-userType="patient">' +
@@ -198,9 +200,15 @@ export function patientsToRows(data) {
             '<td>' + p.username + '</td>';
         '</tr>';
     });
-    table.tbody += t;
+    table.tbody = t;
     return table;
 }
+/**
+ * Take patient details data and turns them into
+ * table rows.
+ * @param data
+ * @returns
+ */
 export function patientDetailsToRows(data) {
     var tables = new TableData();
     var patient = data.patientJsons[0];
@@ -273,23 +281,28 @@ export function searchForPatient(name, pageNum, csrfToken) {
         type: "GET",
         dataType: "json",
         headers: { 'X-CSRF-TOKEN': csrfToken },
-        success: (data) => {
-            if (data.success) {
-                var t1 = patientsToRows(data);
-                console.log('tables:', t1);
-                //display doctor name and username
-                $(t1.getTbodyId()).html(t1.tbody);
-                var tableBody = document.querySelector(t1.getTbodyId());
-                makeClickableTableRows(tableBody, selectRow);
-            }
-            else {
-                $('#message').html(message(data.message, 'alert-warning'));
-            }
-        },
+        success: (data) => searchForPatientSuccess(data),
         error: () => {
             $('#message').html(message('Error retrieving patient information', 'alert-danger'));
         }
     });
+}
+function searchForPatientSuccess(data) {
+    if (data.success) {
+        //turn data into html table form
+        var t1 = patientsToRows(data);
+        console.log("patient data:", data);
+        //display doctor name and username
+        $(t1.getTbodyId()).html(t1.tbody);
+        console.log("table id:", t1.getTheadId());
+        console.log('tables:', t1.tbody);
+        //query table body and make each row selectable / clickable
+        var tableBody = document.querySelector(t1.getTbodyId());
+        makeClickableTableRows(tableBody, selectRow);
+    }
+    else {
+        $('#message').html(message(data.message, 'alert-warning'));
+    }
 }
 //SECTION - ADMIN
 /**
