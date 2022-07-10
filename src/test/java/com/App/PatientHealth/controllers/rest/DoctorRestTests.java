@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -88,7 +87,33 @@ public class DoctorRestTests {
     DoctorRest restController;
 
     
-    //create doctor
+
+
+    //SECTION doctor id
+    @Test
+    void getDoctorIdReturnsSuccesfulGivenValidContext() {
+
+        //given
+        String username = "username";
+        Doctor doctor = new Doctor();
+        Optional<Doctor> doctorOpt = Optional.of(doctor);
+        SecurityContextHolder.setContext(security);
+        given(security.getAuthentication()).willReturn(authentication);
+        given(authentication.getName()).willReturn(username);
+        given(userServices.getDoctorPaging()).willReturn(dRepo);
+        given(dRepo.findByUsername(username)).willReturn(doctorOpt);
+
+        //when
+        JsonResponse res = restController.getDoctorId();
+        
+        //then
+        verify(userServices.getDoctorPaging(), Mockito.times(1)).findByUsername(username);
+        assertThat(res.getSuccess(), is(true));
+
+    }
+
+
+    //SECTION create doctor
     @Test
     void createDoctorReturnsSuccessfulGivenValidDoctorForm() {
         //given
@@ -150,7 +175,7 @@ public class DoctorRestTests {
         assertThat(res.getSuccess(), is(false));
     }
 
-    //doctorId
+    //SECTION doctorId
     @Test
     void getDoctorByIdReturnsSuccessfulGivenValidId() {
         //given
@@ -192,7 +217,7 @@ public class DoctorRestTests {
         assertThat(res.getSuccess(), is(false));
     }
 
-    //get doctor's patients
+    //SECTION get doctor's patients
     @Test
     void getDoctorsPatientsReturnsSuccessfulGivenValidId() {
          //given
@@ -234,7 +259,7 @@ public class DoctorRestTests {
         assertThat(res.getSuccess(), is(false));
     }
 
-    //find doctor by name
+    //SECTION find doctor by name
     @Test
     void findDoctorByNameReturnsSuccesfulGivenValidDoctorName() {
         /* Given */
@@ -267,7 +292,6 @@ public class DoctorRestTests {
         assertThat(res.getDoctorJsons().size(), is(doctorList.size()));
     }
 
-
     @Test
     void findDoctorByNameReturnsUnsuccesfulGivenInvalidDoctorName() {
         /* Given */
@@ -295,7 +319,7 @@ public class DoctorRestTests {
     }
 
 
-    //add patient to doctor
+    //SECTION add patient to doctor
     @Test
     void addPatientToDoctorReturnsSuccessfulGivenValidIds() {
         //given
@@ -326,8 +350,6 @@ public class DoctorRestTests {
         verify(userServices.getPatientPaging(), Mockito.times(1)).findById(pId);
         assertThat(res.getSuccess(),is(true));
     }
-
-
 
     @Test
     void addPatientToDoctorReturnsUnsuccessfulGivenInvalidIPatientId() {
@@ -389,7 +411,7 @@ public class DoctorRestTests {
         assertThat(res.getSuccess(),is(false));
     }
 
-    //remove patient from doctor
+    //SECTION remove patient from doctor
     @Test
     void removePatientFromDoctorReturnsSuccessfulGivenValidPatientId() {
         //given
@@ -677,6 +699,7 @@ public class DoctorRestTests {
         assertThat(res.getMessage(),is(not(empty)));
     }
 
+    //edit medical note
     @Test
     void editMedicalNoteReturnsSuccessfulGivenFormWithValidId() {
         //given

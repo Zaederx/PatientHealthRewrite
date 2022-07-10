@@ -28,11 +28,11 @@ public class UserJson {
 
     public List<MessageJson> toMessageJsons(List<Message> messages) {
         List<MessageJson> messagesJsons = new ArrayList<MessageJson>();
-        
-        messages.forEach(m -> {
-            messagesJsons.add(new MessageJson(m));
-        });
-
+        if (messages != null && messages.size() > 0) {
+            messages.forEach(m -> {
+                messagesJsons.add(new MessageJson(m));
+            });
+        }
         return messagesJsons;
     }
 

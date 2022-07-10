@@ -39,6 +39,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientRestTest {
@@ -50,6 +53,12 @@ public class PatientRestTest {
 
     @Mock
     UserPagingRepository uRepo;
+
+    @Mock
+    SecurityContext security;
+
+    @Mock
+    Authentication authentication;
 
     @InjectMocks
     PatientRest restController;
@@ -64,24 +73,28 @@ public class PatientRestTest {
     // }
 
     @Test
-    void testMocksAreWorking() {
-        Patient patient = new Patient("name", "username", "password", "email@email.com", "10/11/1995");
+    void getPatientIdReturnsSuccesfulGivenValidContext() {
+
+        //given
+        String username = "username";
+        Patient patient = new Patient();
         Optional<Patient> patientOpt = Optional.of(patient);
+        SecurityContextHolder.setContext(security);
+        given(security.getAuthentication()).willReturn(authentication);
+        given(authentication.getName()).willReturn(username);
+        given(userServices.getPatientPaging()).willReturn(pRepo);
+        given(pRepo.findByUsername(username)).willReturn(patientOpt);
 
-        given(userServices
-        .getPatientPaging())
-        .willReturn(pRepo);
+        //when
+        JsonResponse res = restController.getPatientInfo();
+        
+        //then
+        verify(userServices.getPatientPaging(), Mockito.times(1)).findByUsername(username);
+        assertThat(res.getSuccess(), is(true));
 
-        given(pRepo
-        .findByUsername("username"))
-        .willReturn(patientOpt);
-
-        Optional<Patient> pTest = userServices.getPatientPaging().findByUsername("username");
-        assertThat(pTest.isPresent(),is(true));
-        assertThat(pTest.get().getUsername(), is("username"));
-        assertThat(pTest.get(), is(patient));
     }
 
+    
     //create patient tests
     @Test
     void createPatientIsNotSuccessfulGivenExistingUsername() {

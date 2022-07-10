@@ -80,7 +80,6 @@ public class AdminRest {
         return res;
     }
 
-    
     //SECTION read users
     
     //List of admin - pagination
@@ -108,7 +107,6 @@ public class AdminRest {
         return res;
     }
 
-    /*********** Admin - By Firsname Lastname *************** */
     //get admin - by firstname
     @GetMapping("/get-admin/name/{name}/{pageNum}")
     public AdminListResponse findAdminByFirstname(@PathVariable String name, @PathVariable String pageNum) {
@@ -140,8 +138,4 @@ public class AdminRest {
         return res;
     }
     
-    
-    //TODO update admin
-
-    //TODO delete admin
 }
