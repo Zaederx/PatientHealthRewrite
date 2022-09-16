@@ -5,8 +5,8 @@ It's an app to allow patient's to view prescriptions and book request appointmen
 
 See site at [link](https://patient-health-app.herokuapp.com)
 
-<!-- Also be sure to see 
-## [YOUTUBE WALKTHROUGH](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s) -->
+Also be sure to see 
+## [YOUTUBE WALKTHROUGH](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s) - few things have been fixed since then
 
 ## Tables of Contents
 * [Background](#background)
