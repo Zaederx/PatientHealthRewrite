@@ -136,4 +136,3 @@ whenever build or bootRun is called
 
 build.dependsOn installNodeDependencies, compileSass, compileTS
 
-doFirst(installNodeDependencies)
