@@ -54,7 +54,7 @@ test {
 
 
 task installNodeDependencies() {
-	println "\u001B[32m"+"compiling typescript"
+	println "\u001B[32m"+"installing node dependencies"
 	ext.process = new ProcessBuilder()
 	.directory(projectDir)
 	.command("npm", "install")
@@ -135,3 +135,5 @@ whenever build or bootRun is called
  */
 
 build.dependsOn installNodeDependencies, compileSass, compileTS
+
+doFirst(installNodeDependencies)
