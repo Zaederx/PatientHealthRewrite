@@ -48,12 +48,34 @@ test {
 		events "passed", "skipped", "failed"
 	}
 	ignoreFailures = true
+	//allows up to three test classes to run simultaneously - faster
+	maxParallelForks = 3
 }
 
-//allows up to three test classes to run simultaneously - faster
-tasks.named('test') {
-    maxParallelForks = 3
+
+task installNodeDependencies() {
+	println "\u001B[32m"+"compiling typescript"
+	ext.process = new ProcessBuilder()
+	.directory(projectDir)
+	.command("npm", "install")
+	.start();
+
+	ext.process.waitFor(5,TimeUnit.SECONDS);//wait for command to be executed
+	ext.process.destroy();
+	ext.process.waitFor(5,TimeUnit.SECONDS);//wait for destory to happen
+	ext.process.destroyForcibly();//if stuck then kill process 
+	ext.process.waitFor();//wait for kill Process to happen
+	
+	
+	// ext.output = { //for access to external output if needed
+	// 	return "\u001B[32m"+standardOutput.toString();
+	// }
+	timeout = Duration.ofMinutes(1)
+	doLast {
+		println "\u001B[32m"+"compileSass done!"
+	}
 }
+
 
 /**
 * Calls npm to compile scss file into css
@@ -80,6 +102,8 @@ task compileSass() {
 		println "\u001B[32m"+"compileSass done!"
 	}
 }
+
+
 //Calls npm to compile ts files into js files
 task compileTS() {
 	println "\u001B[32m"+"compiling typescript"
@@ -110,4 +134,4 @@ task compileTS() {
 whenever build or bootRun is called
  */
 
-build.dependsOn compileSass, compileTS
+build.dependsOn installNodeDependencies, compileSass, compileTS
