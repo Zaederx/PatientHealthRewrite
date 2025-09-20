@@ -136,3 +136,15 @@ whenever build or bootRun is called
 
 build.dependsOn installNodeDependencies, compileSass, compileTS
 
+/**
+if another process is blocking the build on port 8090 (I usually only run my projects on this port so it may be an unclosed project)
+
+```
+lsof -i :8090 // to find the port id and what is using it
+kill [enter process id]
+```
+
+ */
+
+ //Also if build doesnt run - try removing the db file (it generates a new one on start up) for texting purposes. //TODO need to find out why this happens sometimes
+
