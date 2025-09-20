@@ -84,6 +84,11 @@ export function highlightRow(row:HTMLTableRowElement, colour:string) {
     row.style.backgroundColor = colour;
 }
 
+/**
+ * Displays a doctor's list of patients and their details.
+ * @param doctorId 
+ * @param csrfToken 
+ */
 export function displayDoctorsPatientDetails(doctorId:string, csrfToken:string) {
     $.ajax({
         url: "/rest/doctor/get-patients/"+doctorId,
@@ -106,7 +111,13 @@ export function displayDoctorsPatientDetails(doctorId:string, csrfToken:string) 
         }
     })
 }
-
+/**
+ * Searches for a doctor from the database and presents a list of possible record matches on the frontend table.
+ * Note: this functions uses the specific table IDs within the function that match tables on the frontend. Changing the IDs on the frontend will mean needing to change the id's here.
+ * @param name doctor's name
+ * @param pageNum table pagination/page number
+ * @param csrfToken the page's csrf token
+ */
 export function searchForDoctor(name:string, pageNum:number,csrfToken:string) {
     $('#pageNum').html(String(pageNum));
     console.log("pageNum set to :",pageNum)
@@ -141,6 +152,17 @@ export function searchForDoctor(name:string, pageNum:number,csrfToken:string) {
 }
 
 // SECTION - Patient's Searchbar
+/**
+ * Fully handles searching for a patient and filling the patient table list.
+ * Does this by sending and ajax request to the backend rest controller
+ * with the `name` and `pageNum` in the request url and `csrfToken`
+ * in the header.
+ * It then filled the tables (already has the table id - don't change it on the frontend)
+ * Important Note: changing the table id on the frontend will stop this fuction from working.
+ * @param name name of the patient
+ * @param pageNum patient table pagination/page number
+ * @param csrfToken csrf token
+ */
 export function searchForPatient(name:string, pageNum:number, csrfToken:string) {
     $('#p-pageNum').html(String(pageNum));
     console.log("p-pageNum set to :",pageNum)
@@ -174,7 +196,13 @@ export function searchForPatient(name:string, pageNum:number, csrfToken:string) 
     })
 }
 
-
+/**
+ * Take patient data from an ajax response and turn it into patient table rows.
+ * Takes the reponse data on the frontend modelled as a PatientResponseList
+ * 
+ * @param data PatientResponseList
+ * @returns HTML table rows `<tr></tr>` of patient data
+ */
 export function patientDataToRows(data:PatientResponseList) {
     var rows = '';
     data.patientJsons.forEach( p => {
@@ -189,9 +217,16 @@ export function patientDataToRows(data:PatientResponseList) {
     return rows
 }
 
-var patientSearchTable = document.querySelector('#patient-search-table-body') as HTMLTableElement
+// var patientSearchTable = document.querySelector('#patient-search-table-body') as HTMLTableElement
 
-
+/**
+ * Adds a patient to a doctor's patient list by sending a request to the backend.
+ * Note: Doesn't update the frontend table. Have to retrieve the table again on the frontend after calling this function.
+ * @param pId patient id 
+ * @param docId doctor id
+ * @param csrfToken csrf token
+ * @returns 
+ */
 export async function addPatientToDoctor(pId:string,docId:string,csrfToken:string) {
     var data = {pId,docId}
     return $.ajax({
@@ -215,6 +250,13 @@ export async function addPatientToDoctor(pId:string,docId:string,csrfToken:strin
     })
 }
 
+/**
+ * Sends a request to the backend to remove a patient from a doctor's list
+ * @param pId patient id
+ * @param docId doctor id
+ * @param csrfToken csrf token
+ * @returns 
+ */
 export function removePatientFromDoctor(pId:string,docId:string,csrfToken:string) {
     var data = {pId,docId}
     return $.ajax({
