@@ -1,5 +1,5 @@
 # Patient's Health WebApp
-Based off of something I started for a university project in my final year that was not fully completed.
+Based off of something I started for a [university project](https://github.com/Zaederx/PatientHealthApp-Untouched-Version) in my final year that was not fully completed.
 
 It's an app to allow patient's to view prescriptions and book request appointments online as well as allow admin and doctors to manage patient information and appointments.
 
