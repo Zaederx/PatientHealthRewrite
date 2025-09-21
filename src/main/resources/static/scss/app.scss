@@ -4,6 +4,7 @@ $yellow:#fdfc8a;
 $tomato:#f05c35;
 $btn-blue: rgb(41,120,237);
 $cool-grey: rgb(53,58,63);
+$light-grey: rgb(125, 125, 125);
 $disable-input-grey: rgb(233,236,239);
 
 .disabled {
@@ -164,6 +165,12 @@ $div-height: 50px;
     height: 800px;
 }
 
+.calendar-grid {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    height: 800px;
+}
+
 .times-container {
     display: grid;
     grid-template-rows: $row1-size $row2-size;
@@ -243,7 +250,7 @@ $div-height: 50px;
 }
 
 .underlay div:nth-child(even) {
-    background-color: $light-blue;
+    background-color: $light-grey;
 }
 
 
