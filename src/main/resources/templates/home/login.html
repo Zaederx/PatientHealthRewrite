@@ -10,10 +10,6 @@
     </style>
 	<meta th:name="_csrf" th:content="${_csrf.token}"/>
 	<meta th:name="_csrf_header" th:content="${_csrf.headerName}">
-	<!-- For Google Sign-In -->
-	<meta name="google-signin-scope" content="openid profile email https://www.googleapis.com/auth/calendar">
-	<meta name="google-signin-client_id" content="855286502115-emk3m2e458bfmrtsed1o3b7qsmq3bkht.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
 	
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -39,11 +35,9 @@
 <div th:if="${param.logout}" class="alert alert-primary show text-sm-center">You have successfully logged out.</div>
 <div id="messages"></div>
 
-<div class="container d-flex flex-sm-column col-sm-12 justify-content-center align-items-center">
+
 
   <div class="row">
-  
-  <!-- <div class="row"> -->
     
   <form class="form-group col-sm-4" th:action="@{/authenticateUser}" method="POST">
     <div th:if="${param.error}" class="alert alert-info">
@@ -62,7 +56,5 @@
     
   </form>
 	</div>
-	
-</div>
 
 </html>
