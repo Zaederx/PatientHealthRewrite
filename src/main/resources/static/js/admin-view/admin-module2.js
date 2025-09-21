@@ -136,7 +136,7 @@ export function doctorDetailsToRows(data) {
     return rows;
 }
 /**
- * Send ajax request to server to fecth doctor info.
+ * Send ajax request to server to fetch doctor info.
  * Then fills table2 ('#user-info-table')& tbody2 ('#user-info-tbody')
  * and table3 ('#user-additional-table') and tbody3 ('#user-additional-tbody') with data
  * @param docId
@@ -273,7 +273,7 @@ export function fetchPatientDetails(pId, csrfToken) {
  * @param csrfToken
  */
 export function searchForPatient(name, pageNum, csrfToken) {
-    console.log("searchForPatient called");
+    console.log("function searchForPatient called");
     $('#pageNum').html(String(pageNum));
     console.log("pageNum set to:", pageNum);
     $.ajax({
