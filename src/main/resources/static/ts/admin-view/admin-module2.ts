@@ -214,9 +214,10 @@ export function searchForDoctor(name:string, pageNum:number, csrfToken:string) {
 //SECTION - PATIENT
 /** 
  * Take patient data and returns them as HTML strings
- * inside of TableData object
- * @param data - AJAX response DoctorResponseList
- * @returns rows:TableData
+ * inside of Table object. The Table object returned already has the 
+ * right table id root (`#user-select-`).
+ * @param data - AJAX response PatientResponseList
+ * @returns Table
  */
 export function patientsToRows(data:PatientResponseList) {
     console.log("patientsToRows:",data);
@@ -324,6 +325,7 @@ export function searchForPatient(name:string, pageNum:number, csrfToken:string) 
             $('#message').html(message('Error retrieving patient information','alert-danger'))
         }
     })
+
 }
 
 function searchForPatientSuccess(data:PatientResponseList) {
@@ -338,6 +340,9 @@ function searchForPatientSuccess(data:PatientResponseList) {
         //query table body and make each row selectable / clickable
         var tableBody = document.querySelector(t1.getTbodyId()) as HTMLTableElement
         makeClickableTableRows(tableBody,selectRow)
+        //set total page numbers for pagination on frontend
+        var pageTotalStr = 'of '+String(data.totalPages)
+        $('#pageTotal').html(pageTotalStr)
     }
     else {
         $('#message').html(message(data.message,'alert-warning'))
@@ -450,6 +455,10 @@ export function searchForAdmin(name:string, pageNum:number, csrfToken:string) {
             //display admin name and username
             $(t1.getTbodyId()).html(t1.tbody)
             var tableBody = document.querySelector(t1.getTbodyId()) as HTMLTableElement
+            //set total page numbers for pagination on frontend
+            var pageTotalStr = 'of '+String(data.totalPages)
+            $('#pageTotal').html(pageTotalStr)
+            //make table rows clickable
             makeClickableAdminTableRows(tableBody)
         },
         error: () => {

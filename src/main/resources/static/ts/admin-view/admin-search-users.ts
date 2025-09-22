@@ -3,26 +3,69 @@ import { searchForAdmin, searchForDoctor, searchForPatient, message, fetchPatien
 var csrfToken = $("meta[name='_csrf']").attr("content") as string
 
 $('#user-search-input').on('input', () => {
+    var pageNum = 1
+    searchForUser(pageNum)   
+})
+/**
+ * Search for a user.
+ * Retrieves that name of the user, 
+ * the page number and the user type,
+ * then searches for the name based on the user type selected.
+ */
+function searchForUser(pageNum?:number) {
     var name = $('#user-search-input').val() as string
-    var pageNum = $('#pageNum').val() as number
-    if(!pageNum) {pageNum = 1}
 
+    if (!pageNum) {
+       pageNum = $('#pageNum').val() as number
+    }
+    setPageNumVars(pageNum)
     var userType = getUserSearchType()
     console.log('userType:',userType)
     
     switch (userType) {
         case 'patient': 
-            searchForPatient(name, pageNum,csrfToken);
+            searchForPatient(name, pageNum, csrfToken);
             break;
         case 'doctor': 
-            searchForDoctor(name, pageNum,csrfToken);
+            searchForDoctor(name, pageNum, csrfToken);
             break;
         case 'admin':
-            searchForAdmin(name, pageNum,csrfToken);
+            searchForAdmin(name, pageNum, csrfToken);
             break;
     }
-    
+}
+//SECTION - ENABLE TABLE BUTTONS AND PAGE NUMBER
+/**the current page number */
+var searchTableCurrentPageNum = 1
+var searchTablePagePrev = 1
+var searchTablePageNext = 2
+
+function setPageNumVars(currentPageNum:number) {
+    searchTableCurrentPageNum = currentPageNum;
+    searchTablePagePrev = searchTableCurrentPageNum - 1;
+    searchTablePageNext = searchTableCurrentPageNum + 1;
+}
+$('#btn-prev').on('click', () => {
+    searchForUser(searchTablePagePrev)
+    //set current page to previous page & update prev and next page numbers
+    setPageNumVars(searchTablePagePrev as number)
 })
+$('#btn-next').on('click', () => {
+    searchForUser(searchTablePageNext)
+    //set current page to next page & update prev and next page numbers
+    setPageNumVars(searchTablePageNext as number)
+})
+$('#btn-go').on('click', () => {
+
+    var pageNum = Number($('#pageNum').html() as string)
+    searchForUser(pageNum)
+    //set current page to the entered page number & update prev and next page numbers
+    setPageNumVars(pageNum as number)
+})
+
+
+
+
 
 $('#btn-user-info').on('click', ()=> {
     console.log('btn-user-info clicked')

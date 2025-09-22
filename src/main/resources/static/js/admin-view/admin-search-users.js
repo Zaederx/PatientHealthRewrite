@@ -1,11 +1,21 @@
 import { searchForAdmin, searchForDoctor, searchForPatient, fetchPatientDetails, fetchAdminDetails, fetchDoctorDetails } from "./admin-module2.js";
 var csrfToken = $("meta[name='_csrf']").attr("content");
 $('#user-search-input').on('input', () => {
+    var pageNum = 1;
+    searchForUser(pageNum);
+});
+/**
+ * Search for a user.
+ * Retrieves that name of the user,
+ * the page number and the user type,
+ * then searches for the name based on the user type selected.
+ */
+function searchForUser(pageNum) {
     var name = $('#user-search-input').val();
-    var pageNum = $('#pageNum').val();
     if (!pageNum) {
-        pageNum = 1;
+        pageNum = $('#pageNum').val();
     }
+    setPageNumVars(pageNum);
     var userType = getUserSearchType();
     console.log('userType:', userType);
     switch (userType) {
@@ -19,6 +29,32 @@ $('#user-search-input').on('input', () => {
             searchForAdmin(name, pageNum, csrfToken);
             break;
     }
+}
+//SECTION - ENABLE TABLE BUTTONS AND PAGE NUMBER
+/**the current page number */
+var searchTableCurrentPageNum = 1;
+var searchTablePagePrev = 1;
+var searchTablePageNext = 2;
+function setPageNumVars(currentPageNum) {
+    searchTableCurrentPageNum = currentPageNum;
+    searchTablePagePrev = searchTableCurrentPageNum - 1;
+    searchTablePageNext = searchTableCurrentPageNum + 1;
+}
+$('#btn-prev').on('click', () => {
+    searchForUser(searchTablePagePrev);
+    //set current page to previous page & update prev and next page numbers
+    setPageNumVars(searchTablePagePrev);
+});
+$('#btn-next').on('click', () => {
+    searchForUser(searchTablePageNext);
+    //set current page to next page & update prev and next page numbers
+    setPageNumVars(searchTablePageNext);
+});
+$('#btn-go').on('click', () => {
+    var pageNum = Number($('#pageNum').html());
+    searchForUser(pageNum);
+    //set current page to the entered page number & update prev and next page numbers
+    setPageNumVars(pageNum);
 });
 $('#btn-user-info').on('click', () => {
     console.log('btn-user-info clicked');

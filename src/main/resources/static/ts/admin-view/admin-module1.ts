@@ -118,7 +118,7 @@ export function displayDoctorsPatientDetails(doctorId:string, csrfToken:string) 
  * @param pageNum table pagination/page number
  * @param csrfToken the page's csrf token
  */
-export function searchForDoctor(name:string, pageNum:number,csrfToken:string) {
+export function searchForDoctor(name:string, pageNum:number, csrfToken:string) {
     $('#pageNum').html(String(pageNum));
     console.log("pageNum set to :",pageNum)
     $.ajax({
