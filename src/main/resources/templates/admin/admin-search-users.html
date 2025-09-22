@@ -27,17 +27,27 @@
 
 <div id="message"></div>
 
-<table id="user-select-table" class="table table-bordered table-striped">
-	<thead id="user-select-thead">
-		<tr>
-			<th>Name</th>
-			<th>Username</th>
-		</tr>
-	</thead>
-	<tbody id="user-select-tbody">
+<div class="table-flow">
+	<table id="user-select-table" class="table table-bordered table-striped">
+		<thead id="user-select-thead">
+			<tr>
+				<th>Name</th>
+				<th>Username</th>
+			</tr>
+		</thead>
+		<tbody id="user-select-tbody">
 
-	</tbody>
-</table>
+		</tbody>
+		
+	</table>
+	<div id="user-select-table-buttons">
+			<span id="btn-prev" class="btn btn-primary">Prev</span>
+			<span id="pageNum" class="pageNum" contenteditable="true"></span>
+			<span id="pageTotal" class="pageTotal"></span>
+			<span id="btn-go" class="btn btn-primary">Go to page</span>
+			<span id="btn-next" class="btn btn-primary">Next</span>
+	</div>
+</div>
 
 <table id="user-info-table" class="table table-bordered table-striped">
 	<thead id="user-info-thead">
