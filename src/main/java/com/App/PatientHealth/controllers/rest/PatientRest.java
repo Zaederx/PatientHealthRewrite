@@ -43,29 +43,6 @@ public class PatientRest {
     UserDetailsServiceImpl userServices;
     
 
-    @GetMapping("/get-current-patient-info")
-    public PatientListResponse getPatientInfo() {
-        PatientListResponse res = new PatientListResponse();
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        try {
-            Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
-
-            if (patientOpt.isPresent()) {
-                Patient p = patientOpt.get();
-                res.getPatientJsons().add(new PatientJson(p));
-                res.setSuccess(true);
-            }
-            else {
-                res.setSuccess(false);
-                res.setMessage("No patient details found");
-            }
-        } catch (Exception e) {
-            res.setSuccess(false);
-            res.setMessage("Problem retrieving patient details from database");
-        }
-        return res;
-    }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public JsonResponse createPatient(@RequestBody PatientRegForm form) {
@@ -108,7 +85,8 @@ public class PatientRest {
         List<PatientJson> pJson = new ArrayList<PatientJson>();
 
         //set page number and return up to 10 elements
-        Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 10, Sort.by("name").ascending());
+        //IMPORTANT - CHANGE `size` (second function argument of PageRequest.of()) to 10 after testing
+        Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 1, Sort.by("name").ascending());
 
         //Get iterable patients
         Page<Patient> patients = userServices.getPatientPaging().findAllByNameContainingIgnoreCase(name, pageable);
@@ -199,6 +177,30 @@ public class PatientRest {
 
         return res;
    }
+
+    @GetMapping("/get-current-patient-info")
+    public PatientListResponse getPatientInfo() {
+        PatientListResponse res = new PatientListResponse();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        try {
+            Optional<Patient> patientOpt = userServices.getPatientPaging().findByUsername(username);
+
+            if (patientOpt.isPresent()) {
+                Patient p = patientOpt.get();
+                res.getPatientJsons().add(new PatientJson(p));
+                res.setSuccess(true);
+            }
+            else {
+                res.setSuccess(false);
+                res.setMessage("No patient details found");
+            }
+        } catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage("Problem retrieving patient details from database");
+        }
+        return res;
+    }
 
 
    @GetMapping("/get-appointments")
