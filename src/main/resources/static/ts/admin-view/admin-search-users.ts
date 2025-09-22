@@ -2,10 +2,6 @@ import { searchForAdmin, searchForDoctor, searchForPatient, message, fetchPatien
 
 var csrfToken = $("meta[name='_csrf']").attr("content") as string
 
-$('#user-search-input').on('input', () => {
-    var pageNum = 1
-    searchForUser(pageNum)   
-})
 /**
  * Search for a user.
  * Retrieves that name of the user, 
@@ -34,43 +30,6 @@ function searchForUser(pageNum?:number) {
             break;
     }
 }
-//SECTION - ENABLE TABLE BUTTONS AND PAGE NUMBER
-/**the current page number */
-var searchTableCurrentPageNum = 1
-var searchTablePagePrev = 1
-var searchTablePageNext = 2
-
-function setPageNumVars(currentPageNum:number) {
-    searchTableCurrentPageNum = currentPageNum;
-    searchTablePagePrev = searchTableCurrentPageNum - 1;
-    searchTablePageNext = searchTableCurrentPageNum + 1;
-}
-$('#btn-prev').on('click', () => {
-    searchForUser(searchTablePagePrev)
-    //set current page to previous page & update prev and next page numbers
-    setPageNumVars(searchTablePagePrev as number)
-})
-$('#btn-next').on('click', () => {
-    searchForUser(searchTablePageNext)
-    //set current page to next page & update prev and next page numbers
-    setPageNumVars(searchTablePageNext as number)
-})
-$('#btn-go').on('click', () => {
-
-    var pageNum = Number($('#pageNum').html() as string)
-    searchForUser(pageNum)
-    //set current page to the entered page number & update prev and next page numbers
-    setPageNumVars(pageNum as number)
-})
-
-
-
-
-
-$('#btn-user-info').on('click', ()=> {
-    console.log('btn-user-info clicked')
-    fetchUserDetails()
-})
 
 /**
  * Returns the currectly selected radio button 
@@ -95,9 +54,6 @@ function getUserSearchType() {
     var id = row.getAttribute('data-id') as string
     return id
 }
-
-
-
 
 /**
  * This sends ajax request to fetch selected
@@ -133,6 +89,45 @@ function getSelectedUserType() {
     var userType = row.getAttribute('data-userType') as string
     return userType
 }
+
+//SECTION - ENABLE TABLE Searchbar, Table BUTTONS AND PAGE NUMBER
+/**the current page number */
+var searchTableCurrentPageNum = 1
+var searchTablePagePrev = 1
+var searchTablePageNext = 2
+
+function setPageNumVars(currentPageNum:number) {
+    searchTableCurrentPageNum = currentPageNum;
+    searchTablePagePrev = searchTableCurrentPageNum - 1;
+    searchTablePageNext = searchTableCurrentPageNum + 1;
+}
+//Search bar
+$('#user-search-input').on('input', () => {
+    var pageNum = 1
+    searchForUser(pageNum)   
+})
+$('#btn-prev').on('click', () => {
+    searchForUser(searchTablePagePrev)
+    //set current page to previous page & update prev and next page numbers
+    setPageNumVars(searchTablePagePrev as number)
+})
+$('#btn-next').on('click', () => {
+    searchForUser(searchTablePageNext)
+    //set current page to next page & update prev and next page numbers
+    setPageNumVars(searchTablePageNext as number)
+})
+$('#btn-go').on('click', () => {
+    var pageNum = Number($('#pageNum').html() as string)
+    searchForUser(pageNum)
+    //set current page to the entered page number & update prev and next page numbers
+    setPageNumVars(pageNum as number)
+})
+$('#btn-user-info').on('click', ()=> {
+    console.log('btn-user-info clicked')
+    fetchUserDetails()
+})
+
+
 
 
 
