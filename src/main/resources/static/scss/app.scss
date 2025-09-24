@@ -6,7 +6,7 @@ $btn-blue: rgb(41,120,237);
 $cool-grey: rgb(53,58,63);
 $blue-grey: #7da1b3;
 $disable-input-grey: rgb(233,236,239);
-
+$footer-height: 250px;
 .disabled {
     background-color:$disable-input-grey !important;
 }
@@ -306,7 +306,8 @@ $div-height: 50px;
     border: 1px solid #ced4da;
     border-radius: .25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    text-wrap: wrap;//IMPORTANT
+    text-wrap: wrap;
+    word-wrap:break-word;
 }
 // Patient Medical Notes Page
 .medical-notes-grid {
@@ -339,4 +340,31 @@ $div-height: 50px;
 
 .text-body {
     height: 100px;
+}
+
+.footer {
+    height: $footer-height;
+    margin-top: 200px;
+    background-color: $cool-grey;//think it's the same as the colour I would like #343a40;
+    display:grid;
+    // grid-template-rows: auto;//auto set's it based on content size, not enclosing div size
+    grid-template-rows: 250px;
+    grid-template-columns: [Logo]auto [Site Links]auto [Awards]auto [Awards]auto;
+}
+.footer-text {
+    color:white;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.footer-text a:link {
+    color:white;
+}
+.footer-text a:hover {
+    color:white;
+}
+.footer-text a:visited {
+    color: pink;
+}
+.footer-img {
+    height: $footer-height;
 }

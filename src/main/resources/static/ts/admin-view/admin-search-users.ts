@@ -8,7 +8,7 @@ var csrfToken = $("meta[name='_csrf']").attr("content") as string
  * the page number and the user type,
  * then searches for the name based on the user type selected.
  */
-function searchForUser(pageNum?:number) {
+function searchForUserByName(pageNum?:number) {
     var name = $('#user-search-input').val() as string
 
     if (!pageNum) {
@@ -104,21 +104,23 @@ function setPageNumVars(currentPageNum:number) {
 //Search bar
 $('#user-search-input').on('input', () => {
     var pageNum = 1
-    searchForUser(pageNum)   
+    //check for values of radio buttons - name, id , email
+    //call relevant search function
+    searchForUserByName(pageNum)   
 })
 $('#btn-prev').on('click', () => {
-    searchForUser(searchTablePagePrev)
+    searchForUserByName(searchTablePagePrev)
     //set current page to previous page & update prev and next page numbers
     setPageNumVars(searchTablePagePrev as number)
 })
 $('#btn-next').on('click', () => {
-    searchForUser(searchTablePageNext)
+    searchForUserByName(searchTablePageNext)
     //set current page to next page & update prev and next page numbers
     setPageNumVars(searchTablePageNext as number)
 })
 $('#btn-go').on('click', () => {
     var pageNum = Number($('#pageNum').html() as string)
-    searchForUser(pageNum)
+    searchForUserByName(pageNum)
     //set current page to the entered page number & update prev and next page numbers
     setPageNumVars(pageNum as number)
 })
