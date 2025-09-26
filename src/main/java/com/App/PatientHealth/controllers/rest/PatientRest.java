@@ -84,9 +84,8 @@ public class PatientRest {
         //initialise list of patientsJson
         List<PatientJson> pJson = new ArrayList<PatientJson>();
 
-        //set page number and return up to 10 elements
-        //IMPORTANT - CHANGE `size` (second function argument of PageRequest.of()) to 10 after testing
-        Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 1, Sort.by("name").ascending());
+        //set page number and return up to 5 elements
+        Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 5, Sort.by("name").ascending());
 
         //Get iterable patients
         Page<Patient> patients = userServices.getPatientPaging().findAllByNameContainingIgnoreCase(name, pageable);

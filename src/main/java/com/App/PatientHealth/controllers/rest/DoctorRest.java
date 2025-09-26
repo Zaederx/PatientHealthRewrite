@@ -154,7 +154,7 @@ public class DoctorRest {
 
         //set page number and return up to 10 elements
         //Note: pageNum -1 because it starts at zero
-        Pageable page = PageRequest.of(Integer.parseInt(pageNum)-1, 10, Sort.by("name").ascending());
+        Pageable page = PageRequest.of(Integer.parseInt(pageNum)-1, 5, Sort.by("name").ascending());
         
         //get list of users from that page
         Page<Doctor> doctorPage = userServices.getDoctorPaging().findAllByNameContainingIgnoreCase(name, page);

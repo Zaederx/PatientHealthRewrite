@@ -87,7 +87,7 @@ public class AdminRest {
     public AdminListResponse listAdmin(@PathVariable String pageNum) {
         int pageNumInt = Integer.parseInt(pageNum);
         //set page number and return up to 10 elements
-        Pageable pageable = PageRequest.of(pageNumInt-1, 10);
+        Pageable pageable = PageRequest.of(pageNumInt-1, 5);
         //retrieve page from AdminPaging repository 
         Page<Admin> adminPage = userServices.getAdminPaging().findAll(pageable);
         AdminListResponse res = new AdminListResponse();
@@ -111,7 +111,7 @@ public class AdminRest {
     @GetMapping("/get-admin/name/{name}/{pageNum}")
     public AdminListResponse findAdminByFirstname(@PathVariable String name, @PathVariable String pageNum) {
         //set page number and return up to 10 elements
-        Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 10, Sort.by("name").ascending());
+        Pageable pageable = PageRequest.of(Integer.parseInt(pageNum)-1, 5, Sort.by("name").ascending());
         //get list of users from that page
         Page<Admin> adminPage = userServices.getAdminPaging().findAllByNameContaining(name, pageable);
         //set response object with users
