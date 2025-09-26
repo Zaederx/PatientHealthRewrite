@@ -48,11 +48,26 @@ public class PatientHealthApplication implements CommandLineRunner{
 
 		Patient p5 = new Patient("P5's Name", "p5", "password", "emailp5@email.com", "10/11/1995");
 
+		Patient p6 = new Patient("P6's Name", "p6", "password", "emailp6@email.com", "10/11/1995");
+
+		Patient p7 = new Patient("P7's Name", "p7", "password", "emailp7@email.com", "10/11/1995");
+
+		Patient p8 = new Patient("P8's Name", "p8", "password", "emailp8@email.com", "10/11/1995");
+
+		Patient p9 = new Patient("P9's Name", "p9", "password", "emailp9@email.com", "10/11/1995");
+
+		Patient p10 = new Patient("P10's Name", "p10", "password", "emailp10@email.com", "10/11/1995");
+
 		userServices.getPatientPaging().save(p1);
 		userServices.getPatientPaging().save(p2);
 		userServices.getPatientPaging().save(p3);
 		userServices.getPatientPaging().save(p4);
 		userServices.getPatientPaging().save(p5);
+		userServices.getPatientPaging().save(p6);
+		userServices.getPatientPaging().save(p7);
+		userServices.getPatientPaging().save(p8);
+		userServices.getPatientPaging().save(p9);
+		userServices.getPatientPaging().save(p10);
 
 
 		Doctor d1 = new Doctor("D1's Name", "d1", "password", "emaild1@email.com", "pediatrics");
