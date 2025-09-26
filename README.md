@@ -125,12 +125,20 @@ You can login to the application using these credentials:
 |ADMIN|a1  | password|
 |ADMIN|a2  | password|
 |ADMIN|a3  | password|
-|PATIENT|p1 | password|
-|PATIENT|p2 | password|
-|PATIENT|p3 | password|
 |DOCTOR|d1 | password|
 |DOCTOR|d2 | password|
 |DOCTOR|d3 | password|
+|PATIENT|p1 | password|
+|PATIENT|p2 | password|
+|PATIENT|p3 | password|
+|PATIENT|p4 | password|
+|PATIENT|p5 | password|
+|PATIENT|p6 | password|
+|PATIENT|p7 | password|
+|PATIENT|p8 | password|
+|PATIENT|p9 | password|
+|PATIENT|p10 | password|
+
  
 
 To access the H2 console to view the database go to https://localhost:8090/h2-console/ and enter:
