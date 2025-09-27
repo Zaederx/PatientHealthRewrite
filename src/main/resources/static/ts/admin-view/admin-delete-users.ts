@@ -31,6 +31,7 @@ var passwordValid = false
 //set table
 var table = new Table()
 table.idRoot = '#user-details-'
+//enable searchbar
 $(searchbarId).on('input',()=>{
     var name = $(searchbarId).val() as string;
     var pageNum = $(pageNumId).val() as number
@@ -49,6 +50,7 @@ function setPageNumVars(currentPageNum:number) {
     userTablePageNext = userTableCurrentPageNum + 1;
 }
 
+//SECTION - SET BUTTONS
 $('#btn-search-username').on('click', () => {
     searchBy = 'username'
 })
