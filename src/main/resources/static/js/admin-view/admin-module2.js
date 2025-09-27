@@ -198,8 +198,8 @@ export function patientsToRows(data) {
     data.patientJsons.forEach(p => {
         t += '<tr data-id="' + p.id + '" data-selected="false" data-userType="patient">' +
             '<td>' + p.name + '</td>' +
-            '<td>' + p.username + '</td>';
-        '</tr>';
+            '<td>' + p.username + '</td>' +
+            '</tr>';
     });
     table.tbody = t;
     return table;
