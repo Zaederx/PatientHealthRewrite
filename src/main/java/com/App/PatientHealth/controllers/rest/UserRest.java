@@ -12,11 +12,17 @@ import com.App.PatientHealth.responseObject.domain.UserJson;
 import com.App.PatientHealth.responseObject.lists.UserListResponse;
 import com.App.PatientHealth.services.UserDetailsServiceImpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("rest/user")
 public class UserRest {
 
+    Logger logger = LoggerFactory.getLogger(UserRest.class);
+
     @Autowired
     UserDetailsServiceImpl userServices;
 
@@ -42,6 +50,7 @@ public class UserRest {
         String password = request.get("password");
         //names
         String name = request.get("name");
+
         String email = request.get("email");
 
         String message = "User added successfully";
@@ -82,13 +91,12 @@ public class UserRest {
         return res;
     }
 
-    //get doctor - by firstname
     @GetMapping("/get-user/name/{name}/{pageNum}")
     public JsonResponse findUserByFirstname(@PathVariable String name,@PathVariable String pageNum) {
         int pageNumInt = Integer.parseInt(pageNum);
         //set page number and return up to 10 elements
         //note -1 because of zero indexed for pages (i.e. starts at zero)
-        Pageable page = PageRequest.of(pageNumInt-1, 10, Sort.by("name").ascending());
+        Pageable page = PageRequest.of(pageNumInt-1, 5, Sort.by("name").ascending());
         //get page of users
         Page<User> uPage = userServices.getUserPaging().findAllByNameContainingIgnoreCase(name, page);
         //set response object with users
@@ -114,7 +122,7 @@ public class UserRest {
         int pageNumInt = Integer.parseInt(pageNum);
         //set page number and return up to 10 elements
         //note -1 because of zero indexed for pages (i.e. starts at zero)
-        Pageable page = PageRequest.of(pageNumInt-1, 10, Sort.by("username").ascending());
+        Pageable page = PageRequest.of(pageNumInt-1, 5, Sort.by("username").ascending());
         //get page of users
         Page<User> uPage = userServices.getUserPaging().findAllByUsernameIgnoreCase(username, page);
         //set response object with users

@@ -24,6 +24,7 @@ var passwordValid = false;
 //set table
 var table = new Table();
 table.idRoot = '#user-details-';
+//enable searchbar
 $(searchbarId).on('input', () => {
     var name = $(searchbarId).val();
     var pageNum = $(pageNumId).val();
@@ -41,6 +42,7 @@ function setPageNumVars(currentPageNum) {
     userTablePagePrev = userTableCurrentPageNum - 1;
     userTablePageNext = userTableCurrentPageNum + 1;
 }
+//SECTION - SET BUTTONS
 $('#btn-search-username').on('click', () => {
     searchBy = 'username';
 });
@@ -87,11 +89,11 @@ $(deleteBtnId).on('click', () => {
         });
     }
 });
-function handleEditSuccess(data) {
+function handleDeleteUserSuccess(data) {
     if (data.success) {
-        $('#message').html(message("Editing user successful", 'alert-info'));
+        $('#message').html(message("Deleting user successful", 'alert-info'));
     }
 }
-function handleEditError() {
-    $('#message').html(message('Error retrieving doctor information', 'alert-danger'));
+function handleDeleteUserError() {
+    $('#message').html(message('Error deleting user', 'alert-danger'));
 }
