@@ -22,10 +22,11 @@ const pageTotalElementId = '#pageTotal'
 const submitBtnId = '#btn-submit-edit'
 
 //validation boolean values
-var nameValid = false
-var usernameValid = false
-var emailValid = false
-var passwordValid = false
+var nameValid = {val:false}
+var usernameValid = {val:false}
+var emailValid = {val:false}
+var passwordValid = {val:false}
+var password2Valid = {val:false}
 
 //set table
 var table = new Table()
@@ -48,11 +49,11 @@ function setPageNumVars(currentPageNum:number) {
     userTablePageNext = userTableCurrentPageNum + 1;
 }
 
-$('#btn-search-username').on('click', () => {
+$('#user-search-username').on('input', () => {
     searchBy = 'username'
 })
 
-$('#btn-search-name').on('click', () => {
+$('#user-search-name').on('input', () => {
     searchBy = 'name'
 })
 
@@ -112,13 +113,13 @@ function displaySelectedUserInForm() {
 }
 
 function enableSubmitBtn() {
-    if (nameValid && usernameValid && emailValid && passwordValid) {
+    if (nameValid.val && usernameValid.val && emailValid.val && passwordValid.val && password2Valid.val) {
         (document.querySelector(submitBtnId) as HTMLButtonElement).disabled = false
     }
 }
 
 function disableSubmitBtn() {
-    if (!nameValid || !usernameValid || !emailValid || !passwordValid) {
+    if (!nameValid.val || !usernameValid.val || !emailValid.val || !passwordValid.val || !password2Valid.val) {
         (document.querySelector(submitBtnId) as HTMLButtonElement).disabled = true
     }
 }
@@ -127,7 +128,7 @@ function disableSubmitBtn() {
 //validate username
 $(usernameInputId).on('input', () => {
     validateUsername(usernameInputId,csrfToken,(data:JsonResponse) => {
-        handleSuccess(data,usernameInputId+'-error','usernameValid',enableSubmitBtn,disableSubmitBtn)
+        handleSuccess(data, usernameInputId+'-error', usernameValid, enableSubmitBtn,disableSubmitBtn)
     })
 })
 
@@ -135,7 +136,7 @@ $(usernameInputId).on('input', () => {
 $(emailInputId).on('input', () => {
     validateEmail(emailInputId, csrfToken, 
         (data:JsonResponse) => {
-            handleSuccess(data,emailInputId+'-error','emailValid',enableSubmitBtn,disableSubmitBtn)
+            handleSuccess(data, emailInputId+'-error', emailValid ,enableSubmitBtn,disableSubmitBtn)
     },
     () => {
         $('#message').html(message('Error validating email.', 'alert-danger'))
@@ -146,7 +147,7 @@ $(emailInputId).on('input', () => {
 $(passwordInputId).on('input', () => {
     validatePassword(passwordInputId,password2InputId,csrfToken, 
         (data:PasswordResponse) => {
-            handlePasswordSuccess(data,passwordInputId+'-error', "passwordValid", enableSubmitBtn, disableSubmitBtn)
+            handlePasswordSuccess(data, passwordInputId+'-error', passwordValid, enableSubmitBtn, disableSubmitBtn)
         },
     () => {
         $('#message').html(message('Error validating passwords.', 'alert-danger'))
@@ -157,7 +158,7 @@ $(passwordInputId).on('input', () => {
 $(password2InputId).on('input', () => {
     validatePassword(passwordInputId,password2InputId,csrfToken,
         (data:PasswordResponse) => {
-            handlePasswordSuccess(data,passwordInputId+'-error', "passwordValid", enableSubmitBtn, disableSubmitBtn)
+            handlePasswordSuccess(data,passwordInputId+'-error', password2Valid, enableSubmitBtn, disableSubmitBtn)
         },
     () => {
         $('#message').html(message('Error validating passwords.', 'alert-danger'))
@@ -174,7 +175,9 @@ $('#btn-submit-edit').on('click', () => {
     var email = $(emailInputId).val()
     var password = $(passwordInputId).val()
 
+    //set data to send
     var data = {id,name,username,email,password}
+    
     //submit changes
     $.ajax({
         url: "/rest/user/edit",
