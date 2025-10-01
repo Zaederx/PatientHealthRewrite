@@ -42,3 +42,9 @@ if (auth != null) {
     logger.debug("userPassword:"+userPassword);
 }
 ```
+
+## Passwords cannot be retrieved unless you write some custom Spring classes (a way of protecting passwords)
+If you try 
+```
+String password = user.getPassword()// will not work because it is protected.
+```
