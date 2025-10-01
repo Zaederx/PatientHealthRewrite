@@ -124,7 +124,7 @@ public class UserRest {
         //note -1 because of zero indexed for pages (i.e. starts at zero)
         Pageable page = PageRequest.of(pageNumInt-1, 5, Sort.by("username").ascending());
         //get page of users
-        Page<User> uPage = userServices.getUserPaging().findAllByUsernameIgnoreCase(username, page);
+        Page<User> uPage = userServices.getUserPaging().findAllByUsernameContainingIgnoreCase(username, page);
         //set response object with users
         UserListResponse res = new UserListResponse();
         if(uPage.hasContent()) {
