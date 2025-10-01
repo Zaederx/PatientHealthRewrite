@@ -103,11 +103,15 @@ $(deleteBtnId).on('click', () => {
 })
 
 function handleEditSuccess(data:JsonResponse) {
+function handleDeleteUserSuccess(data:JsonResponse) {
     if(data.success) {
         $('#message').html(message("Editing user successful",'alert-info'))
+        $('#message').html(message("Deleting user successful",'alert-info'))
     }
 }
 
 function handleEditError() {
     $('#message').html(message('Error retrieving doctor information','alert-danger'))
+function handleDeleteUserError() {
+    $('#message').html(message('Error deleting user','alert-danger'))
 }
