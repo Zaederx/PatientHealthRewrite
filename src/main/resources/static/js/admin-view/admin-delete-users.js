@@ -84,13 +84,14 @@ $(deleteBtnId).on('click', () => {
             contentType: "application/json",
             dataType: "json",
             headers: { 'X-CSRF-TOKEN': csrfToken },
-            success: (data) => handleEditSuccess(data),
-            error: () => handleEditError()
+            success: (data) => handleDeleteUserSuccess(data),
+            error: () => handleDeleteUserError()
         });
     }
 });
 function handleDeleteUserSuccess(data) {
     if (data.success) {
+        $('#message').html(message("Editing user successful", 'alert-info'));
         $('#message').html(message("Deleting user successful", 'alert-info'));
     }
 }

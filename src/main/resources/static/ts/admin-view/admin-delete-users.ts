@@ -96,13 +96,13 @@ $(deleteBtnId).on('click', () => {
             contentType: "application/json",
             dataType:"json",
             headers: {'X-CSRF-TOKEN':csrfToken},
-            success: (data) => handleEditSuccess(data) ,
-            error: () => handleEditError()
+            success: (data) => handleDeleteUserSuccess(data) ,
+            error: () => handleDeleteUserError()
         })
     }
 })
 
-function handleEditSuccess(data:JsonResponse) {
+
 function handleDeleteUserSuccess(data:JsonResponse) {
     if(data.success) {
         $('#message').html(message("Editing user successful",'alert-info'))
@@ -110,8 +110,6 @@ function handleDeleteUserSuccess(data:JsonResponse) {
     }
 }
 
-function handleEditError() {
-    $('#message').html(message('Error retrieving doctor information','alert-danger'))
 function handleDeleteUserError() {
     $('#message').html(message('Error deleting user','alert-danger'))
 }
