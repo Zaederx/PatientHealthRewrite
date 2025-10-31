@@ -12,7 +12,8 @@ version = '0.0.1-SNAPSHOT'
 //tool chain provides the needed version of java instead of just indicating which version
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(11)
+		// languageVersion = JavaLanguageVersion.of(11)// originally
+		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 
