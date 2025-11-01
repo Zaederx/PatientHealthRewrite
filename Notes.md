@@ -48,3 +48,71 @@ If you try
 ```
 String password = user.getPassword()// will not work because it is protected.
 ```
+
+
+## Creating a docker image and uploading to docker hub
+Create a docker file
+```
+FROM openjdk:17
+VOLUME /tmp
+COPY build/libs/PatientHealth-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java","-jar","./app.jar"]
+```
+From within the project folder, create patient
+```
+docker -t patient-health .
+```
+### From Docker 'Ask Gordan'
+Yes, you need to create a Docker Hub repository before pushing an image to it. If the repository doesn't exist, the push will fail. Here's how you can create a repository:
+
+Steps to Create a Docker Hub Repository:
+Sign in to Docker Hub:
+
+Go to Docker Hub⁠ and log in with your account.
+Create a Repository:
+
+Click on Create Repository.
+Fill in the required details:
+Repository Name: Choose a unique name (e.g., my-repo).
+Short Description: Optional, but helpful for others.
+Visibility: Choose Public (accessible to everyone) or Private (restricted access).
+Click Create.
+Tag Your Image:
+
+Use the repository name and your namespace (`username` or `organization`) to tag your image:
+```
+docker tag my-app my-namespace/my-repo:v1.0
+```
+Push the Image:
+
+Push the tagged image to the repository:
+```
+docker push my-namespace/my-repo:v1.0
+```
+If the repository already exists, you can skip the creation step and directly push your image.
+
+Sources:
+
+https://docs.docker.com/docker-hub/repos/create/⁠
+https://docs.docker.com/docker-hub/repos/manage/hub-images/push/⁠
+
+### Summary of Docker instructions
+Create a repository online in Docker Hub. The repository I created is `zaederx/patient-health-app`.
+
+Then build the project docker image:
+```
+docker build -t patient-health .
+```
+
+Tag patient-health with the repository that was created in Docker Hub:
+```
+docker tag patient-health zaederx/patient-health-app
+```
+
+Push docker image to Docker Hub:
+```
+docker push zaederx/patient-health-app
+```
+
+## Port for Render.com
+Must use port 1000 when hosting on render.com (unless you know how to configure it otherwise - which I don't [it's not very clear how to do it for Java+Docker in the instructions - [see port binding](https://render.com/docs/web-services#port-binding) & [environment variables](https://render.com/docs/configure-environment-variables) - it doesn't say how this works for Java+Docker so I'm just using port 1000])
