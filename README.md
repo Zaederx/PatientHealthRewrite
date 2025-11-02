@@ -1,10 +1,19 @@
-# Patient's Health WebApp
-Based off of something I started for a [university project](https://github.com/Zaederx/PatientHealthApp-Untouched-Version) in my final year that was not fully completed.
+# Patient's Health App - Render.com Build Branch
+Based off of something I started for a [university project](https://github.com/Zaederx/PatientHealthApp-Untouched-Version) in my final year that was not fully completed. See also the [main branch](https://github.com/Zaederx/PatientHealthRewrite/tree/main) of this repository.
 
 It's an app to allow patient's to view prescriptions and book request appointments online as well as allow admin and doctors to manage patient information and appointments.
 
-<!-- See site at [link](https://patient-health-app.herokuapp.com) -->
+# What's different in this Render.com Build version
+It configured slightly differently to be compatible with render.com's hosting service. For example SSL & TLS are not used (commented out of `application.properties`).
 
+Also h2 is not file based in this version of the project, it is memory based (which is better anyway for this kind of personal project).
+
+Besides this h2 console is also configure for use from any address in this version (allows for remote use, not just from localhost).
+
+The `port` is also set to `10000` (10,000) instead of 8090, to match render.com's default configurations.
+
+<!-- See site at [link](https://patient-health-app.herokuapp.com) -->
+See site at [link at render.com](https://patient-health-app-latest.onrender.com) (used to host it on heroku when it was free.) Note its on free tier so it may take a while for render to spin up a build (5 to 8 mins on average), but it does work/get there eventually.
 Also be sure to see:
 ## [YOUTUBE WALKTHROUGH](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s) - few things have been fixed since then
 
@@ -41,6 +50,7 @@ My project was to create a system that would allow patients with chronic illness
 - [CSS](#css)
 - [SASS](#sass)
 - [Bootstrap](#bootstrap)
+- [Docker](#docker)
 
     ### Explanation of Each Technology's Role
 
@@ -86,6 +96,9 @@ My project was to create a system that would allow patients with chronic illness
     #### Bootstrap
     HTML,CSS and Javascript library for creating dynamic web content[see website](https://getbootstrap.com/).
 
+    ### Docker
+    Used to containterise the app in preparation for hosting the app on [render.com](render.com).
+
 ## Requirements to run the project
 You will need to have java 11 or higher installed and on your classpath in order to run the project.
 
@@ -115,7 +128,7 @@ On Windows
 ./gradlew.bat bootRun
 ```
 
-Once the boot process is complete, you can then view the website from https://localhost:8090/ (if you are using default configurations). 
+Once the boot process is complete, you can then view the website from https://localhost:10000/ (if you are using default configurations). 
 
 <!-- There for each type their are 3 users (i.e. {usertype}{number} - e.g. Admin2). -->
 
@@ -141,7 +154,7 @@ You can login to the application using these credentials:
 
  
 
-To access the H2 console to view the database go to https://localhost:8090/h2-console/ and enter:
+To access the H2 console to view the database go to https://localhost:10000/h2-console/ and enter:
 
 Saved Settings: Generic H2 (Embedded)
 
@@ -149,7 +162,8 @@ Settings Name: Generic H2 (Embedded)
 
 Driver Class: org.h2.Driver
 
-JDBC URL: jdbc:h2:file:./data/db
+<!-- JDBC URL: jdbc:h2:file:./data/db -->
+JDBC URL: jdbc:h2:mem:testdb
 
 User Name: admin
 
