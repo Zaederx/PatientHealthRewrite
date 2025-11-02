@@ -147,5 +147,61 @@ kill [enter process id]
 
  */
 
- //Also if build doesnt run - try removing the db file (it generates a new one on start up) for texting purposes. //TODO need to find out why this happens sometimes
+//  //Also if build doesnt run - try removing the db file (it generates a new one on start up) for texting purposes. //TODO need to find out why this happens sometimes
 
+//Docker doesn't work from gradle tasks for some reason
+// task dockerBuild () {
+// 	println "\u001B[32m"+"Docker Build"
+// 	ext.process = new ProcessBuilder()
+//             .directory(projectDir)
+//             .command("docker", "build", "-t", "patient-health", ".")
+//             .start();
+// 	ext.output = { //for access to external output if needed
+// 		return standardOutput.toString();
+// 	}
+// 	ext.process.waitFor();
+// 	timeout = Duration.ofMinutes(5)
+// 	doLast { 
+// 		println "\u001B[32m"+"dockerBuild done!"
+// 	}
+// }
+// task dockerTag () {
+// 	println "\u001B[32m"+"Tagging Docker Image"
+// 	ext.process = new ProcessBuilder()
+//             .directory(projectDir)
+//             .command("docker", "tag", "patient-health","zaederx/pateint-health-app")
+//             .start();
+
+// 	ext.output = { //for access to external output if needed
+// 		return standardOutput.toString();
+// 	}
+// 	ext.process.waitFor();
+// 	timeout = Duration.ofMinutes(1)
+// 	doLast { 
+// 		println "\u001B[32m"+"dockerTag done!"
+// 	}
+// }
+// task dockerHubImage() {
+// 	println "\u001B[32m"+"Pushing image to Docker Hub"
+// 	ext.process = new ProcessBuilder()
+//             .directory(projectDir)
+//             .command("docker", "push", "zaederx/patient-health-app")
+//             .start();
+			
+// 	ext.output = { //for access to external output if needed
+// 		return standardOutput.toString();
+// 	}
+
+// 	// ext.process.waitFor(5,TimeUnit.SECONDS);
+// 	// ext.process.destroy();
+// 	// ext.process.waitFor(5,TimeUnit.SECONDS);
+// 	// ext.process.destroyForcibly();
+// 	ext.process.waitFor();
+
+// 	timeout = Duration.ofMinutes(15)
+// 	doLast { 
+// 		println "\u001B[32m"+"dockerImageHub done!"
+// 	}
+// }
+
+// dockerHubImage.dependsOn clean, build, dockerBuild, dockerTag
