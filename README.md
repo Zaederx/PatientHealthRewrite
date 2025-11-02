@@ -3,7 +3,19 @@ Based off of something I started for a [university project](https://github.com/Z
 
 It's an app to allow patient's to view prescriptions and book request appointments online as well as allow admin and doctors to manage patient information and appointments.
 
+
+# What's different in the Render.com Build Branch
+See [render-build branch](https://github.com/Zaederx/PatientHealthRewrite/tree/render.com-build)
+It is configured slightly differently to be compatible with render.com's hosting service. For example SSL & TLS are not used (commented out of `application.properties`).
+
+Also h2 is not file based in this version of the project, it is memory based (which is better anyway for this kind of personal project).
+
+Besides this h2 console is also configure for use from any address in this version (allows for remote use, not just from localhost).
+
+The `port` is also set to `10000` (10,000) instead of 8090, to match render.com's default configurations.
+
 <!-- See site at [link](https://patient-health-app.herokuapp.com) -->
+See site at [link at render.com](https://patient-health-app-latest.onrender.com) (used to host it on heroku when it was free.) Note its on free tier so it may take a while for render to spin up a build (5 to 8 mins on average), but it does work/get there eventually.
 
 Also be sure to see:
 ## [YOUTUBE WALKTHROUGH](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s) - few things have been fixed since then
