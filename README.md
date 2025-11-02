@@ -3,7 +3,7 @@ Based off of something I started for a [university project](https://github.com/Z
 
 It's an app to allow patient's to view prescriptions and book request appointments online as well as allow admin and doctors to manage patient information and appointments.
 
-# What's different in this Render.com Build version
+# What's different in this Render.com Build Branch
 It configured slightly differently to be compatible with render.com's hosting service. For example SSL & TLS are not used (commented out of `application.properties`).
 
 Also h2 is not file based in this version of the project, it is memory based (which is better anyway for this kind of personal project).
