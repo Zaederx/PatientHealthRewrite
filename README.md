@@ -149,14 +149,13 @@ Settings Name: Generic H2 (Embedded)
 
 Driver Class: org.h2.Driver
 
-JDBC URL: jdbc:h2:file:./data/db
+<!-- JDBC URL: jdbc:h2:file:./data/db -->
+JDBC URL: jdbc:h2:mem:testdb
 
 User Name: admin
 
 Password: admin
 
-as shown in the image below:
-![h2console](./readme-images/h2console.png)
 
 
 
