@@ -116,3 +116,14 @@ docker push zaederx/patient-health-app
 
 ## Port for Render.com
 Must use port 1000 when hosting on render.com (unless you know how to configure it otherwise - which I don't [it's not very clear how to do it for Java+Docker in the instructions - [see port binding](https://render.com/docs/web-services#port-binding) & [environment variables](https://render.com/docs/configure-environment-variables) - it doesn't say how this works for Java+Docker so I'm just using port 1000])
+
+
+## TLS and certificates
+If you get the message when hosting a web app like this or a site on `render.com`: 
+'Bad Request
+This combination of host and port requires TLS.'
+
+This is probably because you are setting up SSL (Secure Socket Layer) or TLS (Transport Layer Security) when Render.com handles this for you.
+As soon as I commented out the section in `application.properties` (in the resources folder) that handles SSL and TLS, that fixed the problem and the site worked.
+
+See [fully managed certificated](https://render.com/docs/tls)
