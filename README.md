@@ -15,7 +15,7 @@ The `port` is also set to `10000` (10,000) instead of 8090, to match render.com'
 <!-- See site at [link](https://patient-health-app.herokuapp.com) -->
 See site at [link at render.com](https://patient-health-app-latest.onrender.com) (used to host it on heroku when it was free.) Note its on free tier so it may take a while for render to spin up a build (5 to 8 mins on average), but it does work/get there eventually.
 Also be sure to see:
-## [YOUTUBE WALKTHROUGH](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s) - few things have been fixed since then
+## [YOUTUBE WALKTHROUGH](https://www.youtube.com/watch?v=2LTY80dYC0g&t=81s) - a few things have been fixed and improved since then
 
 ## Tables of Contents
 * [Background](#background)
